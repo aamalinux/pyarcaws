@@ -23,7 +23,7 @@ __license__ = "LGPL-3.0-or-later"
 __version__ = "3.03a"
 
 import sys, os, time
-from configparser import SafeConfigParser
+from configparser import ConfigParser
 from pyafipws.utils import inicializar_y_capturar_excepciones, BaseWS, get_install_dir
 from pyafipws.utils import leer, escribir, leer_dbf, guardar_dbf, N, A, I, json
 
@@ -364,7 +364,7 @@ def main():
     global CONFIG_FILE
     if len(sys.argv) > 1 and sys.argv[1][0] not in "-/":
         CONFIG_FILE = sys.argv.pop(1)
-    config = SafeConfigParser()
+    config = ConfigParser()
     config.read(CONFIG_FILE)
     crt = config.get("WSAA", "CERT")
     key = config.get("WSAA", "PRIVATEKEY")

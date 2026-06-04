@@ -303,17 +303,17 @@ if __name__ == '__main__':
                 comienzo += longitud
         sys.exit(0)
 
-    from ConfigParser import SafeConfigParser
+    from configparser import ConfigParser
 
     try:
-    
+
         for arg in sys.argv[1:]:
             if arg.startswith("--"):
                 break
             print("Usando configuración:", arg)
             CONFIG_FILE = arg
 
-        config = SafeConfigParser()
+        config = ConfigParser()
         config.read(CONFIG_FILE)
         CERT = config.get('WSAA','CERT')
         PRIVATEKEY = config.get('WSAA','PRIVATEKEY')

@@ -3938,7 +3938,7 @@ def main():
         sys.exit(0)
 
     import csv
-    from configparser import SafeConfigParser
+    from configparser import ConfigParser
 
     from pyafipws.wsaa import WSAA
 
@@ -3951,7 +3951,7 @@ def main():
             CONFIG_FILE = sys.argv[1]
             print("Usando configuracion:", CONFIG_FILE)
 
-        config = SafeConfigParser()
+        config = ConfigParser()
         config.read(CONFIG_FILE)
         CERT = config.get("WSAA", "CERT")
         PRIVATEKEY = config.get("WSAA", "PRIVATEKEY")

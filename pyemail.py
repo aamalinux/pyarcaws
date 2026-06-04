@@ -28,7 +28,7 @@ from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
 import sys, os
 import smtplib
-from configparser import SafeConfigParser
+from configparser import ConfigParser
 
 
 DEBUG = False
@@ -213,7 +213,7 @@ def main():
 
         win32com.server.register.UseCommandLine(PyEmail)
     elif "py2exe" in sys.argv:
-        from distutils.core import setup
+        from setuptools import setup
         from pyafipws.windows.nsis import build_installer, Target
         import py2exe
 
@@ -278,7 +278,7 @@ def main():
         print("mail enviado?", ok, pyemail.Excepcion)
         ok = pyemail.Salir()
     else:
-        config = SafeConfigParser()
+        config = ConfigParser()
         config.read("rece.ini")
 
         if "/debug" in sys.argv:

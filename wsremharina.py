@@ -819,7 +819,7 @@ def main():
         win32com.server.register.UseCommandLine(WSRemHarina)
         sys.exit(0)
 
-    from configparser import SafeConfigParser
+    from configparser import ConfigParser
 
     try:
 
@@ -832,7 +832,7 @@ def main():
             print("Usando configuración:", arg)
             CONFIG_FILE = arg
 
-        config = SafeConfigParser()
+        config = ConfigParser()
         config.read(CONFIG_FILE)
         CERT = config.get("WSAA", "CERT")
         PRIVATEKEY = config.get("WSAA", "PRIVATEKEY")

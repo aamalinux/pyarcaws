@@ -1735,7 +1735,7 @@ def main():
         # start the server.
         win32com.server.localserver.serve([FEPDF._reg_clsid_])
     else:
-        from pyafipws.utils import SafeConfigParser
+        from configparser import ConfigParser
 
         DEBUG = "--debug" in sys.argv
         utils.safe_console()
@@ -1746,7 +1746,7 @@ def main():
         if DEBUG:
             print("CONFIG_FILE:", CONFIG_FILE)
 
-        config = SafeConfigParser()
+        config = ConfigParser()
         config.read(CONFIG_FILE)
         conf_fact = dict(config.items("FACTURA"))
         conf_pdf = dict(config.items("PDF"))
