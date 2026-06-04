@@ -22,8 +22,6 @@ import sys
 import base64
 from pyafipws.wsaa import WSAA, call_wsaa, sign_tra_openssl
 from pyafipws.wsaa import main
-from past.builtins import basestring
-from builtins import str
 from pyafipws.utils import *
 from pysimplesoap import *
 DEFAULT_TTL = 60 * 60 * 5  # five hours
@@ -126,7 +124,7 @@ def test_wsaa_create_tra():
     tra = wsaa.CreateTRA(service="wsfe")
 
     # sanity checks:
-    assert isinstance(tra, basestring)
+    assert isinstance(tra, str)
     assert tra.startswith(
         '<?xml version="1.0" encoding="UTF-8"?>' '<loginTicketRequest version="1.0">'
     )

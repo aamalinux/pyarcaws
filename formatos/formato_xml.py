@@ -11,7 +11,6 @@
 # for more details.
 
 "Módulo para manejo de archivos XML simil Facturador-Plus (RCEL)"
-from __future__ import print_function
 
 __author__ = "Mariano Reingart (reingart@gmail.com)"
 __copyright__ = "Copyright (C) 2010 Mariano Reingart"

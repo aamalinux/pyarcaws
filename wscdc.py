@@ -11,16 +11,11 @@
 # for more details.
 
 "Módulo para utilizar el servicio web Constatación de Comprobantes de AFIP"
-from __future__ import print_function
-from __future__ import absolute_import
 
 # Información adicional y documentación:
 # http://www.sistemasagiles.com.ar/trac/wiki/ConstatacionComprobantes
 
-from future import standard_library
 
-standard_library.install_aliases()
-from builtins import str
 
 __author__ = "Mariano Reingart (reingart@gmail.com)"
 __copyright__ = "Copyright (C) 2013-2021 Mariano Reingart"
@@ -370,10 +365,7 @@ def main():
     if len(sys.argv) > 1 and sys.argv[1][0] not in "-/":
         CONFIG_FILE = sys.argv.pop(1)
     config = SafeConfigParser()
-    if sys.version_info[0] < 3 :
-        config.read(CONFIG_FILE, encoding="latin-1")
-    else:
-        config.read(CONFIG_FILE)
+    config.read(CONFIG_FILE)
     crt = config.get("WSAA", "CERT")
     key = config.get("WSAA", "PRIVATEKEY")
     cuit = config.get("WSCDC", "CUIT")

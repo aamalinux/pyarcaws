@@ -14,7 +14,6 @@
 # Ejemplos iniciales gracias a "Matias Gieco matigro@gmail.com"
 
 "MÃ³dulo para analizar el formato de un remito electrÃ³nico (COT)"
-from __future__ import print_function
 
 __author__ = "Mariano Reingart (reingart@gmail.com)"
 __copyright__ = "Copyright (C) 2010 Mariano Reingart"

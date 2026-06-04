@@ -11,22 +11,11 @@
 # for more details.
 
 "Herramienta para procesar y consultar el Padrón Unico de Contribuyentes AFIP"
-from __future__ import division
-from __future__ import print_function
-from __future__ import absolute_import
 
 # Documentación e información adicional:
 #    http://www.sistemasagiles.com.ar/trac/wiki/PadronContribuyentesAFIP
 
-from future import standard_library
 
-standard_library.install_aliases()
-from builtins import next
-from builtins import str
-from builtins import range
-from past.builtins import basestring
-from builtins import object
-from past.utils import old_div
 
 __author__ = "Mariano Reingart <reingart@gmail.com>"
 __copyright__ = "Copyright (C) 2014-2021 Mariano Reingart"
@@ -229,7 +218,7 @@ class PadronAFIP(object):
         size = 0
         p0 = None
         while True:
-            p = int(old_div(size, lenght) * 100)
+            p = size * 100 // lenght
             if p0 is None or p > p0:
                 print("Leyendo ... %0d %%" % p)
                 p0 = p
@@ -330,7 +319,7 @@ class PadronAFIP(object):
         for key in [k for k, l, t, d in FORMATO]:
             if row:
                 val = row[key]
-                if not isinstance(val, basestring):
+                if not isinstance(val, str):
                     val = str(row[key])
                 setattr(self, key, val)
             else:

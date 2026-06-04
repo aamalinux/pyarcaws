@@ -11,12 +11,7 @@
 # for more details.
 
 "Módulo para manejo de archivos SQL"
-from __future__ import division
-from __future__ import print_function
 
-from builtins import str
-from past.builtins import basestring
-from past.utils import old_div
 
 __author__ = "Mariano Reingart (reingart@gmail.com)"
 __copyright__ = "Copyright (C) 2014 Mariano Reingart"
@@ -151,10 +146,10 @@ def redondear(formato, clave, valor):
             return int(valor)
         if isinstance(valor, (int, float)):
             valor = str(valor)
-        if isinstance(valor, basestring):
+        if isinstance(valor, str):
             valor = Decimal(valor)
         if int and isinstance(int[0], (tuple, list)):
-            decimales = old_div(Decimal("1"), Decimal(10 ** (int[0][1])))
+            decimales = Decimal("1") / Decimal(10 ** (int[0][1]))
         else:
             decimales = Decimal(".01")
         valor1 = valor.quantize(decimales, rounding=decimal.ROUND_DOWN)
@@ -401,7 +396,7 @@ def leer(db, schema={}, webservice="wsfev1", ids=None, **kwargs):
                 val = row[i]
                 if isinstance(val, str):
                     val = val.decode(CHARSET)
-                if isinstance(val, basestring):
+                if isinstance(val, str):
                     val = val.strip()
                 key = campos_rev["encabezado"].get(k[0], k[0].lower())
                 val = redondear(ENCABEZADO, key, val)

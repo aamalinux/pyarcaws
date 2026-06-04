@@ -11,10 +11,7 @@
 # for more details.
 
 "Pruebas para WSFEv1 de AFIP (Factura Electrónica Mercado Interno sin detalle)"
-from __future__ import print_function
 
-from builtins import str
-from past.builtins import basestring
 
 __author__ = "Mariano Reingart <reingart@gmail.com>"
 __copyright__ = "Copyright (C) 2010 Mariano Reingart"
@@ -143,7 +140,7 @@ class TestFE(unittest.TestCase):
         wsfev1.CAESolicitar()
 
         self.assertEqual(wsfev1.Resultado, "A")  # Aprobado!
-        self.assertIsInstance(wsfev1.CAE, basestring)
+        self.assertIsInstance(wsfev1.CAE, str)
         self.assertEqual(len(wsfev1.CAE), len("63363178822329"))
         self.assertEqual(len(wsfev1.Vencimiento), len("20130907"))
         wsfev1.AnalizarXml("XmlResponse")

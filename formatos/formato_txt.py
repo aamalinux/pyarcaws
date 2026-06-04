@@ -11,10 +11,7 @@
 # for more details.
 
 "Módulo para manejo de archivos TXT simil SIAP-RECE (Cobol et. al.)"
-from __future__ import print_function
 
-from builtins import str
-from past.builtins import basestring
 
 __author__ = "Mariano Reingart (reingart@gmail.com)"
 __copyright__ = "Copyright (C) 2011 Mariano Reingart"
@@ -228,11 +225,8 @@ def escribir_linea_txt(dic, formato):
             if clave.capitalize() in dic:
                 clave = clave.capitalize()
             valor = dic.get(clave, "")
-            if not isinstance(valor, basestring):
+            if not isinstance(valor, str):
                 valor = str(valor)
-            if sys.version_info[0] < 3 :
-                if isinstance(valor, str):
-                    valor = valor.encode(CHARSET, "replace")
             if valor == "None":
                 valor = ""
             if tipo == N and valor and valor != "NULL":

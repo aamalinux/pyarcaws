@@ -11,16 +11,7 @@
 # for more details.
 
 "Almacenamiento de duplicados electrónicos RG1361/02 y RG1579/03 AFIP"
-from __future__ import division
-from __future__ import print_function
-from __future__ import absolute_import
 
-from builtins import input
-from builtins import str
-from builtins import zip
-from past.builtins import basestring
-from builtins import object
-from past.utils import old_div
 
 __author__ = "Mariano Reingart (reingart@gmail.com)"
 __copyright__ = "Copyright (C) 2009-2021 Mariano Reingart"
@@ -357,7 +348,7 @@ def generar_detalle(items):
             else:
                 # tomar datos generales:
                 vals["alicuota_iva"] = (
-                    old_div(Decimal(item["imp_total"]), Decimal(item["imp_neto"])) - 1
+                    Decimal(item["imp_total"]) / Decimal(item["imp_neto"]) - 1
                 ) * 100
                 if float(item.get("impto_liq", item.get("imp_iva", 0))) == 0:
                     vals["gravado"] = "E"
@@ -421,7 +412,7 @@ def generar_ventas(items):
             else:
                 # tomar datos generales:
                 vals["alicuota_iva"] = (
-                    old_div(Decimal(item["imp_total"]), Decimal(item["imp_neto"])) - 1
+                    Decimal(item["imp_total"]) / Decimal(item["imp_neto"]) - 1
                 ) * 100
                 vals["alicuotas_iva"] = "01"
                 if float(item.get("impto_liq", item.get("imp_iva", 0))) == 0:
@@ -940,7 +931,7 @@ def main():
                 for factura in facturas:
                     for k, v in list(factura.items()):
                         # decodificar strings (evitar problemas unicode)
-                        if isinstance(v, basestring):
+                        if isinstance(v, str):
                             if isinstance(v, str):
                                 v = v.decode("latin1", "ignore")
                             factura[k] = unicodedata.normalize("NFKD", v).encode(
@@ -1017,10 +1008,7 @@ def main():
                                     # extraer IVA incluido factura B:
                                     if factura["tipo_cbte"] in (6, 7, 8):
                                         neto = round(
-                                            old_div(
-                                                importe,
-                                                ((100 + alicuotas[iva_id]) / 100.0),
-                                            ),
+                                            importe / ((100 + alicuotas[iva_id]) / 100.0),
                                             2,
                                         )
                                         iva = importe - neto

@@ -11,9 +11,7 @@
 # for more details.
 
 "Módulo para manejo de Facturas Electrónicas en tablas DBF (dBase, FoxPro, Clipper et.al.)"
-from __future__ import print_function
 
-from builtins import str
 
 __author__ = "Mariano Reingart (reingart@gmail.com)"
 __copyright__ = "Copyright (C) 2011 Mariano Reingart"

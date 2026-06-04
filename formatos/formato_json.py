@@ -11,7 +11,6 @@
 # for more details.
 
 "Módulo para manejo de archivos JSON"
-from __future__ import print_function
 
 __author__ = "Mariano Reingart (reingart@gmail.com)"
 __copyright__ = "Copyright (C) 2011 Mariano Reingart"

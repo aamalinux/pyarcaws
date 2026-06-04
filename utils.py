@@ -11,17 +11,8 @@
 # for more details.
 
 "Módulo con funciones auxiliares para el manejo de errores y temas comunes"
-from __future__ import division
-from __future__ import print_function
 
-from future import standard_library
 
-standard_library.install_aliases()
-from builtins import chr
-from builtins import str
-from past.builtins import basestring
-from past.utils import old_div
-from builtins import object
 
 __author__ = "Mariano Reingart <reingart@gmail.com>"
 __copyright__ = "Copyright (C) 2013-2021 Mariano Reingart"
@@ -89,7 +80,7 @@ try:
     from pysimplesoap.client import SoapClient
     import platform
 
-    monkey_patch = sys.version_info < (3, ) or httplib2._build_ssl_context.__module__ != "httplib2"
+    monkey_patch = httplib2._build_ssl_context.__module__ != "httplib2"
     needs_patch = platform.system() in ["Linux", "Darwin"] or sys.version_info > (3, 10)
     if needs_patch and not monkey_patch:
         _build_ssl_context = httplib2._build_ssl_context
@@ -483,14 +474,14 @@ class BaseWS(object):
         # busco datos "anidados" (listas / diccionarios)
         for clave in (clave1, clave2, clave3, clave4):
             if clave is not None and valor is not None:
-                if isinstance(clave1, basestring) and clave.isdigit():
+                if isinstance(clave1, str) and clave.isdigit():
                     clave = int(clave)
                 try:
                     valor = valor[clave]
                 except (KeyError, IndexError):
                     valor = None
         if valor is not None:
-            if isinstance(valor, basestring):
+            if isinstance(valor, str):
                 return valor
             else:
                 return str(valor)
@@ -546,14 +537,9 @@ class WebClient(object):
     def multipart_encode(self, vars):
         "Enconde form data (vars dict)"
         boundary = choose_boundary()
-        if sys.version_info[0] < 3:
-            buf = BytesIO()
-            def _is_string(val):
-                return (not isinstance(val, file))
-        else:
-            buf = StringIO()
-            def _is_string(val):
-                return isinstance(val, str)
+        buf = StringIO()
+        def _is_string(val):
+            return isinstance(val, str)
         for key, value in list(vars.items()):
             if _is_string(value):
                 buf.write("--%s\r\n" % boundary)
@@ -745,9 +731,6 @@ def escribir(dic, formato, contraer_fechas=False):
             if clave.capitalize() in dic:
                 clave = clave.capitalize()
             s = dic.get(clave, "")
-            if sys.version_info[0] < 3:
-                if isinstance(s, str):
-                    s = s.encode("latin1")
             if s is None:
                 valor = chr(127)
                 tipo = None
@@ -922,7 +905,7 @@ def guardar_dbf(formatos, agrega=False, conf_dbf=None):
         for d in l:
             # si no es un diccionario, ignorar ya que seguramente va en otra
             # tabla (por ej. retenciones tiene su propio formato)
-            if isinstance(d, basestring):
+            if isinstance(d, str):
                 continue
             r = {}
             claves = []
@@ -942,7 +925,7 @@ def guardar_dbf(formatos, agrega=False, conf_dbf=None):
                             v = v.encode("ascii", "replace")
                         if isinstance(v, str):
                             v = v.decode("ascii", "replace").encode("ascii", "replace")
-                        if not isinstance(v, basestring):
+                        if not isinstance(v, str):
                             v = str(v)
                         if len(v) > longitud:
                             v = v[:longitud]  # recorto el string para que quepa
@@ -1102,7 +1085,7 @@ def safe_console():
 
 def norm(x, encoding="latin1"):
     "Convertir acentos codificados en ISO 8859-1 u otro, a ASCII regular"
-    if not isinstance(x, basestring):
+    if not isinstance(x, str):
         x = str(x)
     elif isinstance(x, str):
         x = x.decode(encoding, "ignore")
@@ -1186,7 +1169,7 @@ def json_serializer(obj):
 if __name__ == "__main__":
     print(get_install_dir())
     try:
-        old_div(1, 0)
+        1 / 0
     except:
         ex = exception_info()
         print(ex)

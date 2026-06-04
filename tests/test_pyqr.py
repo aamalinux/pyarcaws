@@ -102,10 +102,7 @@ def test_main_archivo():
 
     assert os.path.exists(archivo)
     #compare the image with a reference one
-    if sys.version_info[0] < 3:
-        ref = Image.open("tests/images/qr2.png")
-    else:
-        ref = Image.open("tests/images/qr.png")        
+    ref = Image.open("tests/images/qr.png")
     test = Image.open(archivo)
     diff = ImageChops.difference(ref, test)
     assert diff.getbbox() is None

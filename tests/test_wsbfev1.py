@@ -24,7 +24,6 @@ from pyafipws.wsaa import WSAA
 from pyafipws.wsbfev1 import WSBFEv1
 from pyafipws.wsbfev1 import main
 from pysimplesoap.simplexml import SimpleXMLElement 
-from builtins import str
 
 __WSDL__ = "http://wswhomo.afip.gov.ar/WSBFEv1/service.asmx"
 __obj__ = WSBFEv1()

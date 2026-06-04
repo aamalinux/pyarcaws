@@ -11,12 +11,7 @@
 # for more details.
 
 "Módulo de Intefase para archivos de texto (bono fiscal version 1)"
-from __future__ import print_function
-from __future__ import absolute_import
 
-from builtins import str
-from builtins import input
-from past.builtins import basestring
 
 __author__ = "Mariano Reingart (reingart@gmail.com)"
 __copyright__ = "Copyright (C) 2009-2025 Mariano Reingart"
@@ -173,7 +168,7 @@ def autorizar(ws, entrada, salida):
             else:
                 print("Tipo de registro incorrecto:", linea[0])
 
-    if isinstance(encabezado["id"], basestring) and not encabezado["id"].strip():
+    if isinstance(encabezado["id"], str) and not encabezado["id"].strip():
         # TODO: habria que leer y/o grabar el id en el archivo
         ##id += 1 # incremento el nº de transacción
         # Por el momento, el id se calcula con el tipo, pv y nº de comprobant

@@ -13,14 +13,8 @@
 """Módulo para obtener Remito Electronico Harinero:
 del servicio web RemHarinaService versión 2.0 de AFIP (RG4514/19)
 """
-from __future__ import print_function
-from __future__ import absolute_import
 
-from future import standard_library
 
-standard_library.install_aliases()
-from builtins import str
-from builtins import input
 
 __author__ = "Mariano Reingart <reingart@gmail.com>"
 __copyright__ = "Copyright (C) 2018-2023 Mariano Reingart"
@@ -1102,7 +1096,7 @@ def main():
             try:
                 cuit = int(sys.argv[-1])
             except:
-                cuit = raw_input("Cuit Receptor: ")
+                cuit = input("Cuit Receptor: ")
             ret = wsremharina.ConsultarReceptoresValidos(cuit)
             print("Resultado:", wsremharina.Resultado)
 

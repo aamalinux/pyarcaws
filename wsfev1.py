@@ -21,12 +21,7 @@ RG 4291/2018 Régimen especial de emisión y almacenamiento electrónico
 RG 4367/2018 Régimen de Facturas de Crédito Electrónicas MiPyMEs Ley 27.440
 Más info: http://www.sistemasagiles.com.ar/trac/wiki/ProyectoWSFEv1
 """
-from __future__ import print_function
-from __future__ import absolute_import
 
-from builtins import str
-from builtins import range
-from past.builtins import basestring
 
 __author__ = "Mariano Reingart <reingart@gmail.com>"
 __copyright__ = "Copyright (C) 2010-2025 Mariano Reingart"
@@ -349,7 +344,7 @@ class WSFEv1(BaseWS):
         # cada campo puede ser una clave string (dict) o una posición (list)
         ret = self.factura
         for campo in campos:
-            if isinstance(ret, dict) and isinstance(campo, basestring):
+            if isinstance(ret, dict) and isinstance(campo, str):
                 ret = ret.get(campo)
             elif isinstance(ret, list) and len(ret) > campo:
                 ret = ret[campo]

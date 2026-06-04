@@ -11,19 +11,8 @@
 # for more details.
 
 "Módulo para generar PDF de facturas electrónicas"
-from __future__ import division
-from __future__ import print_function
-from __future__ import absolute_import
 
-from future import standard_library
 
-standard_library.install_aliases()
-from builtins import input
-from builtins import str
-from builtins import range
-from past.builtins import basestring
-from builtins import object
-from past.utils import old_div
 
 __author__ = "Mariano Reingart <reingart@gmail.com>"
 __copyright__ = "Copyright (C) 2011-2021 Mariano Reingart"
@@ -825,7 +814,7 @@ class FEPDF(object):
         # Etapa 4: sumar los resultados obtenidos en las etapas 2 y 3.
         etapa4 = etapa2 + etapa3
         # Etapa 5: buscar el menor número que sumado al resultado obtenido en la etapa 4 dé un número múltiplo de 10. Este será el valor del dígito verificador del módulo 10.
-        digito = 10 - (etapa4 - (int(old_div(etapa4, 10)) * 10))
+        digito = 10 - (etapa4 - (etapa4 // 10 * 10))
         if digito == 10:
             digito = 0
         return str(digito)
@@ -887,9 +876,9 @@ class FEPDF(object):
     ):
         "Agrego un campo a la plantilla"
         # convierto colores de string (en hexadecimal)
-        if isinstance(foreground, basestring):
+        if isinstance(foreground, str):
             foreground = int(foreground, 16)
-        if isinstance(background, basestring):
+        if isinstance(background, str):
             background = int(background, 16)
         if isinstance(text, str):
             text = text
@@ -974,9 +963,9 @@ class FEPDF(object):
 
         ret = False
         try:
-            if isinstance(num_copias, basestring):
+            if isinstance(num_copias, str):
                 num_copias = int(num_copias)
-            if isinstance(lineas_max, basestring):
+            if isinstance(lineas_max, str):
                 lineas_max = int(lineas_max)
 
             f = self.template
@@ -1052,7 +1041,7 @@ class FEPDF(object):
             # reemplazar saltos de linea en observaciones:
             for k in ("obs_generales", "obs_comerciales"):
                 ds = fact.get(k, "")
-                if isinstance(ds, basestring) and "<br/>" in ds:
+                if isinstance(ds, str) and "<br/>" in ds:
                     fact[k] = ds.replace("<br/>", "\n")
 
             # divido las observaciones por linea:
@@ -1148,7 +1137,7 @@ class FEPDF(object):
             # calcular cantidad de páginas:
             lineas = len(li_items)
             if lineas_max > 0:
-                hojas = old_div(lineas, (lineas_max - 1))
+                hojas = lineas // (lineas_max - 1)
                 if lineas % (lineas_max - 1):
                     hojas = hojas + 1
                 if not hojas:
@@ -2064,10 +2053,7 @@ def main():
                 archivo = conf_fact.get("entrada", "entrada.txt")
                 if DEBUG:
                     print("Escribiendo", archivo)
-                if sys.version_info[0] < 3:
-                    regs = formato_json.escribir([reg], archivo, encoding='utf-8')
-                else:
-                    regs = formato_json.escribir([reg], archivo)
+                regs = formato_json.escribir([reg], archivo)
             else:
                 from pyafipws.formatos import formato_txt
 

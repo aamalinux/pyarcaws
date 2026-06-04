@@ -393,10 +393,10 @@ if __name__ == '__main__':
                 tipo_cpe = sys.argv[sys.argv.index("--consultar") + 3]
                 nro_ctg = sys.argv[sys.argv.index("--consultar") + 4]
             except (IndexError, ValueError):
-                tipo_cpe = raw_input("Tipo de CPE [74]:") or 74
-                sucursal = raw_input("Sucursal [1]:") or 1
-                nro_orden = raw_input("Nro de orden:") or 1
-                nro_ctg = raw_input("Nro de CTG:") or None
+                tipo_cpe = input("Tipo de CPE [74]:") or 74
+                sucursal = input("Sucursal [1]:") or 1
+                nro_orden = input("Nro de orden:") or 1
+                nro_ctg = input("Nro de CTG:") or None
             if nro_ctg:
                 ok = wscpe.ConsultarCPEAutomotor(cuit_solicitante=wscpe.Cuit, nro_ctg=nro_ctg)
             else:
@@ -565,10 +565,10 @@ if __name__ == '__main__':
         if '--anular_todo' in sys.argv:
             # Limpieza de CPE pendientes para evitar el error de validación de AFIP:
             # 2002: 'No es posible guardar la solicitud si posee cartas de porte vencidas.'
-            ok = raw_input("CUIDADO: esto anulara todas las CPE, ingresar Si para confirmar: ")
+            ok = input("CUIDADO: esto anulara todas las CPE, ingresar Si para confirmar: ")
             if ok == "Si":
-                sucursal_desde = int(raw_input("Sucursal desde: "))
-                sucursal_hasta = int(raw_input("Sucursal hasta: "))
+                sucursal_desde = int(input("Sucursal desde: "))
+                sucursal_hasta = int(input("Sucursal hasta: "))
                 for tipo in 74, 75, 99:
                     for suc in range(sucursal_desde, sucursal_hasta+1):
                         wscpe.ConsultarUltNroOrden(sucursal=suc, tipo_cpe=tipo)

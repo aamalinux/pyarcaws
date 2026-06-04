@@ -11,7 +11,6 @@
 # for more details.
 
 "Pruebas para el servicio web ConstataciÃ³n de Comprobantes de AFIP"
-from __future__ import print_function
 
 __author__ = "Mariano Reingart <reingart@gmail.com>"
 __copyright__ = "Copyright (C) 2013 Mariano Reingart"

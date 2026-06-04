@@ -11,14 +11,7 @@
 # for more details.
 
 "Módulo para generar códigos de barra en Entrelazado 2 de 5 (I25)"
-from __future__ import division
-from __future__ import print_function
-from __future__ import absolute_import
 
-from builtins import str
-from builtins import range
-from builtins import object
-from past.utils import old_div
 
 __author__ = "Mariano Reingart <reingart@gmail.com>"
 __copyright__ = "Copyright (C) 2011-2021 Mariano Reingart"
@@ -58,7 +51,7 @@ class PyI25(object):
         #  * http://code.activestate.com/recipes/426069/
 
         wide = basewidth
-        narrow = old_div(basewidth, 3)
+        narrow = basewidth // 3
 
         # códigos ancho/angostos (wide/narrow) para los dígitos
         bars = (
@@ -136,7 +129,7 @@ class PyI25(object):
         # Etapa 4: sumar los resultados obtenidos en las etapas 2 y 3.
         etapa4 = etapa2 + etapa3
         # Etapa 5: buscar el menor número que sumado al resultado obtenido en la etapa 4 dé un número múltiplo de 10. Este será el valor del dígito verificador del módulo 10.
-        digito = 10 - (etapa4 - (int(old_div(etapa4, 10)) * 10))
+        digito = 10 - (etapa4 - (etapa4 // 10 * 10))
         if digito == 10:
             digito = 0
         return str(digito)

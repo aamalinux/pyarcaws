@@ -23,7 +23,6 @@ import pytest
 from pyafipws.wsaa import WSAA
 from pyafipws.pyfepdf import FEPDF
 from pyafipws.pyfepdf import main
-from builtins import str
 from pyafipws.utils import SafeConfigParser
 import shutil
 
@@ -319,9 +318,6 @@ def test_main_grabar():
 
     d1 = f1.readlines()
     d2 = f2.readlines()
-    if sys.version_info[0] < 3:
-        d2 = [d.replace("\xc2", "") for d in d2]
-        d2 = [d.replace("\xc3\xb3", "\xf3") for d in d2]
     f1.close()
     f2.close()
     diff1 = [x for x in d2 if x not in d1]

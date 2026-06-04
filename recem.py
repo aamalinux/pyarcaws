@@ -11,11 +11,7 @@
 # for more details.
 
 "Módulo de Intefase para archivos de texto (MATRIX mercado interno con detalle)"
-from __future__ import print_function
-from __future__ import absolute_import
 
-from builtins import input
-from builtins import str
 
 __author__ = "Mariano Reingart (reingart@gmail.com)"
 __copyright__ = "Copyright (C) 2011-2025 Mariano Reingart"
@@ -314,10 +310,7 @@ def depurar_xml(client):
     f.write(client.xml_request)
     f.close()
     f = open("response-%s.xml" % fecha, "w")
-    if sys.version_info[0] < 3:
-        f.write(client.xml_response)
-    else:
-        f.write(client.xml_response.decode())
+    f.write(client.xml_response.decode())
     f.close()
 
 
