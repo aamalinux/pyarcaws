@@ -1,35 +1,64 @@
+# Python
 *.py[cod]
-
-# C extensions
+*.pyo
+__pycache__/
 *.so
 
-# Packages
+# Packages / distribution
 *.egg
-*.egg-info
-dist
-build
-eggs
-parts
-bin
-var
-sdist
-develop-eggs
+*.egg-info/
+dist/
+build/
+eggs/
+parts/
+var/
+sdist/
+develop-eggs/
 .installed.cfg
-lib
-lib64
+lib/
+lib64/
+MANIFEST
 
-# Installer logs
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Installer / test logs
 pip-log.txt
-
-# Unit test / coverage reports
 .coverage
 .tox
+htmlcov/
 nosetests.xml
+.pytest_cache/
 
 # Translations
 *.mo
 
-# Mr Developer
-.mr.developer.cfg
+# Mercurial (legacy — no longer used)
+.hgtags
+.hgignore
+.hg/
+
+# IDE / editors
 .project
 .pydevproject
+.mr.developer.cfg
+*.swp
+*.swo
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local config / secrets
+*.key
+*.crt
+*.pfx
+*.p12
+reingart.*
+*.ini
+!conf/*.ini

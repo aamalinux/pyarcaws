@@ -8,19 +8,14 @@ __copyright__ = "Copyright (C) 2008-2021 Mariano Reingart"
 
 import glob
 import os
-import subprocess
-import sys
+import re
 
 import setuptools
 
-try:
-    rev = subprocess.check_output(
-        ["git", "rev-list", "--count", "--all"], stderr=subprocess.PIPE
-    ).strip().decode("ascii")
-except Exception:
-    rev = 0
-
-__version__ = "%s.%s.%s" % (sys.version_info[0:2] + (rev,))
+# Versión canónica definida en __init__.py
+with open(os.path.join(os.path.dirname(__file__), "__init__.py")) as f:
+    match = re.search(r'^__version__\s*=\s*[\'"]([^\'"]+)[\'"]', f.read(), re.M)
+    __version__ = match.group(1) if match else "0.0.0"
 
 kwargs = {}
 desc = (
@@ -32,7 +27,7 @@ kwargs["packages"] = ["pyafipws", "pyafipws.formatos"]
 opts = {}
 data_files = [("pyafipws/plantillas", glob.glob("plantillas/*"))]
 
-parent_dir = os.getcwd()
+parent_dir = os.path.dirname(__file__) or os.getcwd()
 long_desc = open(os.path.join(parent_dir, "README.md")).read()
 
 setuptools.setup(
@@ -43,7 +38,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     author="Mariano Reingart",
     author_email="reingart@gmail.com",
-    url="https://github.com/reingart/pyafipws",
+    url="https://github.com/aamalinux/pyarcaws",
     license="LGPL-3.0-or-later",
     python_requires=">=3.9",
     install_requires=[
