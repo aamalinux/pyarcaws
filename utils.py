@@ -898,9 +898,10 @@ def guardar_dbf(formatos, agrega=False, conf_dbf=None):
         if DEBUG:
             print("leyendo tabla", nombre, filename)
         if agrega:
-            tabla = dbf.Table(filename, [campos[clave] for clave in claves])
+            tabla = dbf.Table(filename, "; ".join([campos[clave] for clave in claves]))
         else:
             tabla = dbf.Table(filename)
+        tabla.open(dbf.READ_WRITE)
 
         for d in l:
             # si no es un diccionario, ignorar ya que seguramente va en otra
@@ -945,18 +946,19 @@ def guardar_dbf(formatos, agrega=False, conf_dbf=None):
             else:
                 if DEBUG:
                     print("Actualizando ", r)
-                reg = tabla.current()
-                for k, v in list(reg.scatter_fields().items()):
+                reg = tabla[tabla.current]
+                for k, v in dbf.scatter(reg, as_type=dict).items():
                     if k not in r:
                         r[k] = v
                 if DEBUG:
                     print("Actualizando ", r)
-                reg.write_record(**r)
+                with reg:
+                    dbf.gather(reg, r)
                 # mover de registro para no actualizar siempre el primero:
-                if not tabla.eof() and len(l) > 1:
+                if not tabla.eof and len(l) > 1:
                     if DEBUG:
-                        print("Moviendo al próximo registro ", tabla.record_number)
-                    next(tabla)
+                        print("Moviendo al próximo registro ", tabla.current)
+                    tabla.goto(tabla.current + 1)
         tabla.close()
 
 
@@ -973,11 +975,12 @@ def leer_dbf(formatos, conf_dbf):
         if not os.path.exists(filename):
             continue
         tabla = dbf.Table(filename)
+        tabla.open()
         for reg in tabla:
             r = {}
-            d = reg.scatter_fields()
+            d = dbf.scatter(reg, as_type=dict)
             if DEBUG:
-                print("scatter_fields", d)
+                print("scatter", d)
             claves = []
             for fmt in formato:
                 clave, longitud, tipo = fmt[0:3]
@@ -993,6 +996,7 @@ def leer_dbf(formatos, conf_dbf):
                 ld.update(r)
             else:
                 ld.append(r)
+        tabla.close()
 
 
 def dar_nombre_campo_dbf(clave, claves):

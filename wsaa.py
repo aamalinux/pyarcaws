@@ -47,7 +47,6 @@ try:
     from cryptography import __version__ as cryptography_version, x509
     from cryptography.x509.oid import NameOID
     from cryptography.hazmat.primitives import hashes
-    from cryptography.hazmat.backends import default_backend
     from cryptography.hazmat.primitives import serialization
     from cryptography.hazmat.primitives.asymmetric import rsa
     from cryptography.hazmat.bindings.openssl.binding import Binding
@@ -122,7 +121,7 @@ def sign_tra_new(tra, cert=CERT, privatekey=PRIVATEKEY, passphrase=""):
     else:
         password = passphrase
     private_key = serialization.load_pem_private_key(
-        privatekey, password, default_backend()
+        privatekey, password
     )
 
     if not cert.startswith(b"-----BEGIN CERTIFICATE-----"):
@@ -168,7 +167,7 @@ def sign_tra_old(tra, cert=CERT, privatekey=PRIVATEKEY, passphrase=""):
     else:
         password = passphrase
     private_key = serialization.load_pem_private_key(
-        privatekey, password, default_backend()
+        privatekey, password
     )
 
     if not cert.startswith(b"-----BEGIN CERTIFICATE-----"):
@@ -354,13 +353,13 @@ class WSAA(BaseWS):
         "Carga un certificado digital y extrae los campos más importantes"
 
         if binary:
-            cert = x509.load_pem_x509_certificate(crt, default_backend())
+            cert = x509.load_pem_x509_certificate(crt)
         else:
             if not crt.startswith("-----BEGIN CERTIFICATE-----"):
                 crt = open(crt).read()
                 if isinstance(crt, str):
                     crt = crt.encode("utf-8")
-            cert = x509.load_pem_x509_certificate(crt, default_backend())
+            cert = x509.load_pem_x509_certificate(crt)
         if cert:
             self.Identidad = cert.subject
             self.Caducidad = cert.not_valid_after
@@ -379,7 +378,7 @@ class WSAA(BaseWS):
         "Crea una clave privada (private key)"
         # create the RSA key pair (and save the result to a file):
         rsa_key = rsa.generate_private_key(
-            pub_exponent, key_length, backend=default_backend()
+            pub_exponent, key_length
         )
 
         if passphrase:
@@ -428,7 +427,7 @@ class WSAA(BaseWS):
                     x509.NameAttribute(NameOID.SERIAL_NUMBER, "CUIT {}".format(cuit)),
                 ]
             )
-        ).sign(self.rsa_key, hashes.SHA256(), default_backend())
+        ).sign(self.rsa_key, hashes.SHA256())
 
         # save the CSR result to a file:
         with open(filename, "wb") as f:

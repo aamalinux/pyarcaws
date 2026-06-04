@@ -47,15 +47,15 @@ setuptools.setup(
     license="LGPL-3.0-or-later",
     python_requires=">=3.9",
     install_requires=[
-        "httplib2>=0.20.4",
+        "httplib2>=0.22.0",
         "pysimplesoap>=1.8.22",
-        "cryptography>=41.0.1",
+        "cryptography>=42.0.0",
         "fpdf>=1.7.2",
-        "dbf>=0.88.019",
-        "Pillow>=2.0.0",
-        "tabulate>=0.8.5",
-        "certifi>=2020.4.5.1",
-        "qrcode>=6.1",
+        "dbf>=0.99.0",
+        "Pillow>=10.0.0",
+        "tabulate>=0.9.0",
+        "certifi>=2024.1.1",
+        "qrcode>=7.4",
     ],
     extras_require={
         "opt": ["pywin32==304;sys_platform == 'win32'"]

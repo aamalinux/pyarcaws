@@ -31,8 +31,8 @@ CHARSET = "latin1"
 CODEPAGE = "cp437"
 DEBUG = True
 
-if dbf and hasattr(dbf, "encoding"):
-    dbf.encoding(CODEPAGE)
+if dbf:
+    dbf.default_codepage = CODEPAGE
 
 # Formato de entrada/salida similar a SIAP RECE, con agregados
 
@@ -130,10 +130,11 @@ def leer(archivos=None, carpeta=None):
             filename = os.path.join(carpeta, filename)
         if DEBUG:
             print("leyendo tabla", nombre, filename)
-        tabla = dbf.Table(filename, codepage=CODEPAGE)
+        tabla = dbf.Table(filename)
+        tabla.open()
         for reg in tabla:
             r = {}
-            d = reg.scatter_fields()
+            d = dbf.scatter(reg, as_type=dict)
             for fmt in formato:
                 clave, longitud, tipo = fmt[0:3]
                 nombre = dar_nombre_campo(clave)
@@ -154,6 +155,7 @@ def leer(archivos=None, carpeta=None):
                 regs[r["id"]] = r
             else:
                 regs[r["id"]][subclave].append(r)
+        tabla.close()
 
     return regs
 
@@ -183,7 +185,8 @@ def escribir(regs, archivos=None, carpeta=None):
                 filename = os.path.join(carpeta, filename)
             if DEBUG:
                 print("leyendo tabla", nombre, filename)
-            tabla = dbf.Table(filename, campos)
+            tabla = dbf.Table(filename, "; ".join(campos))
+            tabla.open(dbf.READ_WRITE)
 
             for d in l:
                 r = {}
