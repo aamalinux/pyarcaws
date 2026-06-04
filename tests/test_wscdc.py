@@ -19,9 +19,9 @@ __license__ = "GPL 3.0"
 import os
 import sys
 import pytest
-from pyafipws.wsaa import WSAA
-from pyafipws.wscdc import WSCDC, main
-from pyafipws import wscdc as ws
+from pyarcaws.wsaa import WSAA
+from pyarcaws.wscdc import WSCDC, main
+from pyarcaws import wscdc as ws
 
 
 WSDL = "https://wswhomo.afip.gov.ar/WSCDC/service.asmx?WSDL"

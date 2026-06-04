@@ -1,5 +1,5 @@
-from pyafipws.wsfev1 import WSFEv1
-from pyafipws.wsaa import WSAA
+from pyarcaws.wsfev1 import WSFEv1
+from pyarcaws.wsaa import WSAA
 import pytest
 import os
 

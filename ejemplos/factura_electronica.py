@@ -10,9 +10,9 @@
 # or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
 # for more details.
 
-from pyafipws.wsaa import WSAA
-from pyafipws.wsfev1 import WSFEv1
-from pyafipws.pyfepdf import FEPDF
+from pyarcaws.wsaa import WSAA
+from pyarcaws.wsfev1 import WSFEv1
+from pyarcaws.pyfepdf import FEPDF
 
 "Ejemplo completo para WSFEv1 de AFIP (Factura Electrónica Mercado Interno)"
 

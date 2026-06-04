@@ -151,7 +151,7 @@ def main():
             raise
     elif "py2exe" in sys.argv:
         from setuptools import setup
-        from pyafipws.windows.nsis import build_installer, Target
+        from pyarcaws.windows.nsis import build_installer, Target
         import py2exe
         import glob
 
@@ -163,7 +163,7 @@ def main():
         setup(
             name="PyI25",
             version=__version__,
-            description="Interfaz PyAfipWs I25 %s",
+            description="Interfaz pyarcaws I25 %s",
             long_description=__doc__,
             author="Mariano Reingart",
             author_email="reingart@gmail.com",

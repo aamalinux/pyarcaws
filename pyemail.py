@@ -214,13 +214,13 @@ def main():
         win32com.server.register.UseCommandLine(PyEmail)
     elif "py2exe" in sys.argv:
         from setuptools import setup
-        from pyafipws.windows.nsis import build_installer, Target
+        from pyarcaws.windows.nsis import build_installer, Target
         import py2exe
 
         setup(
             name="PyEmail",
             version=__version__,
-            description="Interfaz PyAfipWs Email %s",
+            description="Interfaz pyarcaws Email %s",
             long_description=__doc__,
             author="Mariano Reingart",
             author_email="reingart@gmail.com",

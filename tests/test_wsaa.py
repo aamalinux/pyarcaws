@@ -20,9 +20,9 @@ import pytest
 import os
 import sys
 import base64
-from pyafipws.wsaa import WSAA, call_wsaa, sign_tra_openssl
-from pyafipws.wsaa import main
-from pyafipws.utils import *
+from pyarcaws.wsaa import WSAA, call_wsaa, sign_tra_openssl
+from pyarcaws.wsaa import main
+from pyarcaws.utils import *
 from pysimplesoap import *
 DEFAULT_TTL = 60 * 60 * 5  # five hours
 
@@ -211,7 +211,7 @@ def test_main_crear_pedido_cert():
     sys.argv = []
     sys.argv.append("--crear_pedido_cert")
     sys.argv.append("20267565393")
-    sys.argv.append("PyAfipWs")
+    sys.argv.append("pyarcaws")
     sys.argv.append("54654654")
     sys.argv.append(" ")
     main()

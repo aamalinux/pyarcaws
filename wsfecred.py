@@ -31,7 +31,7 @@ Este progarma es software libre, se entrega ABSOLUTAMENTE SIN GARANTIA
 y es bienvenido a redistribuirlo bajo la licencia GPLv3.
 
 Para información adicional sobre garantía, soporte técnico comercial
-e incorporación/distribución en programas propietarios ver PyAfipWs:
+e incorporación/distribución en programas propietarios ver pyarcaws:
 http://www.sistemasagiles.com.ar/trac/wiki/PyAfipWs
 """
 
@@ -64,13 +64,13 @@ Ver rece.ini para parámetros de configuración (URL, certificados, etc.)"
 from collections import OrderedDict
 import datetime
 import os, sys, time, base64
-from pyafipws.utils import date
+from pyarcaws.utils import date
 import traceback
 from pysimplesoap.client import SoapFault
-from pyafipws import utils
+from pyarcaws import utils
 
 # importo funciones compartidas:
-from pyafipws.utils import (
+from pyarcaws.utils import (
     json,
     BaseWS,
     inicializar_y_capturar_excepciones,
@@ -78,7 +78,7 @@ from pyafipws.utils import (
     json_serializer,
     safe_console,
 )
-from pyafipws.utils import (
+from pyarcaws.utils import (
     leer,
     escribir,
     leer_dbf,
@@ -1190,7 +1190,7 @@ def main():
             print("wsfecred_url:", wsfecred_url)
 
         # obteniendo el TA
-        from pyafipws.wsaa import WSAA
+        from pyarcaws.wsaa import WSAA
 
         wsaa = WSAA()
         ta = wsaa.Autenticar("wsfecred", CERT, PRIVATEKEY, wsaa_url, debug=DEBUG)

@@ -31,7 +31,7 @@ Este progarma es software libre, se entrega ABSOLUTAMENTE SIN GARANTIA
 y es bienvenido a redistribuirlo bajo la licencia GPLv3.
 
 Para información adicional sobre garantía, soporte técnico comercial
-e incorporación/distribución en programas propietarios ver PyAfipWs:
+e incorporación/distribución en programas propietarios ver pyarcaws:
 http://www.sistemasagiles.com.ar/trac/wiki/PyAfipWs
 """
 
@@ -60,7 +60,7 @@ import traceback
 from io import StringIO
 from decimal import Decimal
 from fpdf import Template
-from pyafipws import utils
+from pyarcaws import utils
 
 
 class FEPDF(object):
@@ -952,7 +952,7 @@ class FEPDF(object):
             author="CUIT %s" % self.CUIT,
             subject="CAE %s" % fact["cae"],
             keywords="AFIP Factura Electrónica",
-            creator="PyFEPDF %s (http://www.PyAfipWs.com.ar)" % __version__,
+            creator="PyFEPDF %s (https://github.com/aamalinux/pyarcaws)" % __version__,
         )
         self.template = t
         return True
@@ -1673,7 +1673,7 @@ class FEPDF(object):
 
     @utils.inicializar_y_capturar_excepciones_simple
     def GenerarQR(self):
-        from pyafipws.pyqr import PyQR
+        from pyarcaws.pyqr import PyQR
 
         # instanciar el objeto para codigos QR y crear un archivo temporal:
         pyqr = PyQR()
@@ -1761,11 +1761,11 @@ def main():
 
         if "--formato" in sys.argv:
             if "--dbf" in sys.argv:
-                from pyafipws.formatos import formato_dbf
+                from pyarcaws.formatos import formato_dbf
 
                 formato_dbf.ayuda()
             else:
-                from pyafipws.formatos import formato_txt
+                from pyarcaws.formatos import formato_txt
 
                 formato_txt.ayuda()
             sys.exit(0)
@@ -1785,14 +1785,14 @@ def main():
 
         if "--cargar" in sys.argv:
             if "--dbf" in sys.argv:
-                from pyafipws.formatos import formato_dbf
+                from pyarcaws.formatos import formato_dbf
 
                 conf_dbf = dict(config.items("DBF"))
                 if DEBUG:
                     print("conf_dbf", conf_dbf)
                 regs = list(formato_dbf.leer(conf_dbf).values())
             elif "--json" in sys.argv:
-                from pyafipws.formatos import formato_json
+                from pyarcaws.formatos import formato_json
 
                 if "--entrada" in sys.argv:
                     entrada = sys.argv[sys.argv.index("--entrada") + 1]
@@ -1802,7 +1802,7 @@ def main():
                     print("entrada", entrada)
                 regs = formato_json.leer(entrada)
             else:
-                from pyafipws.formatos import formato_txt
+                from pyarcaws.formatos import formato_txt
 
                 if "--entrada" in sys.argv:
                     entrada = sys.argv[sys.argv.index("--entrada") + 1]
@@ -2041,21 +2041,21 @@ def main():
             reg["datos"] = fepdf.datos
             reg["err_code"] = "OK"
             if "--dbf" in sys.argv:
-                from pyafipws.formatos import formato_dbf
+                from pyarcaws.formatos import formato_dbf
 
                 conf_dbf = dict(config.items("DBF"))
                 if DEBUG:
                     print("conf_dbf", conf_dbf)
                 regs = formato_dbf.escribir([reg], conf_dbf)
             elif "--json" in sys.argv:
-                from pyafipws.formatos import formato_json
+                from pyarcaws.formatos import formato_json
 
                 archivo = conf_fact.get("entrada", "entrada.txt")
                 if DEBUG:
                     print("Escribiendo", archivo)
                 regs = formato_json.escribir([reg], archivo)
             else:
-                from pyafipws.formatos import formato_txt
+                from pyarcaws.formatos import formato_txt
 
                 archivo = conf_fact.get("entrada", "entrada.txt")
                 if DEBUG:

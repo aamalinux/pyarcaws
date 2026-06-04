@@ -28,7 +28,7 @@ import sys
 import datetime, time
 import pysimplesoap.client
 from pysimplesoap.client import SoapFault
-from pyafipws.utils import BaseWS, inicializar_y_capturar_excepciones, get_install_dir
+from pyarcaws.utils import BaseWS, inicializar_y_capturar_excepciones, get_install_dir
 
 HOMO = False
 TYPELIB = False

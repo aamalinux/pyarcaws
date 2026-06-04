@@ -29,7 +29,7 @@ Este progarma es software libre, se entrega ABSOLUTAMENTE SIN GARANTIA
 y es bienvenido a redistribuirlo bajo la licencia GPLv3.
 
 Para información adicional sobre garantía, soporte técnico comercial
-e incorporación/distribución en programas propietarios ver PyAfipWs:
+e incorporación/distribución en programas propietarios ver pyarcaws:
 http://www.sistemasagiles.com.ar/trac/wiki/PyAfipWs
 """
 
@@ -70,16 +70,16 @@ Ver wscpe.ini para parámetros de configuración (URL, certificados, etc.)"
 """
 
 import os, sys, time, base64, datetime
-from pyafipws.utils import date
+from pyarcaws.utils import date
 import traceback
 from pysimplesoap.client import SoapFault
-import pyafipws.utils
+import pyarcaws.utils
 
 # importo funciones compartidas:
-from pyafipws.utils import json, BaseWS, inicializar_y_capturar_excepciones, get_install_dir, json_serializer
-from pyafipws.utils import leer_txt, grabar_txt, leer_dbf, guardar_dbf, N, A, B, I, json, BaseWS, inicializar_y_capturar_excepciones, get_install_dir
+from pyarcaws.utils import json, BaseWS, inicializar_y_capturar_excepciones, get_install_dir, json_serializer
+from pyarcaws.utils import leer_txt, grabar_txt, leer_dbf, guardar_dbf, N, A, B, I, json, BaseWS, inicializar_y_capturar_excepciones, get_install_dir
 
-from pyafipws.wscpe import WSCPE, HOMO
+from pyarcaws.wscpe import WSCPE, HOMO
 
 # constantes de configuración (producción/homologación):
 

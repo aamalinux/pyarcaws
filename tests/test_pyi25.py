@@ -22,7 +22,7 @@ import os
 import sys
 import pytest
 
-from pyafipws.pyi25 import PyI25, main
+from pyarcaws.pyi25 import PyI25, main
 from PIL import Image, ImageChops
 
 pytestmark = [pytest.mark.dontusefix]

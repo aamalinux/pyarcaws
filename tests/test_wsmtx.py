@@ -21,8 +21,8 @@ __license__ = "GPL 3.0"
 import os
 import datetime
 import pytest
-from pyafipws.wsaa import WSAA
-from pyafipws.wsmtx import WSMTXCA, main
+from pyarcaws.wsaa import WSAA
+from pyarcaws.wsmtx import WSMTXCA, main
 import sys
 
 __WSDL__ = "https://fwshomo.afip.gov.ar/wsmtxca/services/MTXCAService?wsdl"

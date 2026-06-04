@@ -33,7 +33,7 @@ from pysimplesoap.simplexml import SimpleXMLElement
 from io import StringIO
 
 # importo funciones compartidas:
-from pyafipws.utils import (
+from pyarcaws.utils import (
     leer,
     escribir,
     leer_dbf,

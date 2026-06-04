@@ -25,8 +25,8 @@ import time
 import traceback
 
 # revisar la instalación de pyafip.ws:
-from pyafipws import wsaa, wsbfev1
-from pyafipws.utils import leer, escribir, leer_dbf, guardar_dbf, N, A, I, abrir_conf
+from pyarcaws import wsaa, wsbfev1
+from pyarcaws.utils import leer, escribir, leer_dbf, guardar_dbf, N, A, I, abrir_conf
 
 HOMO = False
 DEBUG = False
@@ -41,7 +41,7 @@ Este progarma es software libre, se entrega ABSOLUTAMENTE SIN GARANTIA
 y es bienvenido a redistribuirlo bajo la licencia GPLv3.
 
 Para información adicional sobre garantía, soporte técnico comercial
-e incorporación/distribución en programas propietarios ver PyAfipWs:
+e incorporación/distribución en programas propietarios ver pyarcaws:
 http://www.sistemasagiles.com.ar/trac/wiki/PyAfipWs
 """
 
@@ -333,7 +333,7 @@ def main():
             return
 
         # obteniendo el TA
-        from pyafipws.wsaa import WSAA
+        from pyarcaws.wsaa import WSAA
 
         wsaa = WSAA()
         ta = wsaa.Autenticar("wsbfe", cert, privatekey, wsaa_url)

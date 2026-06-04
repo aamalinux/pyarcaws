@@ -27,12 +27,12 @@ Este progarma es software libre, se entrega ABSOLUTAMENTE SIN GARANTIA
 y es bienvenido a redistribuirlo bajo la licencia GPLv3.
 
 Para información adicional sobre garantía, soporte técnico comercial
-e incorporación/distribución en programas propietarios ver PyAfipWs:
+e incorporación/distribución en programas propietarios ver pyarcaws:
 http://www.sistemasagiles.com.ar/trac/wiki/PyAfipWs
 """
 
 import os, sys, time
-from pyafipws.utils import date, SimpleXMLElement, SoapClient, SoapFault
+from pyarcaws.utils import date, SimpleXMLElement, SoapClient, SoapFault
 
 WSDDFURL = "https://testdia.afip.gov.ar/Dia/Ws/wDigDepFiel/wDigDepFiel.asmx"
 SOAP_ACTION = "ar.gov.afip.dia.serviciosWeb.wDigDepFiel/"
@@ -140,7 +140,7 @@ def main():
     import traceback
     import datetime
 
-    from pyafipws import wsaa
+    from pyarcaws import wsaa
 
     try:
 

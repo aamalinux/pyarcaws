@@ -24,15 +24,15 @@ import datetime
 
 sys.path.append("/home/reingart")  # TODO: proper packaging
 
-from pyafipws.wsfev1 import WSFEv1
-from pyafipws.wsaa import WSAA
+from pyarcaws.wsfev1 import WSFEv1
+from pyarcaws.wsaa import WSAA
 
 WSDL = "https://wswhomo.afip.gov.ar/wsfev1/service.asmx?WSDL"
 CUIT = 20267565393
-CERT = "/home/reingart/pyafipws/reingart.crt"
-PRIVATEKEY = "/home/reingart/pyafipws/reingart.key"
-CACERT = "/home/reingart/pyafipws/afip_root_desa_ca.crt"
-CACHE = "/home/reingart/pyafipws/cache"
+CERT = "/home/reingart/pyarcaws/reingart.crt"
+PRIVATEKEY = "/home/reingart/pyarcaws/reingart.key"
+CACERT = "/home/reingart/pyarcaws/afip_root_desa_ca.crt"
+CACHE = "/home/reingart/pyarcaws/cache"
 
 # Autenticación:
 wsaa = WSAA()

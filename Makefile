@@ -25,10 +25,10 @@ get-auth:
 	python -m zipfile -e reingart.zip .
 
 access-ticket:
-	python -m pyafipws.wsaa
+	python -m pyarcaws.wsaa
 
 sample-invoice:
-	python -m pyafipws.wsfev1 --prueba
+	python -m pyarcaws.wsfev1 --prueba
 
 # Use "git clean -n" to see the files to be cleaned
 # Use only when only the config files are untracked

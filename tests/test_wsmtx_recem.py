@@ -22,9 +22,9 @@ import os
 import sys
 import time
 
-from pyafipws import wsmtx
-from pyafipws import recem
-from pyafipws.wsaa import WSAA
+from pyarcaws import wsmtx
+from pyarcaws import recem
+from pyarcaws.wsaa import WSAA
 
 HOMO = wsmtx.HOMO
 CONFIG_FILE = "conf/rece.ini"

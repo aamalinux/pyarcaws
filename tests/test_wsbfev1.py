@@ -20,9 +20,9 @@ import os
 import sys
 from datetime import datetime, timedelta
 import pytest
-from pyafipws.wsaa import WSAA
-from pyafipws.wsbfev1 import WSBFEv1
-from pyafipws.wsbfev1 import main
+from pyarcaws.wsaa import WSAA
+from pyarcaws.wsbfev1 import WSBFEv1
+from pyarcaws.wsbfev1 import main
 from pysimplesoap.simplexml import SimpleXMLElement 
 
 __WSDL__ = "http://wswhomo.afip.gov.ar/WSBFEv1/service.asmx"
@@ -142,7 +142,7 @@ def test_agregar_opcional(auth):
     wsbfev1 =auth
     test_agregar_item(auth)
     idz = "1010"
-    ds = "pyafipws"
+    ds = "pyarcaws"
     opcional = wsbfev1.AgregarOpcional(idz, ds)
     assert opcional==True
 

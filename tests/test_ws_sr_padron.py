@@ -22,8 +22,8 @@ __license__ = "GPL 3.0"
 import os, sys
 import pytest
 
-from pyafipws.wsaa import WSAA
-from pyafipws.ws_sr_padron import WSSrPadronA4, WSSrPadronA5, main
+from pyarcaws.wsaa import WSAA
+from pyarcaws.ws_sr_padron import WSSrPadronA4, WSSrPadronA5, main
 
 
 __WSDL__ = "https://awshomo.afip.gov.ar/sr-padron/webservices/personaServiceA5?wsdl"

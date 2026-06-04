@@ -25,7 +25,7 @@ except ImportError:
     from md5 import md5
 from pysimplesoap.simplexml import SimpleXMLElement
 
-from pyafipws.utils import WebClient
+from pyarcaws.utils import WebClient
 
 HOMO = False
 CACERT = "conf/arba.crt"  # establecimiento de canal seguro (en producción)

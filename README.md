@@ -17,6 +17,7 @@ pyarcaws
 
 El proyecto original [pyafipws](https://github.com/reingart/pyafipws) tiene muchos años de desarrollo, con el cambio de nombre de la AFIP a ARCA quise reflejar el nuevo nombre **pyarcaws** y continuar su desarrollo con los siguientes objetivos:
 
+- **Mejor compatibilidad Linux/Mac/ARM** — se eliminó completamente el soporte para Python 2.7
 - **Solo Python 3.9+** — se eliminó completamente el soporte para Python 2.7
 - **Dependencias actualizadas** — cryptography, Pillow, qrcode, dbf y otras llevan versiones modernas
 - **Código limpio** — removidos imports de compatibilidad (`future`, `past`, `builtins`)
@@ -120,8 +121,8 @@ cp conf/*.ini .
 ### Verificación rápida
 
 ```bash
-python -m pyafipws.wsaa           # obtener ticket de autorización
-python -m pyafipws.wsfev1 --prueba  # emitir factura de prueba (CAE de homologación)
+python -m pyarcaws.wsaa           # obtener ticket de autorización
+python -m pyarcaws.wsfev1 --prueba  # emitir factura de prueba (CAE de homologación)
 ```
 
 ### Ejecutar tests

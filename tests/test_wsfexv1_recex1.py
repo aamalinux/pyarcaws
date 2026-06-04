@@ -22,9 +22,9 @@ import shutil
 import sys
 import time
 
-from pyafipws import wsfexv1
-from pyafipws import recex1
-from pyafipws.wsaa import WSAA
+from pyarcaws import wsfexv1
+from pyarcaws import recex1
+from pyarcaws.wsaa import WSAA
 
 HOMO = wsfexv1.HOMO
 CONFIG_FILE = "conf/rece.ini"

@@ -11,8 +11,8 @@
 # for more details.
 
 from unittest.mock import Mock
-from pyafipws.wsaa import WSAA
-from pyafipws.wsfev1 import WSFEv1, main
+from pyarcaws.wsaa import WSAA
+from pyarcaws.wsfev1 import WSFEv1, main
 
 "Pruebas para WSFEv1 de AFIP (Factura Electrónica Mercado Interno sin detalle)"
 

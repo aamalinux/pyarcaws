@@ -5,7 +5,7 @@
 #       python setup.py py2exe 
 #
 
-"Creador de instalador para PyAfipWs"
+"Creador de instalador para pyarcaws"
 
 __author__ = "Mariano Reingart (reingart@gmail.com)"
 __copyright__ = "Copyright (C) 2008-2016 Mariano Reingart"
@@ -27,20 +27,20 @@ from nsis import build_installer, Target
 
 # modulos a compilar y empaquetar (comentar si no se desea incluir):
 
-#import pyafipws
+#import pyarcaws
 #import pyrece
-from pyafipws import wsaa
-from pyafipws import wsfev1, rece1, rg3685
+from pyarcaws import wsaa
+from pyarcaws import wsfev1, rece1, rg3685
 #import wsfexv1, recex1
 #import wsbfev1, receb1
 #import wsmtx, recem
 #import wsct, recet
 #import wsfecred
 #import ws_sr_padron
-#from pyafipws import pyfepdf
+#from pyarcaws import pyfepdf
 #import pyemail
 #import pyi25
-#from pyafipws import pyqr
+#from pyarcaws import pyqr
 #import ws_sire
 #import wsctg
 #import wslpg
@@ -171,7 +171,7 @@ opts = {
         }
     }
 
-desc = "Instalador PyAfipWs"
+desc = "Instalador pyarcaws"
 kwargs['com_server'] = []
 kwargs['console'] = []
 kwargs['windows'] = []
@@ -612,7 +612,7 @@ long_desc = ("Interfases, herramientas y aplicativos para Servicios Web"
              "ARBA (Remito Electrónico)")
 
 
-setup(name="PyAfipWs",
+setup(name="pyarcaws",
       version=__version__,
       description=desc,
       long_description=long_desc,

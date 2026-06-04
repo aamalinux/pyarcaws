@@ -24,10 +24,10 @@ import datetime
 
 sys.path.append("/home/reingart")  # TODO: proper packaging
 
-from pyafipws.trazamed import TrazaMed
+from pyarcaws.trazamed import TrazaMed
 
 WSDL = "https://servicios.pami.org.ar/trazamed.WebService?wsdl"
-CACHE = "/home/reingart/pyafipws/cache"
+CACHE = "/home/reingart/pyarcaws/cache"
 
 
 class TestTZM(unittest.TestCase):

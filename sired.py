@@ -27,7 +27,7 @@ Este progarma es software libre, se entrega ABSOLUTAMENTE SIN GARANTIA
 y es bienvenido a redistribuirlo bajo la licencia GPLv3.
 
 Para información adicional sobre garantía, soporte técnico comercial
-e incorporación/distribución en programas propietarios ver PyAfipWs:
+e incorporación/distribución en programas propietarios ver pyarcaws:
 http://www.sistemasagiles.com.ar/trac/wiki/PyAfipWs
 """
 
@@ -40,7 +40,7 @@ import unicodedata
 import sqlite3
 import traceback
 
-from pyafipws.utils import leer, escribir, C, N, A, I, B, get_install_dir
+from pyarcaws.utils import leer, escribir, C, N, A, I, B, get_install_dir
 
 CUIT = "20267565393"
 
@@ -214,7 +214,7 @@ VENTAS_TIPO2 = [
 
 # Regimen de informacion de compras y ventas
 
-from pyafipws.rg3685 import REGINFO_CV_VENTAS_CBTE, REGINFO_CV_VENTAS_CBTE_ALICUOTA
+from pyarcaws.rg3685 import REGINFO_CV_VENTAS_CBTE, REGINFO_CV_VENTAS_CBTE_ALICUOTA
 
 
 def format_as_dict(format):
@@ -478,7 +478,7 @@ class SIRED(object):
         self.db.row_factory = sqlite3.Row
         self.cursor = self.db.cursor()
         if crear:
-            from pyafipws.formatos.formato_txt import (
+            from pyarcaws.formatos.formato_txt import (
                 ENCABEZADO,
                 DETALLE,
                 TRIBUTO,
@@ -487,7 +487,7 @@ class SIRED(object):
                 PERMISO,
                 DATO,
             )
-            from pyafipws.formatos.formato_sql import esquema_sql
+            from pyarcaws.formatos.formato_sql import esquema_sql
 
             tipos_registro = [
                 ("encabezado", ENCABEZADO),
@@ -664,20 +664,20 @@ class SIRED(object):
         return True
 
     def GuardarFactura(self):
-        from pyafipws.formatos.formato_sql import escribir
+        from pyarcaws.formatos.formato_sql import escribir
 
         escribir([self.factura], self.db)
         return self.factura["id"]
 
     def ActualizarFactura(self, id_factura):
-        from pyafipws.formatos.formato_sql import modificar
+        from pyarcaws.formatos.formato_sql import modificar
 
         self.factura["id"] = id_factura
         modificar(self.factura, self.db)
         return True
 
     def ObtenerFactura(self, id_factura=None):
-        from pyafipws.formatos.formato_sql import leer, max_id
+        from pyarcaws.formatos.formato_sql import leer, max_id
 
         if not id_factura:
             id_factura = max_id(self.db)
@@ -687,7 +687,7 @@ class SIRED(object):
         return True
 
     def Consultar(self, **kwargs):
-        from pyafipws.formatos.formato_sql import leer
+        from pyarcaws.formatos.formato_sql import leer
 
         return leer(self.db, **kwargs)
 
@@ -878,11 +878,11 @@ def main():
 
         if "--leer" in sys.argv:
             if "--completar_padron" in sys.argv:
-                from pyafipws.padron import PadronAFIP
+                from pyarcaws.padron import PadronAFIP
 
                 padron = PadronAFIP()
                 padron.Conectar(trace="--trace" in sys.argv)
-                from pyafipws.formatos import formato_txt
+                from pyarcaws.formatos import formato_txt
 
                 formato = formato_txt.ENCABEZADO
                 categorias_iva = dict(

@@ -8,7 +8,7 @@ function Invoke-VBScript {
         [string]$ScriptPath
     )
     
-    $env:PYTHONPATH = "C:\Users\ADMIN\desktop\pyafipws;$env:PYTHONPATH"
+    $env:PYTHONPATH = "C:\Users\ADMIN\desktop\pyarcaws;$env:PYTHONPATH"
     $result = cscript //nologo $ScriptPath 2>&1
     $exitCode = $LASTEXITCODE
     

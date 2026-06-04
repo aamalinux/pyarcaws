@@ -20,9 +20,9 @@ __version__ = "3.38c"
 import pytest
 import sys
 import shutil
-from pyafipws import wsbfev1
-from pyafipws import receb1
-from pyafipws.wsaa import WSAA
+from pyarcaws import wsbfev1
+from pyarcaws import receb1
+from pyarcaws.wsaa import WSAA
 
 HOMO = wsbfev1.HOMO
 CONFIG_FILE = "rece.ini"

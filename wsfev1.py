@@ -32,7 +32,7 @@ import datetime
 import decimal
 import os
 import sys
-from pyafipws.utils import verifica, inicializar_y_capturar_excepciones, BaseWS, get_install_dir
+from pyarcaws.utils import verifica, inicializar_y_capturar_excepciones, BaseWS, get_install_dir
 
 HOMO = False  # solo homologación
 TYPELIB = False  # usar librería de tipos (TLB)
@@ -133,7 +133,7 @@ class WSFEv1(BaseWS):
 
     _reg_progid_ = "WSFEv1"
     _reg_clsid_ = "{FA1BB90B-53D1-4FDA-8D1F-DEED2700E739}"
-    _reg_class_spec_ = "pyafipws.wsfev1.WSFEv1"
+    _reg_class_spec_ = "pyarcaws.wsfev1.WSFEv1"
 
     if TYPELIB:
         _typelib_guid_ = "{8AE2BD1D-A216-4E98-95DB-24A11225EF67}"
@@ -1379,7 +1379,7 @@ def main():
         return
 
     # obteniendo el TA para pruebas
-    from pyafipws.wsaa import WSAA
+    from pyarcaws.wsaa import WSAA
 
     ta = WSAA().Autenticar("wsfe", "reingart.crt", "reingart.key", debug=True)
     wsfev1.SetTicketAcceso(ta)
@@ -1521,7 +1521,7 @@ def main():
             # datos de Factura de Crédito Electrónica MiPyMEs (FCE):
             if "--fce" in sys.argv:
                 wsfev1.AgregarOpcional(2101, "2850590940090418135201")  # CBU
-                wsfev1.AgregarOpcional(2102, "pyafipws")  # alias
+                wsfev1.AgregarOpcional(2102, "pyarcaws")  # alias
                 if tipo_cbte in (203, 208, 213):
                     wsfev1.AgregarOpcional(22, "S")  # Anulación
 

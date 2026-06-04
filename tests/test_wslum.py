@@ -20,8 +20,8 @@ __license__ = "GPL 3.0"
 
 import os
 import pytest
-from pyafipws.wsaa import WSAA
-from pyafipws.wslum import WSLUM, main
+from pyarcaws.wsaa import WSAA
+from pyarcaws.wslum import WSLUM, main
 import sys
 
 __WSDL__ = "https://fwshomo.afip.gov.ar/wslum/LumService?wsdl"

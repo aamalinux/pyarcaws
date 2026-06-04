@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf8 -*-
 
-"Creador de instalador para PyAfipWs"
+"Creador de instalador para pyarcaws"
 
 __author__ = "Mariano Reingart (reingart@gmail.com)"
 __copyright__ = "Copyright (C) 2008-2021 Mariano Reingart"
@@ -22,16 +22,16 @@ desc = (
     "Interfases, tools and apps for Argentina's gov't. webservices "
     "(soap, com/dll, pdf, dbf, xml, etc.)"
 )
-kwargs["package_dir"] = {"pyafipws": "."}
-kwargs["packages"] = ["pyafipws", "pyafipws.formatos", "pyafipws.windows"]
+kwargs["package_dir"] = {"pyarcaws": "."}
+kwargs["packages"] = ["pyarcaws", "pyarcaws.formatos", "pyarcaws.windows"]
 opts = {}
-data_files = [("pyafipws/plantillas", glob.glob("plantillas/*"))]
+data_files = [("pyarcaws/plantillas", glob.glob("plantillas/*"))]
 
 parent_dir = os.path.dirname(__file__) or os.getcwd()
 long_desc = open(os.path.join(parent_dir, "README.md")).read()
 
 setuptools.setup(
-    name="PyAfipWs",
+    name="pyarcaws",
     version=__version__,
     description=desc,
     long_description=long_desc,

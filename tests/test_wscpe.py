@@ -23,7 +23,7 @@ import os
 
 import pytest
 
-from pyafipws.wscpe import WSCPE, WSDL
+from pyarcaws.wscpe import WSCPE, WSDL
 
 CUIT = os.environ["CUIT"]
 TEST_WSDL = 1

@@ -25,7 +25,7 @@ import datetime
 import decimal
 import os
 import sys
-from pyafipws.utils import verifica, inicializar_y_capturar_excepciones, BaseWS, get_install_dir
+from pyarcaws.utils import verifica, inicializar_y_capturar_excepciones, BaseWS, get_install_dir
 
 HOMO = False
 LANZAR_EXCEPCIONES = True
@@ -979,7 +979,7 @@ def main():
     DEBUG = "--debug" in sys.argv
 
     # obteniendo el TA para pruebas
-    from pyafipws.wsaa import WSAA
+    from pyarcaws.wsaa import WSAA
 
     ta = WSAA().Autenticar("wsct", "reingart.crt", "reingart.key")
 

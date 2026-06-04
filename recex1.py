@@ -25,9 +25,9 @@ import time
 import traceback
 
 # revisar la instalación de pyafip.ws:
-from pyafipws import wsfexv1
-from pyafipws.utils import SimpleXMLElement, SoapClient, SoapFault, date
-from pyafipws.utils import leer, escribir, leer_dbf, guardar_dbf, N, A, I, abrir_conf
+from pyarcaws import wsfexv1
+from pyarcaws.utils import SimpleXMLElement, SoapClient, SoapFault, date
+from pyarcaws.utils import leer, escribir, leer_dbf, guardar_dbf, N, A, I, abrir_conf
 
 
 HOMO = wsfexv1.HOMO
@@ -44,7 +44,7 @@ Este progarma es software libre, se entrega ABSOLUTAMENTE SIN GARANTIA
 y es bienvenido a redistribuirlo bajo la licencia GPLv3.
 
 Para información adicional sobre garantía, soporte técnico comercial
-e incorporación/distribución en programas propietarios ver PyAfipWs:
+e incorporación/distribución en programas propietarios ver pyarcaws:
 http://www.sistemasagiles.com.ar/trac/wiki/PyAfipWs
 """
 
@@ -392,7 +392,7 @@ def main():
             return
 
         if "/formato" in sys.argv:
-            from pyafipws.formatos.formato_dbf import definir_campos
+            from pyarcaws.formatos.formato_dbf import definir_campos
 
             print("Formato:")
             for msg, formato in [
@@ -422,7 +422,7 @@ def main():
             return
 
         # obteniendo el TA
-        from pyafipws.wsaa import WSAA
+        from pyarcaws.wsaa import WSAA
 
         wsaa = WSAA()
         ta = wsaa.Autenticar(

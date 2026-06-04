@@ -31,7 +31,7 @@ Este progarma es software libre, se entrega ABSOLUTAMENTE SIN GARANTIA
 y es bienvenido a redistribuirlo respetando la licencia GPLv3.
 
 Para información adicional sobre garantía, soporte técnico comercial
-e incorporación/distribución en programas propietarios ver PyAfipWs:
+e incorporación/distribución en programas propietarios ver pyarcaws:
 http://www.sistemasagiles.com.ar/trac/wiki/PyAfipWs
 """
 
@@ -102,10 +102,10 @@ import pprint
 import warnings
 from pysimplesoap.client import SoapFault
 from fpdf import Template
-from pyafipws import utils
+from pyarcaws import utils
 
 # importo funciones compartidas:
-from pyafipws.utils import (
+from pyarcaws.utils import (
     leer,
     escribir,
     leer_dbf,
@@ -616,7 +616,7 @@ class WSLPG(BaseWS):
 
             try:
                 # intento abrir el diccionario persistente de localidades
-                from pyafipws import wslpg_datos
+                from pyarcaws import wslpg_datos
 
                 localidades_db = os.path.join(self.cache, "localidades.dat")
                 # verificar que puede escribir en el dir, sino abrir solo lectura
@@ -3110,7 +3110,7 @@ class WSLPG(BaseWS):
     def BuscarLocalidades(self, cod_prov, cod_localidad=None, consultar=True):
         "Devuelve la localidad o la consulta en AFIP (uso interno)"
         # si no se especifíca cod_localidad, es util para reconstruir la cache
-        from pyafipws import wslpg_datos as datos
+        from pyarcaws import wslpg_datos as datos
 
         if not str(cod_localidad) in datos.LOCALIDADES and consultar:
             d = self.ConsultarLocalidadesPorProvincia(cod_prov, sep=None)
@@ -3305,7 +3305,7 @@ class WSLPG(BaseWS):
             author="CUIT %s" % self.Cuit,
             subject="COE %s" % self.params_out.get("coe"),
             keywords="AFIP Liquidacion Electronica Primaria de Granos",
-            creator="wslpg.py %s (http://www.PyAfipWs.com.ar)" % __version__,
+            creator="wslpg.py %s (https://github.com/aamalinux/pyarcaws)" % __version__,
         )
         self.template = t
         return True
@@ -3438,7 +3438,7 @@ class WSLPG(BaseWS):
                     elif isinstance(v, datetime.datetime):
                         f.set(k, str(v))
 
-                from pyafipws import wslpg_datos as datos
+                from pyarcaws import wslpg_datos as datos
 
                 campania = int(liq.get("campania_ppal") or 0)
                 f.set("campania_ppal", datos.CAMPANIAS.get(campania, campania))
@@ -3940,7 +3940,7 @@ def main():
     import csv
     from configparser import ConfigParser
 
-    from pyafipws.wsaa import WSAA
+    from pyarcaws.wsaa import WSAA
 
     try:
 
@@ -4001,7 +4001,7 @@ def main():
             print("WRAPPER", WRAPPER)
             print("timeout:", TIMEOUT)
         # obteniendo el TA
-        from pyafipws.wsaa import WSAA
+        from pyarcaws.wsaa import WSAA
 
         wsaa = WSAA()
         ta = wsaa.Autenticar(
@@ -5354,7 +5354,7 @@ def main():
 
         if "--shelve" in sys.argv:
             print("# Construyendo BD de Localidades por Provincias")
-            from pyafipws import wslpg_datos as datos
+            from pyarcaws import wslpg_datos as datos
 
             for cod_prov, desc_prov in list(
                 wslpg.ConsultarProvincias(sep=None).items()

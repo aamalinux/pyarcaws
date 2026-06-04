@@ -20,10 +20,10 @@ import os
 import sys
 import datetime
 import pytest
-from pyafipws.wsaa import WSAA
-from pyafipws.pyfepdf import FEPDF
-from pyafipws.pyfepdf import main
-from pyafipws.utils import SafeConfigParser
+from pyarcaws.wsaa import WSAA
+from pyarcaws.pyfepdf import FEPDF
+from pyarcaws.pyfepdf import main
+from pyarcaws.utils import SafeConfigParser
 import shutil
 
 

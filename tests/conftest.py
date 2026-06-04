@@ -12,7 +12,7 @@
 
 import os
 import pytest
-from pyafipws.wsaa import WSAA
+from pyarcaws.wsaa import WSAA
 
 __author__ = "Mariano Reingart <reingart@gmail.com>"
 __copyright__ = "Copyright (C) 2021- Mariano Reingart"
@@ -24,10 +24,10 @@ CUIT = 20267565393
 CERT = "reingart.crt"
 PKEY = "reingart.key"
 CACHE=""
-# CERT = "/home/reingart/pyafipws/reingart.crt"
-# PRIVATEKEY = "/home/reingart/pyafipws/reingart.key"
-# CACERT = "/home/reingart/pyafipws/afip_root_desa_ca.crt"
-# CACHE = "/home/reingart/pyafipws/cache"
+# CERT = "/home/reingart/pyarcaws/reingart.crt"
+# PRIVATEKEY = "/home/reingart/pyarcaws/reingart.key"
+# CACERT = "/home/reingart/pyarcaws/afip_root_desa_ca.crt"
+# CACHE = "/home/reingart/pyarcaws/cache"
 
 os.environ["CUIT"] = str(CUIT)
 

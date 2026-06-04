@@ -20,8 +20,8 @@ __license__ = "GPL 3.0"
 
 import os
 import pytest
-from pyafipws.wsaa import WSAA
-from pyafipws.wslsp import WSLSP, main
+from pyarcaws.wsaa import WSAA
+from pyarcaws.wslsp import WSLSP, main
 import vcr
 import sys
 

@@ -20,8 +20,8 @@ __license__ = "GPL 3.0"
 
 import os
 import pytest
-from pyafipws.wsaa import WSAA
-from pyafipws.wsltv import WSLTV, main
+from pyarcaws.wsaa import WSAA
+from pyarcaws.wsltv import WSLTV, main
 import sys
 
 

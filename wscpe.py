@@ -31,7 +31,7 @@ Este progarma es software libre, se entrega ABSOLUTAMENTE SIN GARANTIA
 y es bienvenido a redistribuirlo bajo la licencia GPLv3.
 
 Para información adicional sobre garantía, soporte técnico comercial
-e incorporación/distribución en programas propietarios ver PyAfipWs:
+e incorporación/distribución en programas propietarios ver pyarcaws:
 http://www.sistemasagiles.com.ar/trac/wiki/PyAfipWs
 """
 
@@ -56,7 +56,7 @@ import traceback
 from pysimplesoap.client import SoapFault
 
 # importo funciones compartidas:
-from pyafipws.utils import (
+from pyarcaws.utils import (
     date,
     leer,
     escribir,
@@ -1281,7 +1281,7 @@ if __name__ == "__main__":
         win32com.server.localserver.serve([WSCPE._reg_clsid_])
 
     # obteniendo el TA
-    from pyafipws.wsaa import WSAA
+    from pyarcaws.wsaa import WSAA
 
     wsaa_url = ""
     wscpe_url = WSDL[True]

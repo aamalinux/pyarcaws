@@ -24,7 +24,7 @@ __version__ = "3.03a"
 import os, sys, traceback
 from pysimplesoap.simplexml import SimpleXMLElement
 
-from pyafipws.utils import WebClient
+from pyarcaws.utils import WebClient
 
 HOMO = False
 CACERT = "conf/arba.crt"  # establecimiento de canal seguro (en producción)

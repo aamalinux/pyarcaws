@@ -324,6 +324,6 @@ class Target(object):
             self.copyright = module.__copyright__
         except AttributeError:
             self.copyright = ""
-        self.name = "Interfaz PyAfipWs - %s" % os.path.basename(
+        self.name = "Interfaz pyarcaws - %s" % os.path.basename(
             module.__file__
         ).replace(".pyc", ".py")

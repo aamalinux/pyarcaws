@@ -24,15 +24,15 @@ import datetime
 
 sys.path.append("/home/reingart")  # TODO: proper packaging
 
-from pyafipws.wsmtx import WSMTXCA
-from pyafipws.wsaa import WSAA
+from pyarcaws.wsmtx import WSMTXCA
+from pyarcaws.wsaa import WSAA
 
 WSDL = "https://fwshomo.afip.gov.ar/wsmtxca/services/MTXCAService?wsdl"
 CUIT = 20267565393
-CERT = "/home/reingart/pyafipws/reingart.crt"
-PRIVATEKEY = "/home/reingart/pyafipws/reingart.key"
-CACERT = "/home/reingart/pyafipws/afip_root_desa_ca.crt"
-CACHE = "/home/reingart/pyafipws/cache"
+CERT = "/home/reingart/pyarcaws/reingart.crt"
+PRIVATEKEY = "/home/reingart/pyarcaws/reingart.key"
+CACERT = "/home/reingart/pyarcaws/afip_root_desa_ca.crt"
+CACHE = "/home/reingart/pyarcaws/cache"
 
 # Autenticación:
 wsaa = WSAA()

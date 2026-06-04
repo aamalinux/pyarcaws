@@ -23,8 +23,8 @@ import pytest
 
 from datetime import datetime
 
-from pyafipws.wsaa import WSAA
-from pyafipws.wsct import WSCT, main
+from pyarcaws.wsaa import WSAA
+from pyarcaws.wsct import WSCT, main
 
 
 __WSDL__ = "https://fwshomo.afip.gov.ar/wsct/CTService?wsdl"

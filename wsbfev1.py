@@ -25,7 +25,7 @@ import datetime
 import decimal
 import os
 import sys
-from pyafipws.utils import inicializar_y_capturar_excepciones, BaseWS, get_install_dir
+from pyarcaws.utils import inicializar_y_capturar_excepciones, BaseWS, get_install_dir
 
 HOMO = False
 LANZAR_EXCEPCIONES = True  # valor por defecto: True
@@ -671,7 +671,7 @@ def main():
         # Setear token y sing de autorización (pasos previos)
 
         # obteniendo el TA para pruebas
-        from pyafipws.wsaa import WSAA
+        from pyarcaws.wsaa import WSAA
 
         ta = WSAA().Autenticar("wsbfe", "reingart.crt", "reingart.key")
         wsbfev1.SetTicketAcceso(ta)
@@ -782,7 +782,7 @@ def main():
                 # datos de Factura de Crédito Electrónica MiPyMEs (FCE):
                 if "--fce" in sys.argv:
                     wsbfev1.AgregarOpcional(2101, "2850590940090418135201")  # CBU
-                    wsbfev1.AgregarOpcional(2102, "pyafipws")  # alias
+                    wsbfev1.AgregarOpcional(2102, "pyarcaws")  # alias
                     if tipo_cbte in (203, 208, 213):
                         wsbfev1.AgregarOpcional(22, "S")  # Anulación
 

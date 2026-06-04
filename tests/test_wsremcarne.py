@@ -20,8 +20,8 @@ __license__ = "GPL 3.0"
 
 import os, sys
 import pytest
-from pyafipws.wsaa import WSAA
-from pyafipws.wsremcarne import WSRemCarne, main
+from pyarcaws.wsaa import WSAA
+from pyarcaws.wsremcarne import WSRemCarne, main
 
 __WSDL__ = "https://fwshomo.afip.gov.ar/wsremcarne/RemCarneService?wsdl"
 __obj__ = WSRemCarne()

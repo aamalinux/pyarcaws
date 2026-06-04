@@ -31,7 +31,7 @@ Este progarma es software libre, se entrega ABSOLUTAMENTE SIN GARANTIA
 y es bienvenido a redistribuirlo respetando la licencia GPLv3.
 
 Para información adicional sobre garantía, soporte técnico comercial
-e incorporación/distribución en programas propietarios ver PyAfipWs:
+e incorporación/distribución en programas propietarios ver pyarcaws:
 http://www.sistemasagiles.com.ar/trac/wiki/PyAfipWs
 """
 
@@ -75,10 +75,10 @@ import traceback
 import pprint
 from pysimplesoap.client import SoapFault
 from fpdf import Template
-from pyafipws import utils
+from pyarcaws import utils
 
 # importo funciones compartidas:
-from pyafipws.utils import (
+from pyarcaws.utils import (
     leer,
     escribir,
     leer_dbf,
@@ -882,7 +882,7 @@ def main():
     import csv
     from configparser import ConfigParser
 
-    from pyafipws.wsaa import WSAA
+    from pyarcaws.wsaa import WSAA
 
     try:
 
@@ -948,7 +948,7 @@ def main():
             print("WRAPPER", WRAPPER)
             print("timeout:", TIMEOUT)
         # obteniendo el TA
-        from pyafipws.wsaa import WSAA
+        from pyarcaws.wsaa import WSAA
 
         wsaa = WSAA()
         ta = wsaa.Autenticar(

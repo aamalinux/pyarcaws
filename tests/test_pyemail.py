@@ -16,7 +16,7 @@ __author__ = "Mariano Reingart <reingart@gmail.com>"
 __copyright__ = "Copyright (C) 2010-2019 Mariano Reingart"
 __license__ = "GPL 3.0"
 
-from pyafipws.pyemail import PyEmail, main
+from pyarcaws.pyemail import PyEmail, main
 import pytest
 import traceback
 from email.mime.text import MIMEText

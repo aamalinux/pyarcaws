@@ -34,7 +34,7 @@ import unicodedata
 import warnings
 
 from pysimplesoap.client import SimpleXMLElement
-from pyafipws.utils import (
+from pyarcaws.utils import (
     inicializar_y_capturar_excepciones,
     BaseWS,
     get_install_dir,
@@ -330,7 +330,7 @@ class WSAA(BaseWS):
     _readonly_attrs_ = _public_attrs_[:-1]
     _reg_progid_ = "WSAA"
     _reg_clsid_ = "{51342E57-9681-4610-AF2B-686267470930}"
-    _reg_class_spec_ = "pyafipws.wsaa.WSAA"
+    _reg_class_spec_ = "pyarcaws.wsaa.WSAA"
 
     if TYPELIB:
         _typelib_guid_ = '{6E4B43FD-0ABB-4627-AA4E-2AD08BD3D212}'
@@ -402,7 +402,7 @@ class WSAA(BaseWS):
 
     @inicializar_y_capturar_excepciones
     def CrearPedidoCertificado(
-        self, cuit="", empresa="", nombre="pyafipws", filename="empresa.csr"
+        self, cuit="", empresa="", nombre="pyarcaws", filename="empresa.csr"
     ):
         "Crear un certificate signing request (X509 CSR)"
         # create the certificate signing request (CSR):
@@ -607,11 +607,11 @@ def main():
         # obtengo el CUIT y lo normalizo:
         cuit = len(args) > 1 and args[1] or input("Ingrese un CUIT: ")
         cuit = "".join([c for c in cuit if c.isdigit()])
-        nombre = len(args) > 2 and args[2] or "PyAfipWs"
+        nombre = len(args) > 2 and args[2] or "pyarcaws"
         # consultar el padrón online de AFIP si no se especificó razón social:
         empresa = len(args) > 3 and args[3] or ""
         if not empresa:
-            from pyafipws.padron import PadronAFIP
+            from pyarcaws.padron import PadronAFIP
 
             padron = PadronAFIP()
             ok = padron.Consultar(cuit)

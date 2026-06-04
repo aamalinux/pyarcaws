@@ -26,9 +26,9 @@ import time
 import traceback
 
 # revisar la instalación de pyafip.ws:
-from pyafipws import wsct
-from pyafipws.utils import SimpleXMLElement, SoapClient, SoapFault, date
-from pyafipws.utils import leer, escribir, leer_dbf, guardar_dbf, N, A, I, abrir_conf
+from pyarcaws import wsct
+from pyarcaws.utils import SimpleXMLElement, SoapClient, SoapFault, date
+from pyarcaws.utils import leer, escribir, leer_dbf, guardar_dbf, N, A, I, abrir_conf
 
 
 HOMO = wsct.HOMO
@@ -45,7 +45,7 @@ Este progarma es software libre, se entrega ABSOLUTAMENTE SIN GARANTIA
 y es bienvenido a redistribuirlo bajo la licencia GPLv3.
 
 Para información adicional sobre garantía, soporte técnico comercial
-e incorporación/distribución en programas propietarios ver PyAfipWs:
+e incorporación/distribución en programas propietarios ver pyarcaws:
 http://www.sistemasagiles.com.ar/trac/wiki/PyAfipWs
 """
 
@@ -420,7 +420,7 @@ def main():
             sys.exit(0)
 
         # obteniendo el TA
-        from pyafipws.wsaa import WSAA
+        from pyarcaws.wsaa import WSAA
 
         wsaa = WSAA()
         ta = wsaa.Autenticar("wsct", cert, privatekey, wsaa_url)
