@@ -1047,8 +1047,8 @@ class FEPDF(object):
             # divido las observaciones por linea:
             if (
                 fact.get("obs_generales")
-                and not f.has_key("obs")
-                and not f.has_key("ObservacionesGenerales1")
+                and "obs" not in f
+                and "ObservacionesGenerales1" not in f
             ):
                 obs = "\n<U>Observaciones:</U>\n\n" + fact["obs_generales"]
                 # limpiar texto (campos dbf) y reemplazar saltos de linea:
@@ -1066,8 +1066,8 @@ class FEPDF(object):
                     )
             if (
                 fact.get("obs_comerciales")
-                and not f.has_key("obs_comerciales")
-                and not f.has_key("ObservacionesComerciales1")
+                and "obs_comerciales" not in f
+                and "ObservacionesComerciales1" not in f
             ):
                 obs = (
                     "\n<U>Observaciones Comerciales:</U>\n\n" + fact["obs_comerciales"]
@@ -1093,12 +1093,12 @@ class FEPDF(object):
                 for p in fact.get("permisos", [])
             ]
             # import dbg; dbg.set_trace()
-            if f.has_key("permiso.id1") and f.has_key("permiso.delivery1"):
+            if "permiso.id1" in f and "permiso.delivery1" in f:
                 for i, p in enumerate(fact.get("permisos", [])):
                     self.AgregarDato("permiso.id%d" % (i + 1), p["id_permiso"])
                     pais_dst = self.paises.get(p["dst_merc"], p["dst_merc"])
                     self.AgregarDato("permiso.delivery%d" % (i + 1), pais_dst)
-            elif not f.has_key("permisos") and permisos:
+            elif "permisos" not in f and permisos:
                 obs = "\n<U>Permisos de Embarque:</U>\n\n" + "\n".join(permisos)
                 for ds in f.split_multicell(obs, "Item.Descripcion01"):
                     li_items.append(
@@ -1119,7 +1119,7 @@ class FEPDF(object):
                 % self.fmt_fact(c["cbte_tipo"], c["cbte_punto_vta"], c["cbte_nro"])
                 for c in fact.get("cbtes_asoc", [])
             ]
-            if not f.has_key("cmps_asoc") and cmps_asoc:
+            if "cmps_asoc" not in f and cmps_asoc:
                 obs = "\n<U>Comprobantes Asociados:</U>\n\n" + "\n".join(cmps_asoc)
                 for ds in f.split_multicell(obs, "Item.Descripcion01"):
                     li_items.append(
@@ -1151,7 +1151,7 @@ class FEPDF(object):
             # mostrar las validaciones no excluyentes de AFIP (observaciones)
 
             if fact.get("motivos_obs") and fact["motivos_obs"] != "00":
-                if not f.has_key("motivos_ds.L"):
+                if "motivos_ds.L" not in f:
                     motivos_ds = (
                         u"Irregularidades observadas por AFIP (F136): %s"
                         % fact["motivos_obs"]
@@ -1165,7 +1165,7 @@ class FEPDF(object):
 
             if letra_fact in ("A", "M"):
                 msg_no_iva = u"\nEl IVA discriminado no puede computarse como Crédito Fiscal (RG2485/08 Art. 30 inc. c)."
-                if not f.has_key("leyenda_credito_fiscal") and motivos_ds:
+                if "leyenda_credito_fiscal" not in f and motivos_ds:
                     motivos_ds += msg_no_iva
 
             # Facturas B Ley 27743
@@ -1305,7 +1305,7 @@ class FEPDF(object):
                             if it["codigo"] is not None:
                                 f.set("Item.Codigo%02d" % li, it["codigo"])
                             if it["umed"] is not None:
-                                if it["umed"] and f.has_key("Item.Umed_ds01"):
+                                if it["umed"] and "Item.Umed_ds01" in f:
                                     # recortar descripción:
                                     umed_ds = self.umeds_ds.get(int(it["umed"]))
                                     s = f.split_multicell(umed_ds, "Item.Umed_ds01")
@@ -1521,9 +1521,9 @@ class FEPDF(object):
 
                     # Datos del pie de factura (obtenidos desde AFIP):
                     f.set("motivos_ds", motivos_ds)
-                    if f.has_key("motivos_ds1") and motivos_ds:
+                    if "motivos_ds1" in f and motivos_ds:
                         if letra_fact in ("A", "M"):
-                            if f.has_key("leyenda_credito_fiscal"):
+                            if "leyenda_credito_fiscal" in f:
                                 f.set("leyenda_credito_fiscal", msg_no_iva)
                         for i, txt in enumerate(
                             f.split_multicell(motivos_ds, "motivos_ds1")
@@ -1569,7 +1569,7 @@ class FEPDF(object):
                         f.set("estado", "")  # compatibilidad hacia atras
 
                     # colocar campos de observaciones (si no van en ds)
-                    if f.has_key("observacionesgenerales1") and "obs_generales" in fact:
+                    if "observacionesgenerales1" in f and "obs_generales" in fact:
                         for i, txt in enumerate(
                             f.split_multicell(
                                 fact["obs_generales"], "ObservacionesGenerales1"
@@ -1577,7 +1577,7 @@ class FEPDF(object):
                         ):
                             f.set("ObservacionesGenerales%d" % (i + 1), txt)
                     if (
-                        f.has_key("observacionescomerciales1")
+                        "observacionescomerciales1" in f
                         and "obs_comerciales" in fact
                     ):
                         for i, txt in enumerate(
@@ -1586,13 +1586,13 @@ class FEPDF(object):
                             )
                         ):
                             f.set("ObservacionesComerciales%d" % (i + 1), txt)
-                    if f.has_key("enletras1") and "en_letras" in fact:
+                    if "enletras1" in f and "en_letras" in fact:
                         for i, txt in enumerate(
                             f.split_multicell(fact["en_letras"], "EnLetras1")
                         ):
                             f.set("EnLetras%d" % (i + 1), txt)
 
-                    if f.has_key("AFIP_QR"):
+                    if "AFIP_QR" in f:
                         if not self.archivo_qr:
                             self.GenerarQR()
                         f.set("AFIP_QR", self.archivo_qr)
