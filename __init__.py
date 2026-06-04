@@ -12,6 +12,13 @@
 
 """Módulo para acceder a web services de la afip
 """
+
+# inspect.getargspec fue removido en Python 3.11; pysimplesoap lo usa en
+# transport.py a nivel de módulo. Este shim lo restaura usando getfullargspec,
+# que devuelve los mismos campos en [0] (args) que usaba el código original.
+import inspect
+if not hasattr(inspect, "getargspec"):
+    inspect.getargspec = inspect.getfullargspec
 __author__ = "Mariano Reingart (mariano@gmail.com)"
 __copyright__ = "Copyright (C) 2008-2021 Mariano Reingart"
 __license__ = "LGPL-3.0-or-later"
