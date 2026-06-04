@@ -1,7 +1,7 @@
 pyarcaws
 ========
 
-**pyarcaws** es un fork activo y mantenido de [pyafipws](https://github.com/reingart/pyafipws), la librería Python para operar con los servicios web de AFIP (Argentina) y otros organismos del Estado, principalmente relacionados con facturación electrónica, liquidaciones e impuestos.
+**pyarcaws** es un fork activo y mantenido de [pyafipws](https://github.com/reingart/pyafipws), la librería Python para operar con los servicios web de ARCA (Argentina) y otros organismos del Estado, principalmente relacionados con facturación electrónica, liquidaciones e impuestos.
 
 ---
 
@@ -15,7 +15,7 @@ pyarcaws
 
 ## ¿Por qué este fork?
 
-El proyecto original [pyafipws](https://github.com/reingart/pyafipws) lleva tiempo sin actualizaciones activas. **pyarcaws** continúa su desarrollo con los siguientes objetivos:
+El proyecto original [pyafipws](https://github.com/reingart/pyafipws) tiene muchos años de desarrollo, con el cambio de nombre de la AFIP a ARCA quise reflejar el nuevo nombre **pyarcaws** y continuar su desarrollo con los siguientes objetivos:
 
 - **Solo Python 3.9+** — se eliminó completamente el soporte para Python 2.7
 - **Dependencias actualizadas** — cryptography, Pillow, qrcode, dbf y otras llevan versiones modernas
