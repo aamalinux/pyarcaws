@@ -23,7 +23,7 @@ HOMO = True
 
 # build a one-click-installer for windows:
 import py2exe
-from pyafipws.nsis import build_installer, Target
+from nsis import build_installer, Target
 
 # modulos a compilar y empaquetar (comentar si no se desea incluir):
 
@@ -186,7 +186,7 @@ if 'wsaa' in globals():
     kwargs['windows'] += [Target(module=wsaa, script="wsaa.py", dest_base="wsaa_com")]
     kwargs['console'] += [Target(module=wsaa, script="wsaa.py", dest_base="wsaa")]
     if wsaa.TYPELIB:
-        data_files.append(("typelib", ["typelib/wsaa.tlb"]))
+        data_files.append(("typelib", ["windows/typelib/wsaa.tlb"]))
         
     HOMO &= wsaa.HOMO
 
@@ -198,7 +198,7 @@ if 'wsfev1' in globals():
         #Target(module=rg3685, script='rg3685.py'), 
         ]             
     if wsfev1.TYPELIB:
-        data_files.append(("typelib", ["typelib/wsfev1.tlb"]))
+        data_files.append(("typelib", ["windows/typelib/wsfev1.tlb"]))
 
     HOMO &= wsfev1.HOMO
 

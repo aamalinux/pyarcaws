@@ -23,7 +23,7 @@ desc = (
     "(soap, com/dll, pdf, dbf, xml, etc.)"
 )
 kwargs["package_dir"] = {"pyafipws": "."}
-kwargs["packages"] = ["pyafipws", "pyafipws.formatos"]
+kwargs["packages"] = ["pyafipws", "pyafipws.formatos", "pyafipws.windows"]
 opts = {}
 data_files = [("pyafipws/plantillas", glob.glob("plantillas/*"))]
 
