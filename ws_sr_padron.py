@@ -453,6 +453,7 @@ def main():
 # busco el directorio de instalación (global para que no cambie si usan otra dll)
 INSTALL_DIR = WSSrPadronA4.InstallDir = WSSrPadronA5.InstallDir = get_install_dir()
 
+PadronA5 = WSSrPadronA5  # alias: nombre corto derivado del servicio ws_sr_padron_a5
 
 if __name__ == "__main__":
 
