@@ -43,7 +43,7 @@ jobs:
         python setup.py install
     - name: Build executables
       run: |
-        python setup_win.py py2exe
+        python windows/setup_win.py py2exe
     - name: List dist folder contents
       run: |
         dir .\dist
@@ -142,7 +142,7 @@ jobs:
     - name: Register PyQR component
       continue-on-error: true
       run: |
-        python register_pyqr.py
+        python windows/register_pyqr.py
         Get-Content -Path $Env:APPDATA\pyqr.log -ErrorAction SilentlyContinue
     - name: Test PyQR COM server automation
       continue-on-error: true
