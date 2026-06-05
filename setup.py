@@ -43,6 +43,8 @@ setuptools.setup(
     python_requires=">=3.9",
     install_requires=[
         "httplib2>=0.22.0",
+        # pysimplesoap>=1.8.22 de PyPI no instala en Python 3.11+ sin parches;
+        # usar: pip install -r requirements.txt  (apunta a vendor/pysimplesoap)
         "pysimplesoap>=1.8.22",
         "cryptography>=42.0.0",
         "fpdf>=1.7.2",

@@ -1747,7 +1747,7 @@ def main():
             print("CONFIG_FILE:", CONFIG_FILE)
 
         config = ConfigParser()
-        config.read(CONFIG_FILE)
+        config.read(CONFIG_FILE, encoding="latin1")
         conf_fact = dict(config.items("FACTURA"))
         conf_pdf = dict(config.items("PDF"))
 
