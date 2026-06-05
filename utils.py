@@ -174,7 +174,7 @@ def inicializar_y_capturar_excepciones(func):
                     retry -= 1
                     return func(self, *args, **kwargs)
                 except socket.error as e:
-                    if e[0] not in (10054, 10053):
+                    if e.errno not in (10054, 10053):
                         # solo reintentar si el error es de conexión
                         # (10054, 'Connection reset by peer')
                         # (10053, 'Software caused connection abort')
