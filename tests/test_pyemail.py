@@ -28,12 +28,20 @@ from configparser import ConfigParser
 
 pytestmark = [pytest.mark.dontusefix]
 
-pyemail = PyEmail()
-config = ConfigParser()
-config.read("rece.ini")
-conf_mail = dict(config.items("MAIL"))
+CONF_DIR = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "conf"
+)
 
-def test_Connectar_Enviar(mocker):
+pyemail = PyEmail()
+
+
+@pytest.fixture
+def conf_mail():
+    config = ConfigParser()
+    config.read(os.path.join(CONF_DIR, "rece.ini"), encoding="latin1")
+    return dict(config.items("MAIL"))
+
+def test_Connectar_Enviar(mocker, conf_mail):
     """Test de conexion"""
     mocker.patch("smtplib.SMTP")
     pyemail.Conectar(
@@ -71,9 +79,11 @@ def test_Adjuntar():
     ok =pyemail.Adjuntar("test@gmail.com")
     assert ok
 
-def test_main(mocker):
+def test_main(mocker, monkeypatch, conf_mail):
     """Test de funcion main"""
     mocker.patch("smtplib.SMTP")
+    # main() lee "rece.ini" con ruta relativa: ubicarse en conf/ para resolverlo
+    monkeypatch.chdir(CONF_DIR)
     sys.argv = []
     sys.argv.append("/debug")
     sys.argv.append("prueba")
