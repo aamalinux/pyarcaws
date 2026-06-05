@@ -66,7 +66,7 @@ import datetime
 import os, sys, time, base64
 from pyarcaws.utils import date
 import traceback
-from pysimplesoap.client import SoapFault
+from pyarcaws._vendor.pysimplesoap.client import SoapFault
 from pyarcaws import utils
 
 # importo funciones compartidas:

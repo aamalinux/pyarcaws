@@ -1346,7 +1346,7 @@ def main():
     DEBUG = "--debug" in sys.argv
 
     if DEBUG:
-        from pysimplesoap.client import __version__ as soapver
+        from pyarcaws._vendor.pysimplesoap.client import __version__ as soapver
 
         print("pysimplesoap.__version__ = ", soapver)
 

@@ -33,7 +33,7 @@ import traceback
 import unicodedata
 import warnings
 
-from pysimplesoap.client import SimpleXMLElement
+from pyarcaws._vendor.pysimplesoap.client import SimpleXMLElement
 from pyarcaws.utils import (
     inicializar_y_capturar_excepciones,
     BaseWS,

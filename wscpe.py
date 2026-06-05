@@ -53,7 +53,7 @@ import sys
 import time
 import traceback
 
-from pysimplesoap.client import SoapFault
+from pyarcaws._vendor.pysimplesoap.client import SoapFault
 
 # importo funciones compartidas:
 from pyarcaws.utils import (

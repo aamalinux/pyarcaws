@@ -23,7 +23,13 @@ desc = (
     "(soap, com/dll, pdf, dbf, xml, etc.)"
 )
 kwargs["package_dir"] = {"pyarcaws": "."}
-kwargs["packages"] = ["pyarcaws", "pyarcaws.formatos", "pyarcaws.windows"]
+kwargs["packages"] = [
+    "pyarcaws",
+    "pyarcaws.formatos",
+    "pyarcaws.windows",
+    "pyarcaws._vendor",
+    "pyarcaws._vendor.pysimplesoap",
+]
 opts = {}
 data_files = [("pyarcaws/plantillas", glob.glob("plantillas/*"))]
 
@@ -43,9 +49,7 @@ setuptools.setup(
     python_requires=">=3.9",
     install_requires=[
         "httplib2>=0.22.0",
-        # pysimplesoap>=1.8.22 de PyPI no instala en Python 3.11+ sin parches;
-        # usar: pip install -r requirements.txt  (apunta a vendor/pysimplesoap)
-        "pysimplesoap>=1.8.22",
+        # pysimplesoap se incluye como _vendor/pysimplesoap (corregido para 3.11+)
         "cryptography>=42.0.0",
         "fpdf>=1.7.2",
         "dbf>=0.99.0",

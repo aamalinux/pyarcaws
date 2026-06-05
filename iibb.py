@@ -23,7 +23,7 @@ try:
     from hashlib import md5
 except ImportError:
     from md5 import md5
-from pysimplesoap.simplexml import SimpleXMLElement
+from pyarcaws._vendor.pysimplesoap.simplexml import SimpleXMLElement
 
 from pyarcaws.utils import WebClient
 

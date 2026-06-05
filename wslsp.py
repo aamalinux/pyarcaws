@@ -66,7 +66,7 @@ import os, sys, shelve, subprocess
 import decimal, datetime
 import traceback
 import pprint
-from pysimplesoap.client import SoapFault
+from pyarcaws._vendor.pysimplesoap.client import SoapFault
 from fpdf import Template
 from pyarcaws import utils
 

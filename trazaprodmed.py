@@ -27,9 +27,9 @@ import socket
 import sys
 import datetime, time
 import traceback
-import pysimplesoap.client
-from pysimplesoap.client import SoapClient, SoapFault, parse_proxy, set_http_wrapper
-from pysimplesoap.simplexml import SimpleXMLElement
+import pyarcaws._vendor.pysimplesoap as pysimplesoap
+from pyarcaws._vendor.pysimplesoap.client import SoapClient, SoapFault, parse_proxy, set_http_wrapper
+from pyarcaws._vendor.pysimplesoap.simplexml import SimpleXMLElement
 from io import StringIO
 
 # importo funciones compartidas:

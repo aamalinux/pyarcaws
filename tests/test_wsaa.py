@@ -23,7 +23,7 @@ import base64
 from pyarcaws.wsaa import WSAA, call_wsaa, sign_tra_openssl
 from pyarcaws.wsaa import main
 from pyarcaws.utils import *
-from pysimplesoap import *
+from pyarcaws._vendor.pysimplesoap import *
 DEFAULT_TTL = 60 * 60 * 5  # five hours
 
 WSDL = "https://wsaahomo.afip.gov.ar/ws/services/LoginCms"

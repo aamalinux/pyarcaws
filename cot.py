@@ -22,7 +22,7 @@ __license__ = "LGPL-3.0-or-later"
 __version__ = "3.03a"
 
 import os, sys, traceback
-from pysimplesoap.simplexml import SimpleXMLElement
+from pyarcaws._vendor.pysimplesoap.simplexml import SimpleXMLElement
 
 from pyarcaws.utils import WebClient
 
