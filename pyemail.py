@@ -279,7 +279,7 @@ def main():
         ok = pyemail.Salir()
     else:
         config = ConfigParser()
-        config.read("rece.ini")
+        config.read("rece.ini", encoding="latin1")
 
         if "/debug" in sys.argv:
             DEBUG = True

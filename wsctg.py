@@ -1059,7 +1059,7 @@ def main():
             CONFIG_FILE = arg
 
         config = ConfigParser()
-        config.read(CONFIG_FILE)
+        config.read(CONFIG_FILE, encoding="latin1")
         CERT = config.get("WSAA", "CERT")
         PRIVATEKEY = config.get("WSAA", "PRIVATEKEY")
         CUIT = config.get("WSCTG", "CUIT")
