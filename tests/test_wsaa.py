@@ -163,7 +163,7 @@ def test_wsaa_sign_tra(key_and_cert):
 def test_wsaa_sign_openssl(key_and_cert):
     wsaa = WSAA()
 
-    tra = wsaa.CreateTRA("wsfe").encode()
+    tra = wsaa.CreateTRA("wsfe")
     sign = sign_tra_openssl(tra, key_and_cert[1], key_and_cert[0])
 
     # check if the commanmd line input is a byte data
