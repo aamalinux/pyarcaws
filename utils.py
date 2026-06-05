@@ -48,7 +48,7 @@ from configparser import ConfigParser
 
 SafeConfigParser = ConfigParser  # alias: importado por pyfepdf y módulos legacy
 
-from pysimplesoap.client import (
+from pyarcaws._vendor.pysimplesoap.client import (
     SimpleXMLElement,
     SoapClient,
     SoapFault,
@@ -70,7 +70,7 @@ try:
     import httplib2
 
     # corregir temas de negociacion de SSL en algunas versiones de ubuntu:
-    from pysimplesoap.client import SoapClient
+    from pyarcaws._vendor.pysimplesoap.client import SoapClient
     import platform
 
     monkey_patch = httplib2._build_ssl_context.__module__ != "httplib2"

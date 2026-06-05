@@ -26,8 +26,8 @@ import os
 import socket
 import sys
 import datetime, time
-import pysimplesoap.client
-from pysimplesoap.client import SoapFault
+import pyarcaws._vendor.pysimplesoap as pysimplesoap
+from pyarcaws._vendor.pysimplesoap.client import SoapFault
 from pyarcaws.utils import BaseWS, inicializar_y_capturar_excepciones, get_install_dir
 
 HOMO = False

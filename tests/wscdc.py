@@ -27,7 +27,7 @@ from pyarcaws import utils
 from pyarcaws.wsaa import WSAA
 from pyarcaws.wscdc import WSCDC
 
-import pysimplesoap.client
+import pyarcaws._vendor.pysimplesoap as pysimplesoap
 
 print(pysimplesoap.client.__version__)
 # assert pysimplesoap.client.__version__ >= "1.08c"

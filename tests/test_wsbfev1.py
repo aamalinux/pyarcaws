@@ -23,7 +23,7 @@ import pytest
 from pyarcaws.wsaa import WSAA
 from pyarcaws.wsbfev1 import WSBFEv1
 from pyarcaws.wsbfev1 import main
-from pysimplesoap.simplexml import SimpleXMLElement 
+from pyarcaws._vendor.pysimplesoap.simplexml import SimpleXMLElement 
 
 __WSDL__ = "http://wswhomo.afip.gov.ar/WSBFEv1/service.asmx"
 __obj__ = WSBFEv1()

@@ -16,7 +16,7 @@ __author__ = "Mariano Reingart (reingart@gmail.com)"
 __copyright__ = "Copyright (C) 2010 Mariano Reingart"
 __license__ = "LGPL-3.0-or-later"
 
-from pysimplesoap.simplexml import SimpleXMLElement
+from pyarcaws._vendor.pysimplesoap.simplexml import SimpleXMLElement
 from decimal import Decimal
 
 # Formato de entrada/salida similar al Facturador Plus, con agregados

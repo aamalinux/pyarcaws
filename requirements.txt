@@ -1,8 +1,6 @@
 httplib2>=0.22.0
-# pysimplesoap: el paquete PyPI (última versión 1.16.2) usa distutils (removido en
-# Python 3.12+) en setup.py y getargspec (removido en Python 3.11) en transport.py.
-# Se usa una copia local con ambas correcciones aplicadas (vendor/pysimplesoap/).
-pysimplesoap @ file:vendor/pysimplesoap
+# pysimplesoap está vendorizado en pyarcaws/_vendor/pysimplesoap/ (corregido para
+# Python 3.11+ y 3.13). No se instala como dependencia externa.
 cryptography>=42.0.0
 fpdf>=1.7.2
 dbf>=0.99.0
