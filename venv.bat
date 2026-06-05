@@ -1,10 +1,10 @@
 @echo off
 
-rem Creación del entorno virtual (opcional) para el proyecto PyAfipWs
+rem Creación del entorno virtual (opcional) para el proyecto pyarcaws
 rem 2021 (c) Mariano Reingart <reingart@gmail.com> - Licencia: GPLv3+
 
 rem Nota: Es recomendable ejecutar este programa como Administrador 
-rem Ver https://code.google.com/p/pyafipws/wiki/InstalacionCodigoFuente
+rem Ver https://github.com/aamalinux/pyarcaws/wiki/InstalacionCodigoFuente
 
 pip 1> NUL 2> NUL
 if %ERRORLEVEL%==9009 (
