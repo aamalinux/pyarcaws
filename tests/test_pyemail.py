@@ -24,12 +24,12 @@ from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
 import sys, os
 import smtplib
-from configparser import SafeConfigParser
+from configparser import ConfigParser
 
 pytestmark = [pytest.mark.dontusefix]
 
 pyemail = PyEmail()
-config = SafeConfigParser()
+config = ConfigParser()
 config.read("rece.ini")
 conf_mail = dict(config.items("MAIL"))
 
