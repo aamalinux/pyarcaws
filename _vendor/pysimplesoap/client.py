@@ -836,24 +836,29 @@ class SoapClient(object):
         force_download = False
         if cache:
             # make md5 hash of the url for caching...
-            filename_pkl = '%s.pkl' % hashlib.md5(url).hexdigest()
-            if isinstance(cache, basestring):
+            filename_pkl = '%s.pkl' % hashlib.md5(url.encode('utf8')).hexdigest()  # py3: md5 requiere bytes
+            if isinstance(cache, str):  # py3: basestring fue eliminado
                 filename_pkl = os.path.join(cache, filename_pkl)
             if os.path.exists(filename_pkl):
                 log.debug('Unpickle file %s' % (filename_pkl, ))
-                f = open(filename_pkl, 'r')
-                pkl = pickle.load(f)
-                f.close()
-                # sanity check:
-                if pkl['version'][:-1] != __version__.split(' ')[0][:-1] or pkl['url'] != url:
-                    warnings.warn('version or url mismatch! discarding cached wsdl', RuntimeWarning)
-                    log.debug('Version: %s %s' % (pkl['version'], __version__))
-                    log.debug('URL: %s %s' % (pkl['url'], url))
-                    force_download = True
-                else:
-                    self.namespace = pkl['namespace']
-                    self.documentation = pkl['documentation']
-                    return pkl['services']
+                try:
+                    f = open(filename_pkl, 'rb')  # py3: pickle usa bytes
+                    pkl = pickle.load(f)
+                    f.close()
+                    # sanity check:
+                    if pkl['version'][:-1] != __version__.split(' ')[0][:-1] or pkl['url'] != url:
+                        warnings.warn('version or url mismatch! discarding cached wsdl', RuntimeWarning)
+                        log.debug('Version: %s %s' % (pkl['version'], __version__))
+                        log.debug('URL: %s %s' % (pkl['url'], url))
+                        force_download = True
+                    else:
+                        self.namespace = pkl['namespace']
+                        self.documentation = pkl['documentation']
+                        return pkl['services']
+                except Exception as e:
+                    # py3: cache .pkl incompatible (Struct no es pickle-safe) ->
+                    # re-parsear desde el .xml cacheado en lugar de fallar
+                    warnings.warn('could not load cached wsdl, re-parsing: %s' % e, RuntimeWarning)
 
         # always return an unicode object:
         REVERSE_TYPE_MAP['string'] = str
