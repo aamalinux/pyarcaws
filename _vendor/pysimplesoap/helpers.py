@@ -63,7 +63,7 @@ def fetch(url, http, cache=False, force_download=False, wsdl_basedir='', headers
         filename = os.path.join(cache, filename)
     if cache and os.path.exists(filename) and not force_download:
         log.info('Reading file %s' % filename)
-        f = open(filename, 'r')
+        f = open(filename, 'rb')  # py3: WSDL cacheado en bytes
         xml = f.read()
         f.close()
     else:
@@ -78,7 +78,7 @@ def fetch(url, http, cache=False, force_download=False, wsdl_basedir='', headers
             log.info('Writing file %s' % filename)
             if not os.path.isdir(cache):
                 os.makedirs(cache)
-            f = open(filename, 'w')
+            f = open(filename, 'wb')  # py3: xml descargado es bytes
             f.write(xml)
             f.close()
     return xml
