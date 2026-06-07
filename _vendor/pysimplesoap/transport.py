@@ -62,12 +62,14 @@ class TransportBase:
 #
 try:
     import httplib2
-    if sys.version > '3' and httplib2.__version__ <= "0.7.7":
+    def _ver_tuple(v):  # py3: comparar versión de httplib2 numéricamente, no como string
+        return tuple(int(x) for x in v.split(".")[:3] if x.isdigit())
+    if sys.version > '3' and _ver_tuple(httplib2.__version__) <= (0, 7, 7):  # py3: comparar versión como números, no como string
         import http.client
-        # httplib2 workaround: check_hostname needs a SSL context with either 
+        # httplib2 workaround: check_hostname needs a SSL context with either
         #                      CERT_OPTIONAL or CERT_REQUIRED
         # see https://code.google.com/p/httplib2/issues/detail?id=173
-        orig__init__ = http.client.HTTPSConnection.__init__ 
+        orig__init__ = http.client.HTTPSConnection.__init__
         def fixer(self, host, port, key_file, cert_file, timeout, context,
                         check_hostname, *args, **kwargs):
             chk = kwargs.get('disable_ssl_certificate_validation', True) ^ True
@@ -84,7 +86,7 @@ else:
         _wrapper_name = 'httplib2'
 
         def __init__(self, timeout, proxy=None, cacert=None, sessions=False):
-#            httplib2.debuglevel=4 
+#            httplib2.debuglevel=4
             kwargs = {}
             if proxy:
                 import socks
@@ -92,9 +94,9 @@ else:
                 log.info("using proxy %s" % proxy)
 
             # set optional parameters according to supported httplib2 version
-            if httplib2.__version__ >= '0.3.0':
+            if _ver_tuple(httplib2.__version__) >= (0, 3, 0):  # py3: comparación numérica
                 kwargs['timeout'] = timeout
-            if httplib2.__version__ >= '0.7.0':
+            if _ver_tuple(httplib2.__version__) >= (0, 7, 0):  # py3: comparación numérica
                 kwargs['disable_ssl_certificate_validation'] = cacert is None
                 kwargs['ca_certs'] = cacert
             httplib2.Http.__init__(self, **kwargs)
