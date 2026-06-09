@@ -25,6 +25,7 @@ desc = (
 kwargs["package_dir"] = {"pyarcaws": "."}
 kwargs["packages"] = [
     "pyarcaws",
+    "pyarcaws.core",
     "pyarcaws.formatos",
     "pyarcaws.windows",
     "pyarcaws._vendor",
