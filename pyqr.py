@@ -10,7 +10,13 @@
 # or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License
 # for more details.
 
-"Módulo para generar códigos QR"
+"""Módulo para generar códigos QR (interfaz COM y CLI).
+
+La lógica de negocio vive en ``pyarcaws.core.qr`` (Python puro, sin COM);
+este módulo conserva la clase ``PyQR`` con su interfaz histórica (métodos
+CamelCase, atributos ``Excepcion``/``Traceback``, registro COM en Windows)
+y el ``main()`` de línea de comandos.
+"""
 
 __author__ = "Mariano Reingart <reingart@gmail.com>"
 __copyright__ = "Copyright (C) 2020-2021 Mariano Reingart"
@@ -21,11 +27,9 @@ import base64
 import json
 import os
 import sys
-import tempfile
 import traceback
-## TODO: fix sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-import qrcode
+from pyarcaws.core import qr as core_qr
 
 
 TEST_QR_DATA = """
@@ -39,7 +43,7 @@ QiOiJFIiwiY29kQXV0Ijo3MDQxNzA1NDM2NzQ3Nn0=""".replace(
 TYPELIB = False
 
 
-class PyQR(object):
+class PyQR:
     "Interfaz para generar Codigo QR de Factura Electrónica"
     _public_methods_ = [
         "GenerarImagen",
@@ -67,28 +71,34 @@ class PyQR(object):
         _typelib_version_ = 1, 5
         _com_interfaces_ = ['IPyQR']
 
-    URL = "https://www.afip.gob.ar/fe/qr/?p=%s"
+    URL = core_qr.URL_TEMPLATE
     Archivo = "qr.png"
     Extension = "PNG"
 
     # qrencode default parameters:
-    qr_ver = 1
-    box_size = 10
-    border = 4
-    error_correction = qrcode.constants.ERROR_CORRECT_L
+    qr_ver = core_qr.DEFAULT_QR_VER
+    box_size = core_qr.DEFAULT_BOX_SIZE
+    border = core_qr.DEFAULT_BORDER
+    error_correction = core_qr.DEFAULT_ERROR_CORRECTION
 
     def __init__(self):
         self.Version = __version__
-        self.Exception = self.Traceback = ""
+        self.Excepcion = self.Traceback = ""
+
+    def _capturar_excepcion(self, e):
+        "Vuelca la excepción a los atributos que espera la interfaz COM"
+        self.Excepcion = traceback.format_exception_only(type(e), e)[0].strip()
+        self.Traceback = traceback.format_exc()
 
     def CrearArchivo(self):
         """Crea un nombre de archivo temporal"""
         # para evitar errores de permisos y poder generar varios qr simultaneos
-        tmp = tempfile.NamedTemporaryFile(
-            prefix="qr_afip_", suffix=".%s" % self.Extension.lower(), delete=False
-        )
-        self.Archivo = tmp.name
-        return self.Archivo
+        try:
+            self.Archivo = core_qr.crear_archivo_temporal(self.Extension)
+            return self.Archivo
+        except Exception as e:
+            self._capturar_excepcion(e)
+            raise
 
     def GenerarImagen(
         self,
@@ -110,75 +120,79 @@ class PyQR(object):
     ):
         "Generar una imágen con el código QR"
         # basado en: https://www.afip.gob.ar/fe/qr/especificaciones.asp
-        datos_cmp = {
-            "ver": int(ver),
-            "fecha": fecha,
-            "cuit": int(cuit),
-            "ptoVta": int(pto_vta),
-            "tipoCmp": int(tipo_cmp),
-            "nroCmp": int(nro_cmp),
-            "importe": float(importe),
-            "moneda": moneda,
-            "ctz": float(ctz),
-            "tipoDocRec": int(tipo_doc_rec),
-            "nroDocRec": int(nro_doc_rec),
-            "tipoCodAut": tipo_cod_aut,
-            "codAut": int(cod_aut),
-        }
-
-        # convertir a representación json y codificar en base64:
-        datos_cmp_json = json.dumps(datos_cmp)
-        url = self.URL % (base64.b64encode(datos_cmp_json.encode('ascii')).decode('ascii'))
-
-        qr = qrcode.QRCode(
-            version=self.qr_ver,
-            error_correction=self.error_correction,
-            box_size=self.box_size,
-            border=self.border,
-        )
-        qr.add_data(url)
-        qr.make(fit=True)
-
-        img = qr.make_image(fill_color=color_relleno, back_color=color_fondo)
-
-        img.save(self.Archivo, self.Extension.upper())
-
-        return url
+        try:
+            generador = core_qr.QRGenerator(
+                url_template=self.URL,
+                qr_ver=self.qr_ver,
+                box_size=self.box_size,
+                border=self.border,
+                error_correction=self.error_correction,
+            )
+            return generador.generar_qr(
+                self.Archivo,
+                self.Extension,
+                color_relleno,
+                color_fondo,
+                ver=ver,
+                fecha=fecha,
+                cuit=cuit,
+                pto_vta=pto_vta,
+                tipo_cmp=tipo_cmp,
+                nro_cmp=nro_cmp,
+                importe=importe,
+                moneda=moneda,
+                ctz=ctz,
+                tipo_doc_rec=tipo_doc_rec,
+                nro_doc_rec=nro_doc_rec,
+                tipo_cod_aut=tipo_cod_aut,
+                cod_aut=cod_aut,
+            )
+        except Exception as e:
+            self._capturar_excepcion(e)
+            raise
 
 
 from pyarcaws.utils import get_install_dir
 INSTALL_DIR = PyQR.InstallDir = get_install_dir()
 
 
+def registrar_com():
+    "Registra/desregistra el servidor COM en Windows (import diferido de pywin32)"
+    import pythoncom
+
+    if TYPELIB:
+        if '--register' in sys.argv:
+            tlb = os.path.abspath(os.path.join(INSTALL_DIR, "typelib", "pyqr.tlb"))
+            print("Registering %s" % (tlb, ))
+            tli = pythoncom.LoadTypeLib(tlb)
+            pythoncom.RegisterTypeLib(tli, tlb)
+        elif '--unregister' in sys.argv:
+            k = PyQR
+            pythoncom.UnRegisterTypeLib(k._typelib_guid_,
+                                        k._typelib_version_[0],
+                                        k._typelib_version_[1],
+                                        0,
+                                        pythoncom.SYS_WIN32)
+            print("Unregistered typelib")
+    import win32com.server.register
+
+    win32com.server.register.UseCommandLine(PyQR)
+
+
+def servir_automate():
+    "Atiende las class factories COM (flag /Automate de Windows)"
+    # MS seems to like /automate to run the class factories.
+    import win32com.server.localserver
+
+    win32com.server.localserver.serve([PyQR._reg_clsid_])
+
+
 def main():
     url = None
     if "--register" in sys.argv or "--unregister" in sys.argv:
-        import pythoncom
-        if TYPELIB:
-            if '--register' in sys.argv:
-                tlb = os.path.abspath(os.path.join(INSTALL_DIR, "typelib", "pyqr.tlb"))
-                print("Registering %s" % (tlb, ))
-                tli=pythoncom.LoadTypeLib(tlb)
-                pythoncom.RegisterTypeLib(tli, tlb)
-            elif '--unregister' in sys.argv:
-                k = PyQR
-                pythoncom.UnRegisterTypeLib(k._typelib_guid_,
-                                            k._typelib_version_[0],
-                                            k._typelib_version_[1],
-                                            0,
-                                            pythoncom.SYS_WIN32)
-                print("Unregistered typelib")
-        import win32com.server.register
-
-        win32com.server.register.UseCommandLine(PyQR)
+        registrar_com()
     elif "/Automate" in sys.argv:
-        try:
-            # MS seems to like /automate to run the class factories.
-            import win32com.server.localserver
-
-            win32com.server.localserver.serve([PyQR._reg_clsid_])
-        except Exception:
-            raise
+        servir_automate()
     else:
 
         pyqr = PyQR()
