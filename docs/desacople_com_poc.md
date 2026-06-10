@@ -1,4 +1,4 @@
-# PoC: desacople de COM en tres capas (módulo `pyqr`)
+# PoC: desacople de COM en tres capas (módulos `pyqr` y `pyi25`)
 
 ## Resumen del patrón
 
@@ -34,6 +34,32 @@ El patrón aplicado separa eso en tres capas:
 | 3. CLI | `pyqr.py` → `main()` | flags `--datos`, `--archivo`, `--size`, `--border`, `--url`, `--prueba`, `--mostrar`; `registrar_com()` y `servir_automate()` con imports diferidos de pywin32 |
 | Tests | `tests/test_core_qr.py` | cobertura del núcleo sin red ni COM |
 | Empaquetado | `setup.py` | se agregó `pyarcaws.core` a `packages` |
+
+### Segundo módulo migrado: `pyi25`
+
+El mismo patrón se replicó en `pyi25.py` (código de barras Entrelazado 2 de 5):
+
+| Capa | Archivo | Contenido |
+|------|---------|-----------|
+| 1. Núcleo | `core/i25.py` | funciones `digito_verificador_modulo10()`, `calcular_ancho()`, `generar_imagen()`, constante `BARS` |
+| 2. Wrapper | `pyi25.py` → `PyI25` | misma interfaz (`GenerarImagen`, `DigitoVerificadorModulo10`), GUID `_reg_clsid_` intacto, captura en `Excepcion`/`Traceback` + re-lanzado |
+| 3. CLI | `pyi25.py` → `main()` | flags `--barras`, `--noverificador`, `--archivo`, `--mostrar`; `registrar_com()`, `servir_automate()` y `empaquetar_py2exe()` con imports diferidos |
+
+Decisiones particulares de `pyi25`:
+
+- El núcleo usa **funciones de módulo** (no una clase): la generación es
+  stateless, sin parámetros de estilo persistentes como en el QR.
+- El `print(width)` de debug que hacía `GenerarImagen` al calcular el ancho
+  automático **se conservó en el wrapper** (no en el núcleo) para que la
+  salida de consola sea idéntica; candidato a eliminar más adelante.
+- `pyi25.py` tenía además una rama `py2exe` propia en `main()` (empaquetado
+  standalone); quedó en `empaquetar_py2exe()` con imports diferidos.
+- Se eliminó el import sin uso de `PIL.ImageFont`; riesgo residual: código
+  que hiciera `from pyarcaws.pyi25 import Image` (no se encontró ninguno).
+- Verificación: CLI vieja vs nueva idéntica (default, `--barras` par e impar,
+  `--noverificador`, `--archivo` JPG) e imágenes byte a byte iguales;
+  `tests/test_pyi25.py` (5/5) sin cambios y 8 tests nuevos en
+  `tests/test_core_i25.py`.
 
 ## Decisiones de diseño y hallazgos
 
