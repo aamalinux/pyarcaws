@@ -64,7 +64,7 @@ from pyarcaws import wsfev1, rece1, rg3685
 
 data_files = [
     (".", ["licencia.txt",]),
-    ("conf", ["conf/rece.ini", "conf/geotrust.crt", "conf/afip_ca_info.crt", ]),
+    ("conf", ["conf/rece.ini", "conf/afip_ca_info.crt", ]),
     ("cache", glob.glob("cache/*")),
     ]
 
