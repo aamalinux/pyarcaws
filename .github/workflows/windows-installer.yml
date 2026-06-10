@@ -74,7 +74,7 @@ jobs:
         del "NSISInstaller.exe"
     - name: Build pyarcaws Installer
       run: |
-        makensis.exe base.nsi
+        & "${env:ProgramFiles(x86)}\NSIS\makensis.exe" base.nsi
     - name: Remove uneeded libs (TK)
       run: |
         Remove-Item .\dist\lib\tcl -recurse
