@@ -106,11 +106,9 @@ jobs:
       uses: actions/download-artifact@v4.1.7
       with:
         name: dist-${{ matrix.targetplatform }}
-    - name: Download certificate and private key
-      run: |
-        Invoke-WebRequest -Uri "https://www.sistemasagiles.com.ar/soft/pyafipws/reingart2023.zip" -OutFile reingart.zip
-        Expand-Archive reingart.zip -DestinationPath .
-    - name: Replace certificate and private key from secrets
+    # el certificado de homologación del upstream ya no está publicado;
+    # las credenciales de prueba deben proveerse vía secrets del repo
+    - name: Write certificate and private key from secrets
       shell: pwsh
       env:
         AFIP_TEST_PRIV_KEY: ${{ secrets.AFIP_TEST_PRIV_KEY }}
@@ -119,14 +117,17 @@ jobs:
         TARGET_PLATFORM: ${{ matrix.targetplatform }}
       if: "${{ env.AFIP_TEST_PRIV_KEY != '' }}"
       run: |
-        "$env:AFIP_TEST_PRIV_KEY" | Out-File -FilePath reingart-gh.key
-        $( if ( "$env:TARGET_PLATFORM" -eq "x64" ) { "$env:AFIP_TEST_CERT2" } else { "$env:AFIP_TEST_CERT3" } ) | Out-File -FilePath reingart-gh.crt
-        Get-Content -Path reingart-gh.crt
+        "$env:AFIP_TEST_PRIV_KEY" | Out-File -FilePath reingart.key
+        $( if ( "$env:TARGET_PLATFORM" -eq "x64" ) { "$env:AFIP_TEST_CERT2" } else { "$env:AFIP_TEST_CERT3" } ) | Out-File -FilePath reingart.crt
+        Get-Content -Path reingart.crt
         Write-Host "TARGET_PLATFORM: $env:TARGET_PLATFORM"
     - name: Copy rece.ini file
       run: |
         copy conf\rece.ini .
     - name: Test WSAA command line interface
+      env:
+        AFIP_TEST_PRIV_KEY: ${{ secrets.AFIP_TEST_PRIV_KEY }}
+      if: "${{ env.AFIP_TEST_PRIV_KEY != '' }}"
       run: |
         .\wsaa.exe --analizar reingart.crt reingart.key wsmtxca 300
     - name: Register WSAA component
