@@ -10,8 +10,13 @@
 # or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License
 # for more details.
 
-"Módulo para generar códigos de barra en Entrelazado 2 de 5 (I25)"
+"""Módulo para generar códigos de barra en Entrelazado 2 de 5 (I25).
 
+La lógica de negocio vive en ``pyarcaws.core.i25`` (Python puro, sin COM);
+este módulo conserva la clase ``PyI25`` con su interfaz histórica (métodos
+CamelCase, atributos ``Excepcion``/``Traceback``, registro COM en Windows)
+y el ``main()`` de línea de comandos.
+"""
 
 __author__ = "Mariano Reingart <reingart@gmail.com>"
 __copyright__ = "Copyright (C) 2011-2021 Mariano Reingart"
@@ -21,10 +26,11 @@ __version__ = "3.02e"
 import os
 import sys
 import traceback
-from PIL import Image, ImageFont, ImageDraw
+
+from pyarcaws.core import i25 as core_i25
 
 
-class PyI25(object):
+class PyI25:
     "Interfaz para generar PDF de Factura Electrónica"
     _public_methods_ = ["GenerarImagen", "DigitoVerificadorModulo10"]
     _public_attrs_ = ["Version", "Excepcion", "Traceback"]
@@ -34,7 +40,12 @@ class PyI25(object):
 
     def __init__(self):
         self.Version = __version__
-        self.Exception = self.Traceback = ""
+        self.Excepcion = self.Traceback = ""
+
+    def _capturar_excepcion(self, e):
+        "Vuelca la excepción a los atributos que espera la interfaz COM"
+        self.Excepcion = traceback.format_exception_only(type(e), e)[0].strip()
+        self.Traceback = traceback.format_exc()
 
     def GenerarImagen(
         self,
@@ -46,168 +57,110 @@ class PyI25(object):
         extension="PNG",
     ):
         "Generar una imágen con el código de barras Interleaved 2 of 5"
-        # basado de:
-        #  * http://www.fpdf.org/en/script/script67.php
-        #  * http://code.activestate.com/recipes/426069/
-
-        wide = basewidth
-        narrow = basewidth // 3
-
-        # códigos ancho/angostos (wide/narrow) para los dígitos
-        bars = (
-            "nnwwn",
-            "wnnnw",
-            "nwnnw",
-            "wwnnn",
-            "nnwnw",
-            "wnwnn",
-            "nwwnn",
-            "nnnww",
-            "wnnwn",
-            "nwnwn",
-            "nn",
-            "wn",
-        )
-
-        # agregar un 0 al principio si el número de dígitos es impar
-        if len(codigo) % 2:
-            codigo = "0" + codigo
-
-        if not width:
-            width = (len(codigo) * 3) * basewidth + (10 * narrow)
-            print(width)
-            # width = 380
-        # crear una nueva imágen
-        im = Image.new("1", (width, height))
-
-        # agregar códigos de inicio y final
-        codigo = "::" + codigo.lower() + ";:"  # A y Z en el original
-
-        # crear un drawer
-        draw = ImageDraw.Draw(im)
-
-        # limpiar la imágen
-        draw.rectangle(((0, 0), (im.size[0], im.size[1])), fill=256)
-
-        xpos = 0
-        # dibujar los códigos de barras
-        for i in range(0, len(codigo), 2):
-            # obtener el próximo par de dígitos
-            bar = ord(codigo[i]) - ord("0")
-            space = ord(codigo[i + 1]) - ord("0")
-            # crear la sequencia barras (1er dígito=barras, 2do=espacios)
-            seq = ""
-            for s in range(len(bars[bar])):
-                seq = seq + bars[bar][s] + bars[space][s]
-
-            for s in range(len(seq)):
-                if seq[s] == "n":
-                    width = narrow
-                else:
-                    width = wide
-
-                # dibujar barras impares (las pares son espacios)
-                if not s % 2:
-                    draw.rectangle(((xpos, 0), (xpos + width - 1, height)), fill=0)
-                xpos = xpos + width
-
-        im.save(archivo, extension.upper())
-        return True
+        try:
+            if not width:
+                width = core_i25.calcular_ancho(codigo, basewidth)
+                print(width)
+            core_i25.generar_imagen(codigo, archivo, basewidth, width, height, extension)
+            return True
+        except Exception as e:
+            self._capturar_excepcion(e)
+            raise
 
     def DigitoVerificadorModulo10(self, codigo):
         "Rutina para el cálculo del dígito verificador 'módulo 10'"
-        # http://www.consejo.org.ar/Bib_elect/diciembre04_CT/documentos/rafip1702.htm
-        # Etapa 1: comenzar desde la izquierda, sumar todos los caracteres ubicados en las posiciones impares.
-        codigo = codigo.strip()
-        if not codigo or not codigo.isdigit():
-            return ""
-        etapa1 = sum([int(c) for i, c in enumerate(codigo) if not i % 2])
-        # Etapa 2: multiplicar la suma obtenida en la etapa 1 por el número 3
-        etapa2 = etapa1 * 3
-        # Etapa 3: comenzar desde la izquierda, sumar todos los caracteres que están ubicados en las posiciones pares.
-        etapa3 = sum([int(c) for i, c in enumerate(codigo) if i % 2])
-        # Etapa 4: sumar los resultados obtenidos en las etapas 2 y 3.
-        etapa4 = etapa2 + etapa3
-        # Etapa 5: buscar el menor número que sumado al resultado obtenido en la etapa 4 dé un número múltiplo de 10. Este será el valor del dígito verificador del módulo 10.
-        digito = 10 - (etapa4 - (etapa4 // 10 * 10))
-        if digito == 10:
-            digito = 0
-        return str(digito)
+        try:
+            return core_i25.digito_verificador_modulo10(codigo)
+        except Exception as e:
+            self._capturar_excepcion(e)
+            raise
+
+
+def registrar_com():
+    "Registra/desregistra el servidor COM en Windows (import diferido de pywin32)"
+    import win32com.server.register
+
+    win32com.server.register.UseCommandLine(PyI25)
+
+
+def servir_automate():
+    "Atiende las class factories COM (flag /Automate de Windows)"
+    # MS seems to like /automate to run the class factories.
+    import win32com.server.localserver
+
+    win32com.server.localserver.serve([PyI25._reg_clsid_])
+
+
+def empaquetar_py2exe():
+    "Empaqueta el módulo como ejecutable/DLL de Windows (import diferido de py2exe)"
+    from setuptools import setup
+    from pyarcaws.windows.nsis import build_installer, Target
+    import py2exe
+    import glob
+
+    VCREDIST = (
+        ".",
+        glob.glob(r"c:\Program Files\Mercurial\mfc*.*")
+        + glob.glob(r"c:\Program Files\Mercurial\Microsoft.VC90.CRT.manifest"),
+    )
+    setup(
+        name="PyI25",
+        version=__version__,
+        description="Interfaz pyarcaws I25 %s",
+        long_description=__doc__,
+        author="Mariano Reingart",
+        author_email="reingart@gmail.com",
+        url="http://www.sistemasagiles.com.ar",
+        license="GNU GPL v3",
+        com_server=[
+            {"modules": "pyi25", "create_exe": True, "create_dll": True},
+        ],
+        console=[
+            Target(
+                module=sys.modules[__name__],
+                script="pyi25.py",
+                dest_base="pyi25_cli",
+            )
+        ],
+        windows=[
+            Target(
+                module=sys.modules[__name__],
+                script="pyi25.py",
+                dest_base="pyi25_win",
+            )
+        ],
+        options={
+            "py2exe": {
+                "includes": [],
+                "optimize": 2,
+                "excludes": [
+                    "pywin",
+                    "pywin.dialogs",
+                    "pywin.dialogs.list",
+                    "win32ui",
+                    "distutils.core",
+                    "py2exe",
+                    "nsis",
+                ],
+                #'skip_archive': True,
+            }
+        },
+        data_files=[
+            VCREDIST,
+            (".", ["licencia.txt"]),
+        ],
+        cmdclass={"py2exe": build_installer},
+    )
 
 
 def main():
 
     if "--register" in sys.argv or "--unregister" in sys.argv:
-        import win32com.server.register
-
-        win32com.server.register.UseCommandLine(PyI25)
+        registrar_com()
     elif "/Automate" in sys.argv:
-        try:
-            # MS seems to like /automate to run the class factories.
-            import win32com.server.localserver
-
-            win32com.server.localserver.serve([PyI25._reg_clsid_])
-        except Exception:
-            raise
+        servir_automate()
     elif "py2exe" in sys.argv:
-        from setuptools import setup
-        from pyarcaws.windows.nsis import build_installer, Target
-        import py2exe
-        import glob
-
-        VCREDIST = (
-            ".",
-            glob.glob(r"c:\Program Files\Mercurial\mfc*.*")
-            + glob.glob(r"c:\Program Files\Mercurial\Microsoft.VC90.CRT.manifest"),
-        )
-        setup(
-            name="PyI25",
-            version=__version__,
-            description="Interfaz pyarcaws I25 %s",
-            long_description=__doc__,
-            author="Mariano Reingart",
-            author_email="reingart@gmail.com",
-            url="http://www.sistemasagiles.com.ar",
-            license="GNU GPL v3",
-            com_server=[
-                {"modules": "pyi25", "create_exe": True, "create_dll": True},
-            ],
-            console=[
-                Target(
-                    module=sys.modules[__name__],
-                    script="pyi25.py",
-                    dest_base="pyi25_cli",
-                )
-            ],
-            windows=[
-                Target(
-                    module=sys.modules[__name__],
-                    script="pyi25.py",
-                    dest_base="pyi25_win",
-                )
-            ],
-            options={
-                "py2exe": {
-                    "includes": [],
-                    "optimize": 2,
-                    "excludes": [
-                        "pywin",
-                        "pywin.dialogs",
-                        "pywin.dialogs.list",
-                        "win32ui",
-                        "distutils.core",
-                        "py2exe",
-                        "nsis",
-                    ],
-                    #'skip_archive': True,
-                }
-            },
-            data_files=[
-                VCREDIST,
-                (".", ["licencia.txt"]),
-            ],
-            cmdclass={"py2exe": build_installer},
-        )
+        empaquetar_py2exe()
     else:
 
         pyi25 = PyI25()
