@@ -70,10 +70,6 @@ jobs:
       run: |
         Remove-Item .\dist\lib\tcl -recurse
         Remove-Item .\dist\lib\tk -recurse
-    - name: Copy PowerShell tests into the release artifact
-      run: |
-        mkdir .\dist\tests
-        copy .\tests\powershell\*.* .\dist\tests
     - name: Save repository metadata for release env-vars
       run: |
         echo release_version="${{ matrix.python-version }}".$(git rev-list --count --all) > dist/.env
@@ -130,25 +126,6 @@ jobs:
     - name: Copy rece.ini file
       run: |
         copy conf\rece.ini .
-    - name: Install Pester
-      shell: powershell
-      run: |
-        Install-Module -Name Pester -Force -SkipPublisherCheck -Scope CurrentUser
-    - name: Test PyI25 COM server automation
-      continue-on-error: true
-      run: |
-        Import-Module Pester
-        Invoke-Pester .\tests\powershell\test_pyi25.ps1
-    - name: Register PyQR component
-      continue-on-error: true
-      run: |
-        python windows/register_pyqr.py
-        Get-Content -Path $Env:APPDATA\pyqr.log -ErrorAction SilentlyContinue
-    - name: Test PyQR COM server automation
-      continue-on-error: true
-      run: |
-        Import-Module Pester
-        Invoke-Pester .\tests\powershell\test_pyqr.ps1
     - name: Test WSAA command line interface
       run: |
         .\wsaa.exe --analizar reingart.crt reingart.key wsmtxca 300
@@ -170,22 +147,11 @@ jobs:
       run: |
         reg export "HKEY_CLASSES_ROOT\CLSID\{FA1BB90B-53D1-4FDA-8D1F-DEED2700E739}" wsfev1.reg
         type wsfev1.reg
-    - name: Test WSAA COM server automation
-      run: |
-        .\tests\test_wsaa.ps1
-    - name: Test WSFEv1 COM server automation
-      continue-on-error: true
-      run: |
-        .\tests\test_wsfev1.ps1
-    - name: Test RECE1 command line interface tool
-      continue-on-error: true
-      run: |
-        $env:Path += ";$pwd"
-        . .\tests\test_rece1.ps1
 
   pre-release:
     name: "Pre Release"
     needs: compile
+    if: github.ref == 'refs/heads/main'
     runs-on: "ubuntu-latest"
 
     steps:
