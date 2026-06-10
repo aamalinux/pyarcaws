@@ -139,6 +139,12 @@ jobs:
       if: "${{ env.AFIP_TEST_PRIV_KEY != '' }}"
       run: |
         .\wsaa.exe --analizar reingart.crt reingart.key wsmtxca 300
+    - name: Warn that WSAA auth test was skipped
+      env:
+        AFIP_TEST_PRIV_KEY: ${{ secrets.AFIP_TEST_PRIV_KEY }}
+      if: "${{ env.AFIP_TEST_PRIV_KEY == '' }}"
+      run: |
+        echo "::warning title=WSAA auth test SKIPPED::secrets AFIP_TEST_PRIV_KEY/AFIP_TEST_CERT2 no configurados; el E2E solo cubre registro COM"
     - name: Register WSAA component
       run: |
         .\wsaa.exe --register
