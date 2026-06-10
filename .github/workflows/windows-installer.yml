@@ -16,11 +16,11 @@ jobs:
         targetplatform: [x86, x64]
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v6
       with:
         fetch-depth: 0
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v6
       with:
         python-version: ${{ matrix.python-version }}
         architecture : ${{ matrix.targetplatform }}
@@ -87,14 +87,14 @@ jobs:
         echo workflow trigger: "${{ github.ref }}" - "${{ github.ref_name }}"
         type dist/.env
     - name: Deploy distribution binaries
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: dist-${{ matrix.targetplatform }}
         include-hidden-files: true
         path: |
           dist/
     - name: Deploy pyarcaws Installer
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: pyarcaws-Installer-${{ matrix.targetplatform }}
         path: |
@@ -108,11 +108,11 @@ jobs:
       matrix:
         targetplatform: [x64]
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v6
       with:
         fetch-depth: 0    
     - name: Download distribution binaries
-      uses: actions/download-artifact@v4.1.7
+      uses: actions/download-artifact@v8
       with:
         name: dist-${{ matrix.targetplatform }}
     # el certificado de homologación del upstream ya no está publicado;
@@ -172,17 +172,17 @@ jobs:
 
     steps:
       - name: Download 64Bit Installer
-        uses: actions/download-artifact@v4.1.7
+        uses: actions/download-artifact@v8
         with:
           name: pyarcaws-Installer-x64
           path: pyarcaws-Installer-x64.exe
       - name: Download 32bit Installer
-        uses: actions/download-artifact@v4.1.7
+        uses: actions/download-artifact@v8
         with:
           name: pyarcaws-Installer-x86
           path: pyarcaws-Installer-x86.exe
       - name: Download distribution binaries
-        uses: actions/download-artifact@v4.1.7
+        uses: actions/download-artifact@v8
         with:
           name: dist-x86
           path: dist-32
@@ -190,7 +190,7 @@ jobs:
         run: |
           zip dist-32.zip -r dist-32
       - name: Download distribution binaries
-        uses: actions/download-artifact@v4.1.7
+        uses: actions/download-artifact@v8
         with:
           name: dist-x64
           path: dist-64
