@@ -146,6 +146,55 @@ def exception_info(current_filename=None, index=-1):
     return ret
 
 
+def normalizar_lista_soap(data, clave):
+    """Aplana un nodo SOAP repetible a una lista de dicts (posiblemente vacía).
+
+    pysimplesoap entrega los nodos repetibles (``<Errors>/<Err>``,
+    ``<Events>/<Evt>``, ...) con distinta forma según cuántos hijos haya y
+    según la información de cardinalidad del WSDL. El código heredado de
+    pyafipws asumía siempre una lista y explotaba con
+    ``TypeError: string indices must be integers`` cuando llegaba un único
+    elemento (dict). Esta función tolera todas las formas conocidas:
+
+      - ausente / None / '' / {} / []                -> []
+      - {clave: {...}}            (un solo elemento)  -> [{...}]
+      - {clave: [{...}, ...]}     (varios)            -> [{...}, ...]
+      - [{clave: {...}}, ...]     (forma histórica)   -> [{...}, ...]
+
+    *clave* es el nombre del nodo hijo (``"Err"``, ``"Evt"``, ...).
+    """
+    if not data:
+        return []
+    if isinstance(data, dict):
+        items = data.get(clave, [])
+    else:
+        # lista: cada elemento puede ser {clave: {...}} o directamente {...}
+        items = []
+        for it in data:
+            if isinstance(it, dict) and clave in it:
+                items.append(it[clave])
+            else:
+                items.append(it)
+    if isinstance(items, dict):
+        items = [items]
+    return [it for it in items if it]
+
+
+def normalizar_errores(errors):
+    "Normaliza el nodo <Errors> a una lista de dicts {'Code','Msg'}."
+    return normalizar_lista_soap(errors, "Err")
+
+
+def normalizar_eventos(events):
+    "Normaliza el nodo <Events> a una lista de dicts {'Code','Msg'}."
+    return normalizar_lista_soap(events, "Evt")
+
+
+def normalizar_observaciones(obs):
+    "Normaliza el nodo <Observaciones> a una lista de dicts {'Code','Msg'}."
+    return normalizar_lista_soap(obs, "Obs")
+
+
 def inicializar_y_capturar_excepciones(func):
     "Decorador para inicializar y capturar errores (version para webservices)"
 

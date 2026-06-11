@@ -26,6 +26,7 @@ import sys, os, time
 from configparser import ConfigParser
 from pyarcaws.utils import inicializar_y_capturar_excepciones, BaseWS, get_install_dir
 from pyarcaws.utils import leer, escribir, leer_dbf, guardar_dbf, N, A, I, json
+from pyarcaws.utils import normalizar_errores
 
 
 # Constantes (si se usa el script de linea de comandos)
@@ -135,25 +136,22 @@ class WSCDC(BaseWS):
 
     def __analizar_errores(self, ret):
         "Comprueba y extrae errores si existen en la respuesta XML"
-        if "Errors" in ret:
-            errores = ret["Errors"]
-            for error in errores:
-                self.Errores.append(
-                    "%s: %s"
-                    % (
-                        error["Err"]["Code"],
-                        error["Err"]["Msg"],
-                    )
-                )
-            self.errores = [
-                {
-                    "code": err["Err"]["Code"],
-                    "msg": err["Err"]["Msg"].replace("\n", "").replace("\r", ""),
-                }
-                for err in errores
-            ]
-            self.ErrCode = " ".join([str(error["Err"]["Code"]) for error in errores])
-            self.ErrMsg = "\n".join(self.Errores)
+        errores = normalizar_errores(ret.get("Errors"))
+        if not errores:
+            return
+        for err in errores:
+            self.Errores.append(
+                "%s: %s" % (err.get("Code", ""), err.get("Msg", ""))
+            )
+        self.errores = [
+            {
+                "code": err.get("Code", ""),
+                "msg": str(err.get("Msg", "")).replace("\n", "").replace("\r", ""),
+            }
+            for err in errores
+        ]
+        self.ErrCode = " ".join([str(err.get("Code", "")) for err in errores])
+        self.ErrMsg = "\n".join(self.Errores)
 
     @inicializar_y_capturar_excepciones
     def Dummy(self):

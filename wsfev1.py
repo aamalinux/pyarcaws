@@ -33,6 +33,7 @@ import decimal
 import os
 import sys
 from pyarcaws.utils import verifica, inicializar_y_capturar_excepciones, BaseWS, get_install_dir
+from pyarcaws.utils import normalizar_errores, normalizar_eventos, normalizar_observaciones
 
 HOMO = False  # solo homologación
 TYPELIB = False  # usar librería de tipos (TLB)
@@ -166,22 +167,18 @@ class WSFEv1(BaseWS):
 
     def __analizar_errores(self, ret):
         "Comprueba y extrae errores si existen en la respuesta XML"
-        if "Errors" in ret:
-            errores = ret["Errors"]
-            for error in errores:
+        errores = normalizar_errores(ret.get("Errors"))
+        if errores:
+            for err in errores:
                 self.Errores.append(
-                    "%s: %s"
-                    % (
-                        error["Err"]["Code"],
-                        error["Err"]["Msg"],
-                    )
+                    "%s: %s" % (err.get("Code", ""), err.get("Msg", ""))
                 )
-            self.ErrCode = " ".join([str(error["Err"]["Code"]) for error in errores])
+            self.ErrCode = " ".join([str(err.get("Code", "")) for err in errores])
             self.ErrMsg = "\n".join(self.Errores)
-        if "Events" in ret:
-            events = ret["Events"]
+        eventos = normalizar_eventos(ret.get("Events"))
+        if eventos:
             self.Eventos = [
-                "%s: %s" % (evt["Evt"]["Code"], evt["Evt"]["Msg"]) for evt in events
+                "%s: %s" % (evt.get("Code", ""), evt.get("Msg", "")) for evt in eventos
             ]
 
     @inicializar_y_capturar_excepciones
@@ -480,10 +477,10 @@ class WSFEv1(BaseWS):
 
             # Reprocesar en caso de error (recuperar CAE emitido anteriormente)
             if self.Reprocesar and ("Errors" in result or "Observaciones" in fedetresp):
-                for error in result.get("Errors", []) + fedetresp.get(
-                    "Observaciones", []
-                ):
-                    err_code = str(error.get("Err", error.get("Obs"))["Code"])
+                for error in normalizar_errores(
+                    result.get("Errors")
+                ) + normalizar_observaciones(fedetresp.get("Observaciones")):
+                    err_code = str(error.get("Code", ""))
                     if fedetresp["Resultado"] == "R" and err_code == "10016":
                         # guardo los mensajes xml originales
                         xml_request = self.client.xml_request
@@ -1122,8 +1119,8 @@ class WSFEv1(BaseWS):
 
             # Reprocesar en caso de error (recuperar CAE emitido anteriormente)
             if self.Reprocesar and "Errors" in result:
-                for error in result["Errors"]:
-                    err_code = str(error["Err"]["Code"])
+                for error in normalizar_errores(result.get("Errors")):
+                    err_code = str(error.get("Code", ""))
                     if fedetresp["Resultado"] == "R" and err_code == "703":
                         caea = self.CompConsultar(
                             f["tipo_cbte"],
