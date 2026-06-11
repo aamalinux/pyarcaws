@@ -99,7 +99,35 @@ def main(argv):
     except Exception:
         traceback.print_exc()
 
-    # --- 3) ConsultarLiquidacion (lectura) --------------------------------
+    # --- 2.5) Catálogos read-only: PRUEBA END-TO-END del fix de namespaces ---
+    # Estas operaciones llevan auth+solicitud anidados; si el servidor las
+    # acepta (devuelve datos) en vez de un fault cvc-.../[common_001], el
+    # envelope corregido (hojas sin namespace) es válido contra el servicio vivo.
+    for metodo, kwargs in [
+        ("ConsultarProvincias", {}),
+        ("ConsultarTiposComprobante", {}),
+    ]:
+        print("\n[Catálogo] %s ..." % metodo)
+        try:
+            res = getattr(wslsp, metodo)(**kwargs)
+            n = len(res) if hasattr(res, "__len__") else "?"
+            print("  OK — %s registros. Primeros 3: %s" % (n, (res or [])[:3]))
+            print("  ErrMsg:", wslsp.ErrMsg, "| Excepcion:", wslsp.Excepcion)
+            print("  XmlRequest (Body):",
+                  (wslsp.XmlRequest or "").split("<soapenv:Body>")[-1][:400])
+        except Exception:
+            traceback.print_exc()
+            print("  XmlResponse:", (wslsp.XmlResponse or "")[:600])
+
+    # --- 4) ConsultarUltimoComprobante (lectura) --------------------------
+    print("\n[ConsultarUltimoComprobante] tipo=%s ptovta=%s" % (args.tipo, args.ptovta))
+    try:
+        ult = wslsp.ConsultarUltimoComprobante(tipo_cbte=args.tipo, pto_vta=args.ptovta)
+        print("  Último Nro:", ult, "| ErrMsg:", wslsp.ErrMsg, "| Excepcion:", wslsp.Excepcion)
+    except Exception:
+        traceback.print_exc()
+
+    # --- 5) ConsultarLiquidacion (lectura) --------------------------------
     print("\n[Consulta] tipo=%s ptovta=%s nro=%s cae=%s comprador=%s" % (
         args.tipo, args.ptovta, args.nro, args.cae, args.comprador))
     try:
