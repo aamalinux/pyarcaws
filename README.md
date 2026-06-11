@@ -85,20 +85,29 @@ Servicios web soportados:
 Notas de compatibilidad
 -----------------------
 
-**WSLSP — consulta de liquidaciones:**
+**WSLSP — consulta de liquidaciones (veredicto definitivo):**
 
-- `ConsultarLiquidacion(cae=...)` es la vía preferida, pero la operación
-  `consultarLiquidacionPorCae` **no existe en el WSDL de homologación**
-  (verificado contra el WSDL vivo, WSLSPv1.4.1: sólo se exponen
-  `consultarLiquidacionPorNroComprobante` y la variante avícola). Si el WSDL
-  conectado no la expone, `ConsultarLiquidacion(cae=...)` falla con un mensaje
-  claro indicando el ambiente (en vez de un críptico *Operation not found*).
+Verificado contra los WSDL vivos de **homologación y producción (11/06/2026)**:
+
+- La única consulta puntual es **`consultarLiquidacionPorNroComprobante`** (más
+  la variante avícola). Identifica la liquidación por
+  `puntoVenta + tipoComprobante + nroComprobante`, acotada al CUIT autenticado.
+  Es **emisor-céntrica**: no existe consulta por CAE, por receptor/comprador ni
+  por período. Autenticá con el certificado del **emisor**.
+- `ConsultarLiquidacion(tipo_cbte=..., pto_vta=..., nro_cbte=...)` es la forma
+  correcta. El parámetro `cuit_comprador` se mantiene por compatibilidad pero
+  **se ignora** (emite `UserWarning`): ARCA descartó la consulta por comprador.
+- `ConsultarLiquidacion(cae=...)` falla con un error claro: la operación
+  `consultarLiquidacionPorCae` **no existe ni en homologación ni en producción**.
   Podés chequear disponibilidad con `wslsp.OperacionDisponible(nombre)`.
-- En homologación usá la consulta por número de comprobante:
-  `ConsultarLiquidacion(tipo_cbte=..., pto_vta=..., nro_cbte=...)`. La operación
-  identifica la liquidación por `puntoVenta + tipoComprobante + nroComprobante`,
-  acotada al CUIT autenticado (no hay parámetro `cuitComprador` en ese WSDL). El
-  PDF llega dentro de la respuesta.
+- El `pdf` es sólo el nombre de archivo **local** donde guardar el PDF que viene
+  en la respuesta; no viaja ningún elemento `pdf` ni `cuitComprador` en la
+  solicitud (el schema vivo los rechaza).
+- Nota técnica: el WSDL de WSLSP usa `elementFormDefault="unqualified"`; el
+  pysimplesoap vendoreado fue corregido para no calificar con namespace los
+  elementos hoja de schemas unqualified (antes generaba un envelope que el
+  servicio rechazaba). El fix respeta `elementFormDefault` y no afecta a los
+  servicios `qualified` (WSFEv1, WSCDC, etc.).
 
 ---
 
