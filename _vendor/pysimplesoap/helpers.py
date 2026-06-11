@@ -265,7 +265,17 @@ def process_element(elements, element_name, node, element_type, xsd_uri,
                 e_name = e['name'] or type_name  # for refs, use the type name
                 struct[e_name] = fn
                 struct.references[e_name] = e['ref']
-                struct.namespaces[e_name] = namespace  # set the element namespace
+                # set the element namespace honouring elementFormDefault:
+                # only "qualified" schemas namespace-tag their local elements;
+                # for "unqualified" (the XSD default, qualified is False) the
+                # sub-elements must go without namespace, otherwise pysimplesoap
+                # adds a spurious xmlns=... that schema-validating servers reject
+                # (e.g. WSLSP rejects the qualified <token>/<puntoVenta>). Only
+                # act on an explicit False to leave undetermined cases untouched.
+                if qualified is False:
+                    struct.namespaces[e_name] = ""
+                else:
+                    struct.namespaces[e_name] = namespace
             else:
                 log.debug('complexContent/simpleType/element %s = %s' % (element_name, type_name))
                 # use None to point this is a complex element reference

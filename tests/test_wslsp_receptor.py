@@ -182,9 +182,10 @@ def test_sin_errores_no_toca_errmsg():
 # --- Tests de la consulta por comprador -----------------------------------
 
 
-def test_consultar_por_comprador_y_pdf(tmp_path):
-    """ConsultarLiquidacion por receptor: arma el request con cuitComprador,
-    parsea la liquidación y guarda el PDF en disco."""
+def test_consultar_por_nro_solicitud_limpia_y_pdf(tmp_path):
+    """ConsultarLiquidacion (emisor-céntrica): la solicitud lleva sólo
+    puntoVenta/tipoComprobante/nroComprobante (sin cuitComprador ni pdf, que
+    el servicio vivo rechaza), parsea la liquidación y guarda el PDF en disco."""
     w = _nuevo_wslsp()
     w.Token, w.Sign, w.Cuit = "TK", "SG", "20111111112"
     w.client = _FakeClient(LIQ_OK)
@@ -194,20 +195,18 @@ def test_consultar_por_comprador_y_pdf(tmp_path):
         tipo_cbte=190,
         pto_vta=3,
         nro_cbte=16,
-        cuit_comprador="30690720023",
         pdf=str(pdf_path),
     )
 
     assert ok
-    # se usó el método por número de comprobante con el CUIT comprador
     modo, kwargs = w.client.calls[0]
     assert modo == "porNro"
     sol = kwargs["solicitud"]
-    assert sol["cuitComprador"] == "30690720023"
+    # la solicitud tiene EXACTAMENTE los 3 campos del esquema (bugs 1 y 3)
+    assert set(sol) == {"puntoVenta", "tipoComprobante", "nroComprobante"}
     assert sol["tipoComprobante"] == 190
     assert sol["puntoVenta"] == 3
     assert sol["nroComprobante"] == 16
-    assert sol["pdf"] is True
     # datos de la liquidación poblados
     assert w.CAE == "86217130787511"
     assert w.NroComprobante == 16
@@ -217,9 +216,23 @@ def test_consultar_por_comprador_y_pdf(tmp_path):
     # gasto/tributo único (dict) tolerado y normalizado a lista
     assert w.params_out["gasto"] == [{"cod_gasto": 16, "importe": 100.0}]
     assert w.params_out["tributo"][0]["codigo"] == 5
-    # PDF escrito a disco
+    # PDF escrito a disco (vino en la respuesta, no se pidió en la solicitud)
     assert pdf_path.read_bytes() == b"%PDF-1.4 contenido de prueba"
     assert not w.Errores
+
+
+def test_consultar_cuit_comprador_ignorado_con_warning():
+    """Pasar cuit_comprador emite UserWarning y NO lo mete en la solicitud."""
+    w = _nuevo_wslsp()
+    w.Token, w.Sign, w.Cuit = "TK", "SG", "20111111112"
+    w.client = _FakeClient(LIQ_OK)
+    with pytest.warns(UserWarning, match="emisor"):
+        w.ConsultarLiquidacion(
+            tipo_cbte=190, pto_vta=3, nro_cbte=16,
+            cuit_comprador="30690720023", pdf="",
+        )
+    sol = w.client.calls[0][1]["solicitud"]
+    assert "cuitComprador" not in sol
 
 
 def test_consultar_por_cae(tmp_path):
@@ -279,8 +292,7 @@ def test_consultar_liquidacion_inexistente_degrada_limpio(tmp_path):
     w.client = _FakeClient(LIQ_INEXISTENTE)
 
     ok = w.ConsultarLiquidacion(
-        tipo_cbte=190, pto_vta=3, nro_cbte=99999, cuit_comprador="30690720023",
-        pdf="",
+        tipo_cbte=190, pto_vta=3, nro_cbte=99999, pdf="",
     )
 
     assert ok

@@ -66,6 +66,7 @@ import os, sys, shelve, subprocess
 import decimal, datetime
 import traceback
 import pprint
+import warnings
 from pyarcaws._vendor.pysimplesoap.client import SoapFault
 from fpdf import Template
 from pyarcaws import utils
@@ -627,36 +628,49 @@ class WSLSP(BaseWS):
         cuit_comprador=None,
         pdf="liq.pdf",
     ):
-        """Consulta una liquidación por No de Comprobante o CAE.
+        """Consulta una liquidación por No de Comprobante (o por CAE si el WSDL
+        lo expone).
 
-        IMPORTANTE (verificado contra el WSDL de homologación WSLSPv1.4.1):
-        la operación ``consultarLiquidacionPorNroComprobante`` identifica la
-        liquidación SÓLO por ``puntoVenta`` + ``tipoComprobante`` +
-        ``nroComprobante``, acotada al CUIT autenticado en ``auth`` (token/
-        sign/cuit). NO existe en ese WSDL un parámetro ``cuitComprador`` ni
-        ``cuitEmisor``: la consulta "como receptor/comprador" se hace
-        autenticando con el certificado del comprador (self.Cuit) — AFIP
-        devuelve la liquidación si ese CUIT está habilitado a verla. El kwarg
-        ``cuit_comprador`` se mantiene por compatibilidad y porque versiones
-        de producción/posteriores podrían incorporarlo, pero en ese WSDL el
-        marshaller lo descarta por no estar en el esquema.
+        IMPORTANTE — verificado contra el WSDL vivo de homologación Y producción
+        (11/06/2026): la única operación de consulta puntual es
+        ``consultarLiquidacionPorNroComprobante``, que identifica la liquidación
+        SÓLO por ``puntoVenta`` + ``tipoComprobante`` + ``nroComprobante``,
+        acotada al CUIT autenticado en ``auth`` (token/sign/cuit). La consulta es
+        **emisor-céntrica**: no existen en el esquema ``cuitComprador`` ni
+        ``cuitEmisor`` ni un flag ``pdf`` en la solicitud. Enviarlos hace
+        explotar el marshalling local (``Invalid Args Structure``) o los rechaza
+        el schema vivo (``cvc-complex-type.2.4.d``). La consulta "como receptor"
+        quedó descartada por diseño de ARCA; autenticá con el certificado del
+        EMISOR.
+
+        El kwarg ``cuit_comprador`` se mantiene en la firma por compatibilidad
+        pero **se ignora**: si se pasa, se emite un ``UserWarning``.
 
         El PDF llega dentro de la respuesta (``LiquidacionDetalleRespuesta.pdf``);
-        si se indica un nombre de archivo en ``pdf`` y vino en la respuesta, se
-        guarda en disco. La rama por ``cae`` (vía preferida del proyecto) usa
-        ``consultarLiquidacionPorCae``: esa operación NO existe en el WSDL de
-        homologación (verificado contra el WSDL vivo, WSLSPv1.4.1). Si el WSDL
-        conectado no la expone, se lanza un error claro indicando el ambiente
-        en vez de un críptico "Operation not found".
+        ``pdf`` es sólo el nombre de archivo LOCAL donde guardarlo (no viaja en
+        la solicitud). La rama por ``cae`` usa ``consultarLiquidacionPorCae``,
+        operación que NO existe ni en homologación ni en producción (verificado
+        11/06/2026); si el WSDL conectado no la expone se lanza un error claro.
         """
+        if cuit_comprador is not None:
+            warnings.warn(
+                "WSLSP no soporta la consulta por comprador: ARCA la descartó "
+                "por diseño (la consulta es emisor-céntrica y no existe "
+                "'cuitComprador' en el WSDL). El parámetro cuit_comprador se "
+                "ignora; autenticá con el certificado del emisor.",
+                UserWarning,
+                stacklevel=2,
+            )
         if cae:
             if not self.OperacionDisponible("consultarLiquidacionPorCae"):
                 raise RuntimeError(
                     "La operación 'consultarLiquidacionPorCae' no está disponible "
                     "en el WSDL conectado (%s). La consulta por CAE no existe en "
-                    "este ambiente (p. ej. homologación WSLSPv1.4.1). Usá la "
-                    "consulta por número de comprobante (pto_vta + tipo_cbte + "
-                    "nro_cbte) o conectá contra un ambiente/WSDL que la exponga."
+                    "WSLSP: verificado contra los WSDL vivos de homologación y "
+                    "producción (11/06/2026), sólo se expone "
+                    "consultarLiquidacionPorNroComprobante (+ variante avícola). "
+                    "Usá la consulta por número de comprobante "
+                    "(pto_vta + tipo_cbte + nro_cbte)."
                     % (getattr(self.client, "location", None) or self.WSDL)
                 )
             ret = self.client.consultarLiquidacionPorCae(
@@ -667,7 +681,6 @@ class WSLSP(BaseWS):
                 },
                 solicitud={
                     "cae": cae,
-                    "pdf": pdf and True or False,
                 },
             )
         else:
@@ -678,11 +691,9 @@ class WSLSP(BaseWS):
                     "cuit": self.Cuit,
                 },
                 solicitud={
-                    "cuitComprador": cuit_comprador,
                     "puntoVenta": pto_vta,
-                    "nroComprobante": nro_cbte,
                     "tipoComprobante": tipo_cbte,
-                    "pdf": pdf and True or False,
+                    "nroComprobante": nro_cbte,
                 },
             )
         ret = ret["respuesta"]
