@@ -82,6 +82,26 @@ Servicios web soportados:
 
 ---
 
+Notas de compatibilidad
+-----------------------
+
+**WSLSP — consulta de liquidaciones:**
+
+- `ConsultarLiquidacion(cae=...)` es la vía preferida, pero la operación
+  `consultarLiquidacionPorCae` **no existe en el WSDL de homologación**
+  (verificado contra el WSDL vivo, WSLSPv1.4.1: sólo se exponen
+  `consultarLiquidacionPorNroComprobante` y la variante avícola). Si el WSDL
+  conectado no la expone, `ConsultarLiquidacion(cae=...)` falla con un mensaje
+  claro indicando el ambiente (en vez de un críptico *Operation not found*).
+  Podés chequear disponibilidad con `wslsp.OperacionDisponible(nombre)`.
+- En homologación usá la consulta por número de comprobante:
+  `ConsultarLiquidacion(tipo_cbte=..., pto_vta=..., nro_cbte=...)`. La operación
+  identifica la liquidación por `puntoVenta + tipoComprobante + nroComprobante`,
+  acotada al CUIT autenticado (no hay parámetro `cuitComprador` en ese WSDL). El
+  PDF llega dentro de la respuesta.
+
+---
+
 Instalación:
 ------------
 

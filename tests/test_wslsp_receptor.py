@@ -119,11 +119,25 @@ LIQ_INEXISTENTE = {
 
 
 class _FakeClient:
-    def __init__(self, respuesta):
+    def __init__(self, respuesta, operations=None):
         self._respuesta = respuesta
         self.calls = []
         self.xml_request = ""
         self.xml_response = ""
+        self.location = "http://fake/LspService"
+        if operations is None:
+            operations = [
+                "consultarLiquidacionPorNroComprobante",
+                "consultarLiquidacionPorCae",
+            ]
+        # estructura mínima como la que arma pysimplesoap al parsear el WSDL
+        self.services = {
+            "LspService": {
+                "ports": {
+                    "LspEndPoint": {"operations": {op: {} for op in operations}}
+                }
+            }
+        }
 
     def consultarLiquidacionPorNroComprobante(self, **kwargs):
         self.calls.append(("porNro", kwargs))
@@ -220,6 +234,41 @@ def test_consultar_por_cae(tmp_path):
     modo, kwargs = w.client.calls[0]
     assert modo == "porCae"
     assert kwargs["solicitud"]["cae"] == "86217130787511"
+
+
+def test_consultar_por_cae_no_disponible_falla_claro():
+    """Si el WSDL conectado no expone consultarLiquidacionPorCae (p. ej.
+    homologación), ConsultarLiquidacion(cae=...) falla con un mensaje claro
+    que nombra el ambiente, no un críptico 'Operation not found'."""
+    w = _nuevo_wslsp()  # LanzarExcepciones=True
+    w.Token, w.Sign, w.Cuit = "TK", "SG", "20111111112"
+    # cliente sin la operación por CAE (sólo por nro)
+    w.client = _FakeClient(
+        LIQ_OK, operations=["consultarLiquidacionPorNroComprobante"]
+    )
+
+    with pytest.raises(RuntimeError) as exc:
+        w.ConsultarLiquidacion(cae="86217130787511", pdf="")
+
+    assert "consultarLiquidacionPorCae" in str(exc.value)
+    assert "no está disponible" in str(exc.value)
+    # no se llegó a invocar ninguna operación
+    assert w.client.calls == []
+
+
+def test_consultar_por_cae_disponible_degrada_a_errmsg():
+    """Con LanzarExcepciones=False el mismo caso degrada limpio a ErrMsg."""
+    w = _nuevo_wslsp()
+    w.LanzarExcepciones = False
+    w.Token, w.Sign, w.Cuit = "TK", "SG", "20111111112"
+    w.client = _FakeClient(
+        LIQ_OK, operations=["consultarLiquidacionPorNroComprobante"]
+    )
+
+    ok = w.ConsultarLiquidacion(cae="86217130787511", pdf="")
+
+    assert ok is None
+    assert "consultarLiquidacionPorCae" in w.ErrMsg
 
 
 def test_consultar_liquidacion_inexistente_degrada_limpio(tmp_path):
