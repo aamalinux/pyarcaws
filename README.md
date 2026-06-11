@@ -100,6 +100,24 @@ Notas de compatibilidad
   acotada al CUIT autenticado (no hay parámetro `cuitComprador` en ese WSDL). El
   PDF llega dentro de la respuesta.
 
+**Padrón Alcance 5 → Constancia de Inscripción:**
+
+- ARCA **deprecó** `ws_sr_padron_a5`. Usá **`WSSrConstanciaInscripcion`**
+  (servicio WSAA `ws_sr_constancia_inscripcion`, Consulta a Padrón Constancia de
+  Inscripción, manual V4.1), que invoca **`getPersona_v2`** sobre el mismo
+  endpoint SOAP `personaServiceA5`. Instanciar `WSSrPadronA5` emite un
+  `DeprecationWarning`; sigue funcionando para no romper compatibilidad.
+- `WSSrConstanciaInscripcion.Consultar(cuit)` puebla los campos clásicos
+  (denominación, domicilio, impuestos, actividades, `cat_iva`, etc.) y además
+  `self.caracterizaciones` — lista de `{id, descripcion, periodo,
+  fecha_solicitud}`. El tag **`fechaSolicitud`** (xs:int) es opcional, sólo
+  presente desde el 11/02/2026; se expone cuando viene y es `None` si falta.
+  Helper `TieneCaracterizacion(id)` para detectar, p. ej., la **639**
+  (Ganancias Simplificada Ley 27.779), que la constancia clásica no publicaba.
+- Los bloques de error (`errorConstancia` / `errorMonotributo` /
+  `errorRegimenGeneral`) se parsean tolerando dict único vs lista (no explotan
+  con `TypeError` ante un solo error).
+
 ---
 
 Instalación:
