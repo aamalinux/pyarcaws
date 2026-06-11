@@ -608,6 +608,15 @@ class WSLSP(BaseWS):
                 pprint.pprint(self.params_out)
         self.params_out["errores"] = self.errores
 
+    def OperacionDisponible(self, nombre):
+        "Indica si el WSDL conectado expone la operación SOAP indicada"
+        servicios = getattr(self.client, "services", None) or {}
+        for service in servicios.values():
+            for port in service.get("ports", {}).values():
+                if nombre in (port.get("operations") or {}):
+                    return True
+        return False
+
     @inicializar_y_capturar_excepciones
     def ConsultarLiquidacion(
         self,
@@ -634,11 +643,22 @@ class WSLSP(BaseWS):
 
         El PDF llega dentro de la respuesta (``LiquidacionDetalleRespuesta.pdf``);
         si se indica un nombre de archivo en ``pdf`` y vino en la respuesta, se
-        guarda en disco. La rama por ``cae`` usa ``consultarLiquidacionPorCae``,
-        operación que NO figura en el WSDL de homologación cacheado: validar su
-        disponibilidad contra el WSDL vivo antes de usarla.
+        guarda en disco. La rama por ``cae`` (vía preferida del proyecto) usa
+        ``consultarLiquidacionPorCae``: esa operación NO existe en el WSDL de
+        homologación (verificado contra el WSDL vivo, WSLSPv1.4.1). Si el WSDL
+        conectado no la expone, se lanza un error claro indicando el ambiente
+        en vez de un críptico "Operation not found".
         """
         if cae:
+            if not self.OperacionDisponible("consultarLiquidacionPorCae"):
+                raise RuntimeError(
+                    "La operación 'consultarLiquidacionPorCae' no está disponible "
+                    "en el WSDL conectado (%s). La consulta por CAE no existe en "
+                    "este ambiente (p. ej. homologación WSLSPv1.4.1). Usá la "
+                    "consulta por número de comprobante (pto_vta + tipo_cbte + "
+                    "nro_cbte) o conectá contra un ambiente/WSDL que la exponga."
+                    % (getattr(self.client, "location", None) or self.WSDL)
+                )
             ret = self.client.consultarLiquidacionPorCae(
                 auth={
                     "token": self.Token,
