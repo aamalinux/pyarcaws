@@ -195,6 +195,20 @@ def normalizar_observaciones(obs):
     return normalizar_lista_soap(obs, "Obs")
 
 
+def como_lista(data):
+    """Devuelve *data* siempre como lista.
+
+    pysimplesoap entrega los nodos repetibles (gasto, tributo, caracterizacion,
+    ...) como dict cuando hay un solo hijo y como lista cuando hay varios.
+    Itera sin sorpresas:  None/'' -> [], dict -> [dict], lista -> la misma lista.
+    """
+    if not data:
+        return []
+    if isinstance(data, list):
+        return data
+    return [data]
+
+
 def inicializar_y_capturar_excepciones(func):
     "Decorador para inicializar y capturar errores (version para webservices)"
 

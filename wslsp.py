@@ -83,6 +83,8 @@ from pyarcaws.utils import (
     BaseWS,
     inicializar_y_capturar_excepciones,
     get_install_dir,
+    normalizar_lista_soap,
+    como_lista,
 )
 
 
@@ -221,24 +223,30 @@ class WSLSP(BaseWS):
 
     def __analizar_errores(self, ret):
         "Comprueba y extrae errores si existen en la respuesta XML"
-        errores = []
-        if "errores" in ret:
-            errores.extend(ret["errores"])
-        if errores:
-            self.Errores = [
-                "%(codigo)s: %(descripcion)s" % err["error"][0] for err in errores
-            ]
-            self.errores = [
-                {
-                    "codigo": err["error"][0]["codigo"],
-                    "descripcion": err["error"][0]["descripcion"]
-                    .replace("\n", "")
-                    .replace("\r", ""),
-                }
-                for err in errores
-            ]
-            self.ErrCode = " ".join(self.Errores)
-            self.ErrMsg = "\n".join(self.Errores)
+        # <errores><error><codigo/><descripcion/></error>...</errores>
+        # pysimplesoap entrega <errores> como dict {'error': {...}} cuando hay
+        # un solo <error> y como {'error': [...]} cuando hay varios; el código
+        # heredado asumía siempre una lista y explotaba con
+        # "TypeError: string indices must be integers" (p. ej. coe.notAuthorized
+        # o un error de negocio único).
+        errores = normalizar_lista_soap(ret.get("errores"), "error")
+        if not errores:
+            return
+        self.Errores = [
+            "%s: %s" % (e.get("codigo", ""), e.get("descripcion", ""))
+            for e in errores
+        ]
+        self.errores = [
+            {
+                "codigo": e.get("codigo", ""),
+                "descripcion": str(e.get("descripcion", ""))
+                .replace("\n", "")
+                .replace("\r", ""),
+            }
+            for e in errores
+        ]
+        self.ErrCode = " ".join(self.Errores)
+        self.ErrMsg = "\n".join(self.Errores)
 
     @inicializar_y_capturar_excepciones
     def Dummy(self):
@@ -557,14 +565,14 @@ class WSLSP(BaseWS):
                 tributo=[],
                 pdf=liq.get("pdf"),
             )
-            for ret in liq.get("gasto", []):
+            for gasto in como_lista(liq.get("gasto")):
                 self.params_out["gasto"].append(
                     dict(
-                        cod_gasto=ret["codGasto"],
-                        importe=ret["importe"],
+                        cod_gasto=gasto["codGasto"],
+                        importe=gasto["importe"],
                     )
                 )
-            for trib in liq.get("tributo", []):
+            for trib in como_lista(liq.get("tributo")):
                 self.params_out["tributo"].append(
                     dict(
                         descripcion=trib.get("descripcion", ""),
@@ -610,7 +618,26 @@ class WSLSP(BaseWS):
         cuit_comprador=None,
         pdf="liq.pdf",
     ):
-        "Consulta una liquidación por No de Comprobante o CAE"
+        """Consulta una liquidación por No de Comprobante o CAE.
+
+        IMPORTANTE (verificado contra el WSDL de homologación WSLSPv1.4.1):
+        la operación ``consultarLiquidacionPorNroComprobante`` identifica la
+        liquidación SÓLO por ``puntoVenta`` + ``tipoComprobante`` +
+        ``nroComprobante``, acotada al CUIT autenticado en ``auth`` (token/
+        sign/cuit). NO existe en ese WSDL un parámetro ``cuitComprador`` ni
+        ``cuitEmisor``: la consulta "como receptor/comprador" se hace
+        autenticando con el certificado del comprador (self.Cuit) — AFIP
+        devuelve la liquidación si ese CUIT está habilitado a verla. El kwarg
+        ``cuit_comprador`` se mantiene por compatibilidad y porque versiones
+        de producción/posteriores podrían incorporarlo, pero en ese WSDL el
+        marshaller lo descarta por no estar en el esquema.
+
+        El PDF llega dentro de la respuesta (``LiquidacionDetalleRespuesta.pdf``);
+        si se indica un nombre de archivo en ``pdf`` y vino en la respuesta, se
+        guarda en disco. La rama por ``cae`` usa ``consultarLiquidacionPorCae``,
+        operación que NO figura en el WSDL de homologación cacheado: validar su
+        disponibilidad contra el WSDL vivo antes de usarla.
+        """
         if cae:
             ret = self.client.consultarLiquidacionPorCae(
                 auth={
