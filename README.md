@@ -69,6 +69,7 @@ Servicios web soportados:
 - [WSLSP][17d]: agricultura (sector pecuario/ganadero)
 - [WSCDC][23]: constatación de comprobantes
 - [Padrón de contribuyentes][26]: verificación de vendedores y compradores
+  (Alcance 4, Alcance 5 / Constancia de Inscripción, Alcance 10)
 
 **ARBA:**
 
@@ -126,6 +127,22 @@ Verificado contra los WSDL vivos de **homologación y producción (11/06/2026)**
 - Los bloques de error (`errorConstancia` / `errorMonotributo` /
   `errorRegimenGeneral`) se parsean tolerando dict único vs lista (no explotan
   con `TypeError` ante un solo error).
+
+**Padrón — alcances y servicios deprecados:**
+
+- Los padrones viejos **N3 y N10 fueron reemplazados** por los WebServices de
+  **Alcance 4** (`WSSrPadronA4`, `ws_sr_padron_a4`) y **Alcance 10**
+  (`WSSrPadronA10`, `ws_sr_padron_a10`) respectivamente.
+- **`WSSrPadronA10`** (Alcance 10) es la versión liviana para validación rápida
+  de un CUIT: `Consultar(cuit)` puebla denominación, tipo/nro de documento,
+  estado de la clave, domicilio(s) y la actividad principal
+  (`actividad_principal`). No trae impuestos/actividades detalladas/categorías
+  ni caracterizaciones (para eso usar Alcance 4 o la Constancia de Inscripción).
+  Verificado contra el WSDL vivo `personaServiceA10` (operación `getPersona`,
+  sin `getPersona_v2`); los errores de negocio llegan como SOAP fault.
+- **Alcance 100** (Sistema Registral, consulta de parámetros): pendiente — el
+  WSDL no responde en `sr-padron/webservices/*A100` (homologación devuelve
+  *"Servicio inexistente"*); se implementará al confirmar la URL/operación real.
 
 ---
 
