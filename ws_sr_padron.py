@@ -28,6 +28,7 @@ import decimal
 import json
 import os
 import sys
+import warnings
 
 from pyarcaws.utils import (
     inicializar_y_capturar_excepciones,
@@ -53,6 +54,7 @@ class WSSrPadronA4(BaseWS):
     "Interfaz para el WebService de Consulta Padrón Contribuyentes Alcance 4"
     _public_methods_ = [
         "Consultar",
+        "TieneCaracterizacion",
         "AnalizarXml",
         "ObtenerTagXml",
         "LoadTestXML",
@@ -100,6 +102,7 @@ class WSSrPadronA4(BaseWS):
         "localidad",
         "provincia",
         "cod_postal",
+        "caracterizaciones",
     ]
 
     _reg_progid_ = "WSSrPadronA4"
@@ -231,6 +234,12 @@ class WSSrPadronA4(BaseWS):
         ]
         return self.caracterizaciones
 
+    def TieneCaracterizacion(self, id_caracterizacion):
+        "Indica si la persona tiene la caracterización indicada (p. ej. 639)"
+        return any(
+            c.get("id") == id_caracterizacion for c in self.caracterizaciones
+        )
+
     def analizar_datos(self, cat_mt):
         # intenta determinar situación de IVA:
         if 32 in self.impuestos:
@@ -267,10 +276,23 @@ class WSSrPadronA5(WSSrPadronA4):
 
     WSDL = WSDL.replace("personaServiceA4", "personaServiceA5")
 
+    def __init__(self, *args, **kwargs):
+        # ARCA deprecó ws_sr_padron_a5 a favor de la Consulta a Padrón
+        # Constancia de Inscripción (getPersona_v2). Avisamos sólo si se
+        # instancia A5 directamente (no las subclases vigentes).
+        if type(self) is WSSrPadronA5:
+            warnings.warn(
+                "WSSrPadronA5 (ws_sr_padron_a5) está deprecado por ARCA; usá "
+                "WSSrConstanciaInscripcion (ws_sr_constancia_inscripcion, "
+                "método getPersona_v2).",
+                DeprecationWarning,
+                stacklevel=2,
+            )
+        super().__init__(*args, **kwargs)
+
     @inicializar_y_capturar_excepciones
     def Consultar(self, id_persona):
         "Devuelve el detalle de todos los datos del contribuyente solicitado"
-        # llamar al webservice:
         res = self.client.getPersona(
             sign=self.Sign,
             token=self.Token,
@@ -278,32 +300,47 @@ class WSSrPadronA5(WSSrPadronA4):
             idPersona=id_persona,
         )
         ret = res.get("personaReturn", {})
-        # obtengo el resultado de AFIP (dict):
+        return self.AnalizarPersona(ret)
+
+    def AnalizarPersona(self, ret):
+        """Analiza la respuesta de getPersona/getPersona_v2 (formato constancia).
+
+        Estructura (verificada contra el WSDL vivo personaServiceA5):
+        ``personaReturn`` → ``datosGenerales`` (incluye ``caracterizacion`` y,
+        desde getPersona_v2, ``fechaSolicitud``), ``datosMonotributo``,
+        ``datosRegimenGeneral`` y los bloques de error ``errorConstancia`` /
+        ``errorMonotributo`` / ``errorRegimenGeneral``.
+        """
         data = ret.get("datosGenerales", {})
         if isinstance(data, list):
-            data = data[0]
+            data = data[0] if data else {}
         self.data = data
-        # lo serializo
+        # serializo la respuesta cruda completa:
         self.Persona = json.dumps(ret, default=json_serializer)
-        for er in "errorConstancia", "errorMonotributo", "errorRegimenGeneral":
-            if er in ret:
-                self.errores.extend(ret[er])
-        self.Excepcion = "\n\r".join([er["error"] for er in self.errores])
-        # extraigo los campos principales:
+        # errores: cada bloque es un dict con 'error' = str o lista de str.
+        # Tolerante a dict único vs lista (mismo bug histórico de <Errors>).
+        self.errores = []
+        for er in ("errorConstancia", "errorMonotributo", "errorRegimenGeneral"):
+            for bloque in como_lista(ret.get(er)):
+                self.errores.extend(
+                    str(e) for e in como_lista(bloque.get("error"))
+                )
+        self.Excepcion = "\n\r".join(self.errores)
+        # campos principales:
         self.tipo_persona = data.get("tipoPersona")
         self.tipo_doc = TIPO_CLAVE.get(data.get("tipoClave"))
         self.nro_doc = data.get("idPersona")
         self.cuit = self.nro_doc
         self.estado = data.get("estadoClave")
         self.es_sucesion = data.get("esSucesion")
-        if not "razonSocial" in data:
+        if "razonSocial" not in data:
             self.denominacion = ", ".join(
                 [data.get("apellido", ""), data.get("nombre", "")]
             )
         else:
             self.denominacion = data.get("razonSocial", "")
-        # analizo el domicilio, dando prioridad al FISCAL, luego LEGAL/REAL
-        domicilio = data.get("domicilioFiscal", [])
+        # domicilio fiscal:
+        domicilio = data.get("domicilioFiscal") or {}
         if domicilio:
             self.direccion = domicilio.get("direccion", "")
             self.localidad = domicilio.get("localidad", "")  # no usado en CABA
@@ -313,26 +350,58 @@ class WSSrPadronA5(WSSrPadronA4):
             self.direccion = self.localidad = self.provincia = ""
             self.cod_postal = ""
         # retrocompatibilidad:
-        self.domicilios = [domicilio]
+        self.domicilios = [domicilio] if domicilio else []
         self.domicilio = "%s - %s (%s) - %s" % (
             self.direccion,
             self.localidad,
             self.cod_postal,
             self.provincia,
         )
-        # extraer datos impositivos (inscripción / opción) para unificarlos:
-        data_mt = ret.get("datosMonotributo", {})
-        data_rg = ret.get("datosRegimenGeneral", {})
-        # analizo impuestos:
-        impuestos = data_mt.get("impuesto", []) + data_rg.get("impuesto", [])
+        # datos impositivos (inscripción / opción), tolerantes a single-vs-list:
+        data_mt = ret.get("datosMonotributo", {}) or {}
+        data_rg = ret.get("datosRegimenGeneral", {}) or {}
+        impuestos = como_lista(data_mt.get("impuesto")) + como_lista(
+            data_rg.get("impuesto")
+        )
         self.impuestos = [imp["idImpuesto"] for imp in impuestos]
-        actividades = data_rg.get("actividad", []) + data_mt.get(
-            "actividadMonotributista", []
+        actividades = como_lista(data_rg.get("actividad")) + como_lista(
+            data_mt.get("actividadMonotributista")
         )
         self.actividades = [act["idActividad"] for act in actividades]
-        cat_mt = data_mt.get("categoriaMonotributo", {})
+        cat_mt = data_mt.get("categoriaMonotributo", {}) or {}
         self.analizar_datos(cat_mt)
+        # caracterizaciones (cuelgan dentro de datosGenerales):
+        self.analizar_caracterizaciones(data)
         return not self.errores
+
+
+class WSSrConstanciaInscripcion(WSSrPadronA5):
+    """Interfaz para la Consulta a Padrón Constancia de Inscripción (manual V4.1).
+
+    Reemplaza al servicio deprecado ws_sr_padron_a5. Se sirve por el mismo
+    endpoint SOAP (personaServiceA5) pero usa la operación ``getPersona_v2``,
+    que expone el tag opcional ``fechaSolicitud`` dentro de cada
+    ``<caracterizacion>`` (incorporado por ARCA el 11/02/2026). Nombre de
+    servicio para WSAA: ``ws_sr_constancia_inscripcion``.
+    """
+
+    _reg_progid_ = "WSSrConstanciaInscripcion"
+    _reg_clsid_ = "{66C5B0BE-F6F6-4063-A56F-F7ECDDBDFEB9}"
+
+    # Mismo WSDL/endpoint que A5 (heredado: personaServiceA5).
+    # Producción: https://aws.afip.gov.ar/sr-padron/webservices/personaServiceA5
+
+    @inicializar_y_capturar_excepciones
+    def Consultar(self, id_persona):
+        "Devuelve la constancia de inscripción del contribuyente (getPersona_v2)"
+        res = self.client.getPersona_v2(
+            sign=self.Sign,
+            token=self.Token,
+            cuitRepresentada=self.Cuit,
+            idPersona=id_persona,
+        )
+        ret = res.get("personaReturn", {})
+        return self.AnalizarPersona(ret)
 
 
 def main():
@@ -345,7 +414,7 @@ def main():
     safe_console()
 
     if "--constancia" in sys.argv:
-        padron = WSSrPadronA5()
+        padron = WSSrConstanciaInscripcion()
         SECTION = "WS-SR-PADRON-A5"
         service = "ws_sr_constancia_inscripcion"
     else:
@@ -475,8 +544,10 @@ def main():
 
 # busco el directorio de instalación (global para que no cambie si usan otra dll)
 INSTALL_DIR = WSSrPadronA4.InstallDir = WSSrPadronA5.InstallDir = get_install_dir()
+WSSrConstanciaInscripcion.InstallDir = INSTALL_DIR
 
 PadronA5 = WSSrPadronA5  # alias: nombre corto derivado del servicio ws_sr_padron_a5
+ConstanciaInscripcion = WSSrConstanciaInscripcion  # alias corto del servicio nuevo
 
 if __name__ == "__main__":
 
@@ -485,5 +556,6 @@ if __name__ == "__main__":
 
         win32com.server.register.UseCommandLine(WSSrPadronA4)
         win32com.server.register.UseCommandLine(WSSrPadronA5)
+        win32com.server.register.UseCommandLine(WSSrConstanciaInscripcion)
     else:
         main()
