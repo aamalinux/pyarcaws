@@ -38,6 +38,7 @@ from pyarcaws.utils import (
     norm,
     SoapFault,
     safe_console,
+    como_lista,
 )
 from pyarcaws.padron import TIPO_CLAVE, PROVINCIAS
 
@@ -131,6 +132,7 @@ class WSSrPadronA4(BaseWS):
         self.monotributo = self.actividad_monotributo = ""
         self.data = {}
         self.errores = []
+        self.caracterizaciones = []
 
     def Dummy(self):
         "Obtener el estado de los servidores de la AFIP"
@@ -205,7 +207,29 @@ class WSSrPadronA4(BaseWS):
         ]
         mt.sort(key=lambda cat: cat["idImpuesto"])
         self.analizar_datos(mt[0] if mt else {})
+        self.analizar_caracterizaciones(data)
         return True
+
+    def analizar_caracterizaciones(self, data):
+        """Extrae el bloque <caracterizacion> (id, descripción, período).
+
+        Algunas caracterizaciones sólo se publican acá y no en la constancia
+        A5 (p. ej. la 639, Ganancias Simplificada Ley 27.779). Desde el
+        11/02/2026 ARCA agregó el tag opcional ``fechaSolicitud`` dentro de
+        cada caracterización (getPersona_v2): se expone cuando viene y se
+        tolera su ausencia. pysimplesoap entrega el nodo como dict único o
+        como lista según la cantidad: ``como_lista`` normaliza ambos.
+        """
+        self.caracterizaciones = [
+            {
+                "id": car.get("idCaracterizacion"),
+                "descripcion": car.get("descripcionCaracterizacion"),
+                "periodo": car.get("periodo"),
+                "fecha_solicitud": car.get("fechaSolicitud"),
+            }
+            for car in como_lista((data or {}).get("caracterizacion"))
+        ]
+        return self.caracterizaciones
 
     def analizar_datos(self, cat_mt):
         # intenta determinar situación de IVA:
