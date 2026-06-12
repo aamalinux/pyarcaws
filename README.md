@@ -157,9 +157,12 @@ Verificado contra los WSDL vivos de **homologación y producción (11/06/2026)**
   ni caracterizaciones (para eso usar Alcance 4 o la Constancia de Inscripción).
   Verificado contra el WSDL vivo `personaServiceA10` (operación `getPersona`,
   sin `getPersona_v2`); los errores de negocio llegan como SOAP fault.
-- **Alcance 100** (Sistema Registral, consulta de parámetros): pendiente — el
-  WSDL no responde en `sr-padron/webservices/*A100` (homologación devuelve
-  *"Servicio inexistente"*); se implementará al confirmar la URL/operación real.
+- **Alcance 100** (`ws_sr_padron_a100`, consulta de parámetros del Sistema
+  Registral): servicio **identificado y disponible** — el WSDL vive bajo
+  `sr-parametros/webservices/parameterServiceA100` (no `sr-padron`), operación
+  `getParameterCollectionByName`. Aún **no implementado** en la librería; ver
+  [docs/a100_servicio_real.md](docs/a100_servicio_real.md) (URLs, esquema y
+  estimación de esfuerzo).
 
 ---
 
