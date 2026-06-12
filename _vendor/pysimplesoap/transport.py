@@ -16,6 +16,11 @@
 import logging
 import ssl
 import sys
+import warnings
+try:
+    import certifi
+except ImportError:  # pragma: no cover
+    certifi = None
 try:
     import urllib2
     from cookielib import CookieJar
@@ -27,6 +32,48 @@ from . import __author__, __copyright__, __license__, __version__, TIMEOUT
 from .simplexml import SimpleXMLElement, TYPE_MAP, Struct
 
 log = logging.getLogger(__name__)
+
+
+# --- Validación del certificado SSL del servidor --------------------------
+# Por defecto se VALIDA el certificado del servidor (check_hostname +
+# CERT_REQUIRED) usando el bundle de certifi o el trust store del sistema.
+# `cacert` puede ser: None -> validar con el bundle por defecto; una ruta a un
+# CA propio -> validar contra ese CA; False -> DESACTIVAR la validación (sólo
+# para depuración, emite UserWarning; nunca en silencio).
+
+def _advertir_ssl_inseguro():
+    warnings.warn(
+        "Validación del certificado SSL del servidor DESACTIVADA "
+        "(cacert=False): la conexión queda expuesta a ataques MITM. Usar sólo "
+        "para depuración.",
+        UserWarning, stacklevel=3,
+    )
+
+
+def _ca_bundle(cacert):
+    "Ruta al bundle de CA para validar (CA propio, o certifi/trust store)."
+    if cacert and cacert is not True:
+        return cacert
+    if certifi is not None:
+        return certifi.where()
+    return None  # último recurso: que la librería subyacente use su trust store
+
+
+def build_ssl_context(cacert=None):
+    """Contexto SSL con validación ACTIVADA por defecto.
+
+    - ``cacert=None`` / ``True`` -> ``ssl.create_default_context`` (check_hostname
+      + CERT_REQUIRED) con el bundle de certifi / trust store del sistema.
+    - ``cacert="<ruta>"`` -> valida contra ese CA propio.
+    - ``cacert=False`` -> validación DESACTIVADA (con UserWarning).
+    """
+    if cacert is False:
+        _advertir_ssl_inseguro()
+        ctx = ssl.create_default_context()
+        ctx.check_hostname = False
+        ctx.verify_mode = ssl.CERT_NONE
+        return ctx
+    return ssl.create_default_context(cafile=_ca_bundle(cacert))
 
 #
 # Socket wrapper to enable socket.TCP_NODELAY - this greatly speeds up transactions in Linux
@@ -97,8 +144,13 @@ else:
             if _ver_tuple(httplib2.__version__) >= (0, 3, 0):  # py3: comparación numérica
                 kwargs['timeout'] = timeout
             if _ver_tuple(httplib2.__version__) >= (0, 7, 0):  # py3: comparación numérica
-                kwargs['disable_ssl_certificate_validation'] = cacert is None
-                kwargs['ca_certs'] = cacert
+                # secure-by-default: validar salvo opt-out explícito cacert=False
+                if cacert is False:
+                    _advertir_ssl_inseguro()
+                    kwargs['disable_ssl_certificate_validation'] = True
+                else:
+                    kwargs['disable_ssl_certificate_validation'] = False
+                    kwargs['ca_certs'] = _ca_bundle(cacert)
             httplib2.Http.__init__(self, **kwargs)
 
     _http_connectors['httplib2'] = Httplib2Transport
@@ -122,16 +174,14 @@ class urllib2Transport(TransportBase):
             raise RuntimeError('timeout is not supported with urllib2 transport')
         if proxy:
             raise RuntimeError('proxy is not supported with urllib2 transport')
-        if cacert:
-            raise RuntimeError('cacert is not support with urllib2 transport')
-        
+
         handlers = []
 
         if ((sys.version_info[0] == 2 and sys.version_info >= (2,7,9)) or
             (sys.version_info[0] == 3 and sys.version_info >= (3,2,0))):
-            context = ssl.create_default_context()
-            context.check_hostname = False
-            context.verify_mode = ssl.CERT_NONE
+            # secure-by-default: valida el certificado del servidor salvo que
+            # se pase cacert=False (ver build_ssl_context)
+            context = build_ssl_context(cacert)
             handlers.append(urllib2.HTTPSHandler(context=context))
         
         if sessions:
@@ -197,10 +247,14 @@ else:
             #c.setopt(pycurl.READFUNCTION, self.read)
             #self.body = StringIO(body)
             #c.setopt(pycurl.HEADERFUNCTION, self.header)
-            if self.cacert:
-                c.setopt(c.CAINFO, self.cacert)
-            c.setopt(pycurl.SSL_VERIFYPEER, self.cacert and 1 or 0)
-            c.setopt(pycurl.SSL_VERIFYHOST, self.cacert and 2 or 0)
+            # secure-by-default: validar salvo opt-out explícito cacert=False
+            ca = _ca_bundle(self.cacert)
+            if self.cacert is False:
+                _advertir_ssl_inseguro()
+            elif ca:
+                c.setopt(c.CAINFO, ca)
+            c.setopt(pycurl.SSL_VERIFYPEER, 0 if self.cacert is False else 1)
+            c.setopt(pycurl.SSL_VERIFYHOST, 0 if self.cacert is False else 2)
             c.setopt(pycurl.CONNECTTIMEOUT, self.timeout)
             c.setopt(pycurl.TIMEOUT, self.timeout)
             if method == 'POST':

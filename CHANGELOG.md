@@ -8,6 +8,18 @@ el proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
 
 ## [Sin publicar]
 
+### Seguridad
+- **Validación del certificado SSL del servidor activada por defecto.** Antes,
+  el transporte vendoreado (`_vendor/pysimplesoap/transport.py`) usaba
+  `disable_ssl_certificate_validation`/`CERT_NONE`: toda conexión a ARCA viajaba
+  **sin validar** el certificado del servidor (expuesta a MITM). Ahora se valida
+  por defecto (`check_hostname` + `CERT_REQUIRED`) usando el bundle de `certifi`
+  o un CA propio (`cacert="<ruta>"`). El opt-out sigue disponible para
+  depuración con `cacert=False`, pero **nunca es silencioso**: emite un
+  `UserWarning`. Los endpoints de ARCA (homologación y producción) usan
+  certificados públicos válidos, por lo que el nuevo default no debería romper
+  integraciones existentes.
+
 ### Agregado
 - **Padrón Alcance 10** (`WSSrPadronA10`, servicio WSAA `ws_sr_padron_a10`):
   consulta liviana para validación rápida de un CUIT vía `getPersona`. Puebla
