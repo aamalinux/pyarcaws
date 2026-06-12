@@ -98,6 +98,7 @@ class WSSrPadronA4(BaseWS):
         "es_sucesion",
         "impuestos",
         "actividades",
+        "actividad_principal",
         "direccion",
         "localidad",
         "provincia",
@@ -133,6 +134,7 @@ class WSSrPadronA4(BaseWS):
         self.actividades = []
         self.imp_iva = self.empleador = self.integrante_soc = self.cat_iva = ""
         self.monotributo = self.actividad_monotributo = ""
+        self.actividad_principal = ""  # sólo poblado por Alcance 10
         self.data = {}
         self.errores = []
         self.caracterizaciones = []
@@ -404,6 +406,80 @@ class WSSrConstanciaInscripcion(WSSrPadronA5):
         return self.AnalizarPersona(ret)
 
 
+class WSSrPadronA10(WSSrPadronA4):
+    """Interfaz para Consulta a Padrón Alcance 10 (datos mínimos, manual V1.2/V1.3).
+
+    Versión liviana para validación rápida de un CUIT. Verificado contra el
+    WSDL vivo de homologación (personaServiceA10): la única operación de
+    consulta es ``getPersona`` (no hay ``getPersona_v2``), con la misma firma
+    de auth que A4/A5. La respuesta es ``personaReturn`` → ``persona`` con un
+    subconjunto chico de campos (denominación, tipo/nro de documento, estado de
+    la clave, domicilio(s) y actividad principal); NO trae bloques de impuesto,
+    actividad detallada, categoría ni caracterización. El WSDL no define
+    bloques de error de negocio: una persona inexistente o un servicio no
+    autorizado llegan como SOAP fault (capturado por el decorador en
+    ``Excepcion``/``ErrMsg``), igual que en A4.
+    """
+
+    _reg_progid_ = "WSSrPadronA10"
+    _reg_clsid_ = "{5937B177-93E3-459E-A86E-EDDD687E458C}"
+
+    WSDL = WSDL.replace("personaServiceA4", "personaServiceA10")
+    # Producción: https://aws.afip.gov.ar/sr-padron/webservices/personaServiceA10
+
+    @inicializar_y_capturar_excepciones
+    def Consultar(self, id_persona):
+        "Devuelve los datos mínimos del contribuyente (Padrón Alcance 10)"
+        res = self.client.getPersona(
+            sign=self.Sign,
+            token=self.Token,
+            cuitRepresentada=self.Cuit,
+            idPersona=id_persona,
+        )
+        ret = res.get("personaReturn", {})
+        data = ret.get("persona", {})
+        if isinstance(data, list):
+            data = data[0] if data else {}
+        self.data = data or {}
+        self.Persona = json.dumps(self.data, default=json_serializer)
+        # campos principales (todos tolerantes a ausencia):
+        self.cuit = self.data.get("idPersona")
+        self.tipo_persona = self.data.get("tipoPersona")
+        self.tipo_doc = TIPO_CLAVE.get(self.data.get("tipoClave"))
+        self.nro_doc = self.data.get("numeroDocumento")
+        self.estado = self.data.get("estadoClave")
+        if "razonSocial" not in self.data:
+            self.denominacion = ", ".join(
+                [self.data.get("apellido", ""), self.data.get("nombre", "")]
+            )
+        else:
+            self.denominacion = self.data.get("razonSocial", "")
+        # domicilio(s), priorizando el FISCAL (tolerante a single-vs-list):
+        domicilios = como_lista(self.data.get("domicilio"))
+        domicilios.sort(key=lambda item: item.get("tipoDomicilio") != "FISCAL")
+        if domicilios:
+            domicilio = domicilios[0]
+            self.direccion = domicilio.get("direccion", "")
+            self.localidad = domicilio.get("localidad", "")
+            self.provincia = PROVINCIAS.get(domicilio.get("idProvincia"), "")
+            self.cod_postal = domicilio.get("codPostal")
+        else:
+            self.direccion = self.localidad = self.provincia = ""
+            self.cod_postal = ""
+        self.domicilios = domicilios
+        self.domicilio = "%s - %s (%s) - %s" % (
+            self.direccion,
+            self.localidad,
+            self.cod_postal,
+            self.provincia,
+        )
+        # actividad principal (A10 sólo expone la principal, no el listado):
+        id_act = self.data.get("idActividadPrincipal")
+        self.actividades = [id_act] if id_act is not None else []
+        self.actividad_principal = self.data.get("descripcionActividadPrincipal", "")
+        return True
+
+
 def main():
     "Función principal de pruebas (obtener CAE)"
     import os, time
@@ -417,6 +493,10 @@ def main():
         padron = WSSrConstanciaInscripcion()
         SECTION = "WS-SR-PADRON-A5"
         service = "ws_sr_constancia_inscripcion"
+    elif "--a10" in sys.argv:
+        padron = WSSrPadronA10()
+        SECTION = "WS-SR-PADRON-A10"
+        service = "ws_sr_padron_a10"
     else:
         padron = WSSrPadronA4()
         SECTION = "WS-SR-PADRON-A4"
@@ -545,9 +625,11 @@ def main():
 # busco el directorio de instalación (global para que no cambie si usan otra dll)
 INSTALL_DIR = WSSrPadronA4.InstallDir = WSSrPadronA5.InstallDir = get_install_dir()
 WSSrConstanciaInscripcion.InstallDir = INSTALL_DIR
+WSSrPadronA10.InstallDir = INSTALL_DIR
 
 PadronA5 = WSSrPadronA5  # alias: nombre corto derivado del servicio ws_sr_padron_a5
 ConstanciaInscripcion = WSSrConstanciaInscripcion  # alias corto del servicio nuevo
+PadronA10 = WSSrPadronA10  # alias: nombre corto derivado del servicio ws_sr_padron_a10
 
 if __name__ == "__main__":
 
@@ -557,5 +639,6 @@ if __name__ == "__main__":
         win32com.server.register.UseCommandLine(WSSrPadronA4)
         win32com.server.register.UseCommandLine(WSSrPadronA5)
         win32com.server.register.UseCommandLine(WSSrConstanciaInscripcion)
+        win32com.server.register.UseCommandLine(WSSrPadronA10)
     else:
         main()
