@@ -85,6 +85,19 @@ Servicios web soportados:
 Notas de compatibilidad
 -----------------------
 
+**WSCDC / WSFEv1 — parseo tolerante de nodos repetibles:**
+
+- Los nodos `maxOccurs="unbounded"` (`<Errors>/<Err>`, `<Events>/<Evt>`,
+  `<Observaciones>/<Obs>`, y en `FECompConsultar` también `<Iva>`, `<Tributos>`,
+  `<CbtesAsoc>`, `<Opcionales>`, `<Compradores>`, `<Actividades>`) llegan como
+  **dict único** cuando hay un solo hijo y como **lista** cuando hay varios. El
+  parseo se normaliza con `como_lista` / `normalizar_lista_soap` (helpers de
+  `utils.py`) para tolerar ambas formas y no lanzar
+  `TypeError: string indices must be integers`. En particular, una constatación
+  WSCDC con `Resultado='R'` y una sola observación (p. ej. Obs 100 "CAE no
+  existe" u Obs 110 "importe no se corresponde") ahora puebla `Obs`/
+  `Observaciones` correctamente en vez de explotar.
+
 **WSLSP — consulta de liquidaciones (veredicto definitivo):**
 
 Verificado contra los WSDL vivos de **homologación y producción (11/06/2026)**:

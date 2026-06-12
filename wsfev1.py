@@ -34,6 +34,7 @@ import os
 import sys
 from pyarcaws.utils import verifica, inicializar_y_capturar_excepciones, BaseWS, get_install_dir
 from pyarcaws.utils import normalizar_errores, normalizar_eventos, normalizar_observaciones
+from pyarcaws.utils import normalizar_lista_soap
 
 HOMO = False  # solo homologación
 TYPELIB = False  # usar librería de tipos (TLB)
@@ -501,8 +502,8 @@ class WSFEv1(BaseWS):
 
             self.Resultado = fecabresp["Resultado"]
             # Obs:
-            for obs in fedetresp.get("Observaciones", []):
-                self.Observaciones.append("%(Code)s: %(Msg)s" % (obs["Obs"]))
+            for obs in normalizar_observaciones(fedetresp.get("Observaciones")):
+                self.Observaciones.append("%(Code)s: %(Msg)s" % obs)
             self.Obs = "\n".join(self.Observaciones)
             self.CAE = fedetresp["CAE"] and str(fedetresp["CAE"]) or ""
             self.EmisionTipo = "CAE"
@@ -671,62 +672,76 @@ class WSFEv1(BaseWS):
                     "moneda_ctz": resultget.get("MonCotiz"),
                     "cbtes_asoc": [
                         {
-                            "tipo": cbte_asoc["CbteAsoc"]["Tipo"],
-                            "pto_vta": cbte_asoc["CbteAsoc"]["PtoVta"],
-                            "nro": cbte_asoc["CbteAsoc"]["Nro"],
-                            "cuit": cbte_asoc["CbteAsoc"].get("Cuit"),
-                            "fecha": cbte_asoc["CbteAsoc"].get("CbteFch"),
+                            "tipo": cbte_asoc["Tipo"],
+                            "pto_vta": cbte_asoc["PtoVta"],
+                            "nro": cbte_asoc["Nro"],
+                            "cuit": cbte_asoc.get("Cuit"),
+                            "fecha": cbte_asoc.get("CbteFch"),
                         }
-                        for cbte_asoc in resultget.get("CbtesAsoc", [])
+                        for cbte_asoc in normalizar_lista_soap(
+                            resultget.get("CbtesAsoc"), "CbteAsoc"
+                        )
                     ],
                     "tributos": [
                         {
-                            "tributo_id": tributo["Tributo"]["Id"],
-                            "desc": tributo["Tributo"]["Desc"],
-                            "base_imp": tributo["Tributo"].get("BaseImp"),
-                            "alic": tributo["Tributo"].get("Alic"),
-                            "importe": tributo["Tributo"]["Importe"],
+                            "tributo_id": tributo["Id"],
+                            "desc": tributo["Desc"],
+                            "base_imp": tributo.get("BaseImp"),
+                            "alic": tributo.get("Alic"),
+                            "importe": tributo["Importe"],
                         }
-                        for tributo in resultget.get("Tributos", [])
+                        for tributo in normalizar_lista_soap(
+                            resultget.get("Tributos"), "Tributo"
+                        )
                     ],
                     "iva": [
                         {
-                            "iva_id": iva["AlicIva"]["Id"],
-                            "base_imp": iva["AlicIva"]["BaseImp"],
-                            "importe": iva["AlicIva"]["Importe"],
+                            "iva_id": iva["Id"],
+                            "base_imp": iva["BaseImp"],
+                            "importe": iva["Importe"],
                         }
-                        for iva in resultget.get("Iva", [])
+                        for iva in normalizar_lista_soap(
+                            resultget.get("Iva"), "AlicIva"
+                        )
                     ],
                     "opcionales": [
                         {
-                            "opcional_id": obs["Opcional"]["Id"],
-                            "valor": obs["Opcional"]["Valor"],
+                            "opcional_id": op["Id"],
+                            "valor": op["Valor"],
                         }
-                        for obs in resultget.get("Opcionales", [])
+                        for op in normalizar_lista_soap(
+                            resultget.get("Opcionales"), "Opcional"
+                        )
                     ],
                     "compradores": [
                         {
-                            "doc_tipo": comp["Comprador"]["DocTipo"],
-                            "doc_nro": comp["Comprador"]["DocNro"],
-                            "porcentaje": comp["Comprador"]["Porcentaje"],
+                            "doc_tipo": comp["DocTipo"],
+                            "doc_nro": comp["DocNro"],
+                            "porcentaje": comp["Porcentaje"],
                         }
-                        for comp in resultget.get("Compradores", [])
+                        for comp in normalizar_lista_soap(
+                            resultget.get("Compradores"), "Comprador"
+                        )
                     ],
                     "actividades": [
                         {
-                            "actividad_id": act["Actividad"]["Id"],
+                            "actividad_id": act["Id"],
                         }
-                        for act in resultget.get("Actividades", [])
+                        for act in normalizar_lista_soap(
+                            resultget.get("Actividades"), "Actividad"
+                        )
                     ],
                     "cae": resultget.get("CodAutorizacion"),
                     "resultado": resultget.get("Resultado"),
                     "fch_venc_cae": resultget.get("FchVto"),
                     "obs": [
                         {
-                            "code": obs["Obs"]["Code"],
-                            "msg": obs["Obs"]["Msg"],
+                            "code": obs["Code"],
+                            "msg": obs["Msg"],
                         }
-                        for obs in resultget.get("Observaciones", [])
+                        for obs in normalizar_observaciones(
+                            resultget.get("Observaciones")
+                        )
                     ],
                 }
 
@@ -752,8 +767,8 @@ class WSFEv1(BaseWS):
             elif self.EmisionTipo == "CAEA":
                 self.CAEA = cod_aut
             # Obs:
-            for obs in resultget.get("Observaciones", []):
-                self.Observaciones.append("%(Code)s: %(Msg)s" % (obs["Obs"]))
+            for obs in normalizar_observaciones(resultget.get("Observaciones")):
+                self.Observaciones.append("%(Code)s: %(Msg)s" % obs)
             self.Obs = "\n".join(self.Observaciones)
 
         self.__analizar_errores(result)
@@ -889,8 +904,8 @@ class WSFEv1(BaseWS):
                 f["emision_tipo"] = "CAE"
                 f["fch_venc_cae"] = fedetresp["CAEFchVto"]
                 f["obs"] = [
-                    {"code": obs["Obs"]["Code"], "msg": obs["Obs"]["Msg"]}
-                    for obs in fedetresp.get("Observaciones", [])
+                    {"code": obs["Code"], "msg": obs["Msg"]}
+                    for obs in normalizar_observaciones(fedetresp.get("Observaciones"))
                 ]
                 # sanity checks:
                 assert str(f["fecha_cbte"]) == str(fedetresp["CbteFch"])
@@ -973,8 +988,8 @@ class WSFEv1(BaseWS):
                 self.FchTopeInf = result["FchTopeInf"]
                 self.FchProceso = result["FchProceso"]
                 # Obs (COMPGv28):
-                for obs in result.get("Observaciones", []):
-                    self.Observaciones.append("%(Code)s: %(Msg)s" % (obs["Obs"]))
+                for obs in normalizar_observaciones(result.get("Observaciones")):
+                    self.Observaciones.append("%(Code)s: %(Msg)s" % obs)
                 self.Obs = "\n".join(self.Observaciones)
 
         return self.CAEA and str(self.CAEA) or ""
@@ -1135,8 +1150,8 @@ class WSFEv1(BaseWS):
 
             self.Resultado = fecabresp["Resultado"]
             # Obs:
-            for obs in fedetresp.get("Observaciones", []):
-                self.Observaciones.append("%(Code)s: %(Msg)s" % (obs["Obs"]))
+            for obs in normalizar_observaciones(fedetresp.get("Observaciones")):
+                self.Observaciones.append("%(Code)s: %(Msg)s" % obs)
             self.Obs = "\n".join(self.Observaciones)
             self.CAEA = fedetresp["CAEA"] and str(fedetresp["CAEA"]) or ""
             self.EmisionTipo = "CAEA"
