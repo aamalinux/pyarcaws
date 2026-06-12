@@ -341,9 +341,15 @@ class BaseWS(object):
             if not cache or self.HOMO:
                 # use 'cache' from installation base directory
                 cache = os.path.join(self.InstallDir, "cache")
-            # deshabilitar verificación cert. servidor si es nulo falso vacio
-            if not cacert:
-                cacert = None
+            # validación del certificado del servidor (secure-by-default):
+            #   cacert=None  -> validar con certifi / trust store del sistema
+            #   cacert=False -> DESACTIVAR la validación (se propaga al transport,
+            #                   que emite UserWarning; sólo para depuración)
+            #   cacert=ruta/PEM/"default" -> validar contra ese CA
+            if cacert is False:
+                pass  # opt-out explícito: se propaga False sin tocar
+            elif cacert is None or cacert == "":
+                cacert = None  # el transport usará certifi por defecto
             elif cacert is True or cacert.lower() == "default":
                 # usar certificados predeterminados que vienen en la biblioteca
                 try:

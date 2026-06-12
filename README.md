@@ -90,6 +90,16 @@ Servicios web soportados:
 Notas de compatibilidad
 -----------------------
 
+**Validación del certificado SSL del servidor (cambio de comportamiento):**
+
+- Desde la próxima versión, las conexiones a ARCA **validan el certificado del
+  servidor por defecto** (`check_hostname` + `CERT_REQUIRED`) usando `certifi`.
+  Antes viajaban sin validar (expuestas a MITM). Los endpoints de ARCA usan
+  certificados públicos válidos, así que no debería romper nada.
+- Para usar un CA propio: `Conectar(..., cacert="/ruta/ca.pem")`. Para
+  desactivar la validación (sólo depuración): `Conectar(..., cacert=False)` —
+  emite un `UserWarning`, nunca es silencioso.
+
 **WSCDC / WSFEv1 — parseo tolerante de nodos repetibles:**
 
 - Los nodos `maxOccurs="unbounded"` (`<Errors>/<Err>`, `<Events>/<Evt>`,
