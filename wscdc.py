@@ -26,7 +26,7 @@ import sys, os, time
 from configparser import ConfigParser
 from pyarcaws.utils import inicializar_y_capturar_excepciones, BaseWS, get_install_dir
 from pyarcaws.utils import leer, escribir, leer_dbf, guardar_dbf, N, A, I, json
-from pyarcaws.utils import normalizar_errores
+from pyarcaws.utils import normalizar_errores, normalizar_observaciones
 
 
 # Constantes (si se usa el script de linea de comandos)
@@ -201,12 +201,15 @@ class WSCDC(BaseWS):
             self.Resultado = result["Resultado"]
             self.FchProceso = result.get("FchProceso", "")
             self.observaciones = []
-            for obs in result.get("Observaciones", []):
-                self.Observaciones.append("%(Code)s: %(Msg)s" % (obs["Obs"]))
+            # <Observaciones><Obs>...</Obs></Observaciones>: con una sola Obs
+            # pysimplesoap entrega un dict (no lista); normalizar_observaciones
+            # tolera dict único o lista (mismo bug histórico de <Errors>).
+            for obs in normalizar_observaciones(result.get("Observaciones")):
+                self.Observaciones.append("%(Code)s: %(Msg)s" % obs)
                 self.observaciones.append(
                     {
-                        "code": obs["Obs"]["Code"],
-                        "msg": obs["Obs"]["Msg"].replace("\n", "").replace("\r", ""),
+                        "code": obs.get("Code"),
+                        "msg": str(obs.get("Msg", "")).replace("\n", "").replace("\r", ""),
                     }
                 )
             self.Obs = "\n".join(self.Observaciones)
