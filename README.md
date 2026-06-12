@@ -18,10 +18,13 @@ pyarcaws
 El proyecto original [pyafipws](https://github.com/reingart/pyafipws) tiene muchos años de desarrollo, con el cambio de nombre de la AFIP a ARCA quise reflejar el nuevo nombre **pyarcaws** y continuar su desarrollo con los siguientes objetivos:
 
 - **Mejor compatibilidad Linux/Mac/ARM** — se eliminó completamente el soporte para Python 2.7
-- **Solo Python 3.9+** — se eliminó completamente el soporte para Python 2.7
+- **Python 3.9 a 3.13 (matriz probada en CI)** — se eliminó completamente el soporte para Python 2.7
 - **Dependencias actualizadas** — cryptography, Pillow, qrcode, dbf y otras llevan versiones modernas
 - **Código limpio** — removidos imports de compatibilidad (`future`, `past`, `builtins`)
 - **Versionado semántico** — reemplaza la numeración de revisiones Mercurial por semver (`v1.0.0`)
+- **pysimplesoap vendoreado y mantenido** — incluido como `pyarcaws._vendor.pysimplesoap`, portado a Python 3 (caché WSDL, comparación de versiones, `getargspec`) y con un fix de `elementFormDefault="unqualified"` para que el envelope generado sea aceptado por servicios como WSLSP; instala como wheel. El paquete de PyPI está abandonado/roto.
+- **Bugs silenciosos de producción corregidos** — p. ej. la lógica de reintentos en `utils.py` que comparaba `e[0]` en vez de `e.errno` (rota en Python 3) ahora reintenta correctamente ante cortes de conexión; y el parseo tolerante de nodos repetibles SOAP (una sola `<Obs>`/`<Err>` ya no lanza `TypeError`).
+- **Suite de tests con cassettes VCR** — gran parte de los tests reproducen las respuestas grabadas sin pegarle a la red; además los tests unitarios nuevos (`pytest -m dontusefix`) corren sin certificado ni conexión.
 
 ---
 
@@ -29,6 +32,7 @@ Información general:
 --------------------
 
 - **Este fork:** https://github.com/aamalinux/pyarcaws
+- **Historial de cambios:** [CHANGELOG.md](CHANGELOG.md)
 - **Proyecto original:** https://github.com/reingart/pyafipws
 - **Manual de usuario:** http://www.sistemasagiles.com.ar/trac/wiki/ManualPyAfipWs (Español)
 - **Documentación original:** https://github.com/reingart/pyafipws/wiki (Español/Inglés)
@@ -54,7 +58,7 @@ Funcionalidades:
 Servicios web soportados:
 -------------------------
 
-**AFIP:**
+**ARCA (ex AFIP):**
 
 - [WSAA][10]: autenticación y autorización con firma criptográfica digital
 - [WSFEv1][11]: mercado interno (factura electrónica) — [English][12]
@@ -182,18 +186,38 @@ O usando el `Makefile`:
 make install
 ```
 
-### Certificado digital
+### Certificado digital (homologación, autogestión WSASS)
 
-Necesitás un certificado (.crt) y clave privada (.key) para autenticarte con AFIP
-(ver [instrucciones de generación de certificados][29]).
+Necesitás un certificado (`.crt`) y su clave privada (`.key`) para autenticarte
+con ARCA. Para **homologación** se obtiene gratis por autogestión en el portal
+**WSASS** de ARCA. Pasos:
 
-Para pruebas podés usar el certificado de testing del autor original:
+1. Generar la clave privada y el pedido de certificado (CSR) localmente:
 
-```bash
-wget https://www.sistemasagiles.com.ar/soft/pyafipws/reingart.zip -O reingart.zip
-python -m zipfile -e reingart.zip .
-cp conf/*.ini .
-```
+   ```bash
+   openssl genrsa -out homo.key 2048
+   openssl req -new -key homo.key \
+     -subj "/C=AR/O=MiEmpresa/CN=miAlias/serialNumber=CUIT 20XXXXXXXXX" \
+     -out homo.csr
+   ```
+
+2. Ingresá al portal **WSASS** ("Autogestión de certificados para Web Services
+   en ambientes de homologación") con **Clave Fiscal nivel 3**. Si el servicio
+   no aparece, adherilo primero desde el **Administrador de Relaciones** de
+   Clave Fiscal. Elegí **"Nuevo certificado"**, pegá el contenido de `homo.csr`
+   y guardá el `.crt` que devuelve.
+
+3. En **"Crear autorización a servicio"**, autorizá el DN del certificado a
+   cada Web Service que vayas a probar; por ejemplo: `wsfe`, `wscdc`,
+   `ws_sr_padron_a4`, `ws_sr_constancia_inscripcion`, `wslsp`.
+
+> **WSASS es solo para homologación.** Para **producción** el trámite es
+> distinto: certificado de producción (Clave Fiscal / portal de ARCA) y
+> delegación del servicio en el **Administrador de Relaciones**.
+
+> ⚠️ El histórico `reingart.zip` (`reingart.crt`/`reingart.key`) que recomendaba
+> el README original **está vencido** y ya no sirve para autenticarse; usá la
+> autogestión WSASS de arriba.
 
 ### Verificación rápida
 
@@ -204,10 +228,18 @@ python -m pyarcaws.wsfev1 --prueba  # emitir factura de prueba (CAE de homologac
 
 ### Ejecutar tests
 
+Los tests usan cassettes VCR (respuestas grabadas), así que no le pegan a la red:
+
 ```bash
 pytest tests
 # o con el Makefile:
 make test
+```
+
+Los tests unitarios que no requieren certificado ni conexión se corren con:
+
+```bash
+pytest -m dontusefix
 ```
 
 ---
