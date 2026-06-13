@@ -336,8 +336,12 @@ class BaseWS(object):
             if self.HOMO or not wsdl:
                 wsdl = self.WSDL
             # agregar sufijo para descargar descripción del servicio ?WSDL o ?wsdl
-            if not wsdl.endswith(self.WSDL[-5:]) and wsdl.startswith("http"):
-                wsdl += self.WSDL[-5:]
+            # (comparación case-insensitive: una URL terminada en "?WSDL" no debe
+            #  reincorporar "?wsdl" y quedar como "...?WSDL?wsdl", URL inválida que
+            #  devolvía una página de error y rompía el parseo del WSDL)
+            sufijo = self.WSDL[-5:]
+            if not wsdl.lower().endswith(sufijo.lower()) and wsdl.startswith("http"):
+                wsdl += sufijo
             if not cache or self.HOMO:
                 # use 'cache' from installation base directory
                 cache = os.path.join(self.InstallDir, "cache")
