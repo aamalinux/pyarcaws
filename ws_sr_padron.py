@@ -140,12 +140,14 @@ class WSSrPadronA4(BaseWS):
         self.caracterizaciones = []
 
     def Dummy(self):
-        "Obtener el estado de los servidores de la AFIP"
+        "Obtener el estado de los servidores de ARCA"
         ret = self.client.dummy()
-        result = ret["dummyReturn"]
-        self.AppServerStatus = result["appserver"]
-        self.DbServerStatus = result["dbserver"]
-        self.AuthServerStatus = result["authserver"]
+        # A4/A5 (personaServiceA4/A5) envuelven en <dummyReturn>; A10
+        # (personaServiceA10) lo entrega en <return>: tolerar ambos.
+        result = ret.get("dummyReturn") or ret.get("return") or {}
+        self.AppServerStatus = result.get("appserver")
+        self.DbServerStatus = result.get("dbserver")
+        self.AuthServerStatus = result.get("authserver")
         return True
 
     @inicializar_y_capturar_excepciones
@@ -561,10 +563,12 @@ class WSSrPadronA100(BaseWS):
     def Dummy(self):
         "Obtener el estado de los servidores de ARCA"
         ret = self.client.dummy()
-        result = ret["dummyReturn"]
-        self.AppServerStatus = result["appserver"]
-        self.DbServerStatus = result["dbserver"]
-        self.AuthServerStatus = result["authserver"]
+        # tolerar ambos envoltorios (<dummyReturn> y <return>) como el resto
+        # de la familia Padrón
+        result = ret.get("dummyReturn") or ret.get("return") or {}
+        self.AppServerStatus = result.get("appserver")
+        self.DbServerStatus = result.get("dbserver")
+        self.AuthServerStatus = result.get("authserver")
         return True
 
     @inicializar_y_capturar_excepciones

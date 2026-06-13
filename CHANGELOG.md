@@ -39,6 +39,13 @@ el proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
   manual oficial V2.1; smoke de homologación gateado (requiere autorizar
   `ws_sr_padron_a100` en WSASS).
 
+### Corregido
+- **`WSSrPadronA10.Dummy()`** — el servicio `personaServiceA10` entrega el
+  estado de servidores en `<return>` (no en `<dummyReturn>` como A4/A5), así que
+  el `Dummy()` heredado lanzaba `KeyError: 'dummyReturn'`. Detectado en el smoke
+  de homologación; ahora el `Dummy()` de la familia Padrón tolera ambos
+  envoltorios.
+
 ### Deprecado
 - **`WSCOC`** (Consulta de Operaciones Cambiarias): el régimen fue
   discontinuado por ARCA en 2015 y no tiene WS activo ni reemplazo. Instanciarlo
