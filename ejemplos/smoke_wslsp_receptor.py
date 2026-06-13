@@ -27,6 +27,7 @@ bajo el certificado habilitado.
 """
 
 import argparse
+import re
 import sys
 import traceback
 
@@ -36,6 +37,15 @@ from pyarcaws.wslsp import WSLSP
 WSDL_HOMO = "https://fwshomo.afip.gov.ar/wslsp/LspService?wsdl"
 WSDL_PROD = "https://serviciosjava.afip.gov.ar/wslsp/LspService?wsdl"
 SERVICE = "wslsp"
+
+
+def _redact(s):
+    "Censura token/sign del Ticket de Acceso antes de imprimir (no loguear credenciales)"
+    if isinstance(s, bytes):
+        s = s.decode("utf-8", "replace")
+    s = re.sub(r"(<token>).*?(</token>)", r"\1***REDACTED***\2", s or "", flags=re.S)
+    s = re.sub(r"(<sign>).*?(</sign>)", r"\1***REDACTED***\2", s, flags=re.S)
+    return s
 
 
 def parse_args(argv):
@@ -86,8 +96,11 @@ def main(argv):
     # Volcar las operaciones reales del WSDL vivo (clave para confirmar el
     # esquema de la consulta por comprador):
     try:
-        metodos = sorted(wslsp.client.methods) if hasattr(wslsp.client, "methods") else None
-        print("\n[WSDL] métodos disponibles:", metodos)
+        metodos = set()
+        for svc in (wslsp.client.services or {}).values():
+            for port in svc.get("ports", {}).values():
+                metodos.update(port.get("operations", {}).keys())
+        print("\n[WSDL] métodos disponibles:", sorted(metodos))
     except Exception as e:
         print("[WSDL] no se pudieron listar métodos:", e)
 
@@ -113,8 +126,9 @@ def main(argv):
             n = len(res) if hasattr(res, "__len__") else "?"
             print("  OK — %s registros. Primeros 3: %s" % (n, (res or [])[:3]))
             print("  ErrMsg:", wslsp.ErrMsg, "| Excepcion:", wslsp.Excepcion)
+            xmlreq = _redact(wslsp.XmlRequest)
             print("  XmlRequest (Body):",
-                  (wslsp.XmlRequest or "").split("<soapenv:Body>")[-1][:400])
+                  xmlreq.split("<soapenv:Body>")[-1][:400])
         except Exception:
             traceback.print_exc()
             print("  XmlResponse:", (wslsp.XmlResponse or "")[:600])

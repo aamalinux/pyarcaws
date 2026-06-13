@@ -89,7 +89,9 @@ def main(argv):
     print("denominacion:", padron.denominacion)
     print("tipo/nro doc:", padron.tipo_persona, padron.tipo_doc, padron.nro_doc)
     print("estado:", padron.estado)
-    print("domicilio:", padron.domicilio)
+    # `domicilio` (string consolidado) sólo se setea en una consulta exitosa;
+    # ante un fault (p. ej. CUIT inexistente) usar el atributo siempre presente
+    print("domicilio:", getattr(padron, "domicilio", "") or padron.domicilios)
     print("actividad principal:", padron.actividades, padron.actividad_principal)
     print("ErrMsg:", padron.ErrMsg)
     print("Excepcion:", padron.Excepcion)
