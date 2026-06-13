@@ -536,6 +536,23 @@ class SoapClient(object):
         # Parse WSDL XML:
         wsdl = SimpleXMLElement(xml, namespace=self.wsdl_uri)
 
+        # Verificar que la respuesta sea realmente un WSDL <definitions>: si el
+        # servidor devolvió una página de error HTML o un SOAP Fault (p. ej. por
+        # una URL mal formada o un servicio caído), el parseo posterior fallaba
+        # con un críptico "Tag not found: message". Surgir el motivo real:
+        root_tag = wsdl.get_local_name()
+        if root_tag != 'definitions':
+            faultstring = unicode(wsdl('faultstring', error=False) or '').strip()
+            if faultstring:
+                detalle = faultstring
+            else:
+                detalle = unicode(xml[:500] if isinstance(xml, str)
+                                  else xml[:500].decode('utf-8', 'replace')).strip()
+            raise SoapFault(
+                'WSDLParseError',
+                u"La URL '%s' no devolvió un WSDL válido (raíz <%s>): %s"
+                % (url, root_tag, detalle))
+
         # Extract useful data:
         self.namespace = ""
         self.documentation = unicode(wsdl('documentation', error=False)) or ''

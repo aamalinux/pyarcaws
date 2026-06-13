@@ -29,6 +29,19 @@ el proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
   _(Irá en la próxima v1.2.0, a la espera de la validación del smoke de
   homologación.)_
 
+### Corregido
+- **`Conectar` — sufijo `?WSDL` case-insensitive.** La comprobación del sufijo
+  del WSDL era case-sensitive (`self.WSDL[-5:] == "?wsdl"`): una URL terminada
+  en `?WSDL` (mayúsculas, usada por varios ejemplos/integraciones) no matcheaba
+  y se le reincorporaba `?wsdl`, quedando `...?WSDL?wsdl` (URL inválida que el
+  servidor respondía con una página de error, rompiendo el parseo del WSDL).
+- **Parseo de WSDL — surgir el motivo real ante una respuesta inválida.** El
+  parser (pysimplesoap vendoreado) asumía que la descarga del WSDL siempre era
+  un `<definitions>`. Si el servidor devolvía un SOAP Fault o una página HTML de
+  error, el parseo fallaba más adelante con un críptico `Tag not found: message
+  (No elements found)`. Ahora se valida la raíz y se surge la causa accionable
+  (el `faultstring` real del Fault, o la raíz inesperada + un fragmento).
+
 ## [1.1.1] - 2026-06-12
 
 ### Corregido
