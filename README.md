@@ -19,7 +19,7 @@ El proyecto original [pyafipws](https://github.com/reingart/pyafipws) tiene much
 
 - **Mejor compatibilidad Linux/Mac/ARM** — se eliminó completamente el soporte para Python 2.7
 - **Python 3.9 a 3.13 (matriz probada en CI)** — se eliminó completamente el soporte para Python 2.7
-- **Dependencias actualizadas** — cryptography, Pillow, qrcode, dbf y otras llevan versiones modernas
+- **Dependencias actualizadas** — cryptography, Pillow, qrcode, dbf, fpdf (generación de PDF) y otras llevan versiones modernas
 - **Código limpio** — removidos imports de compatibilidad (`future`, `past`, `builtins`)
 - **Versionado semántico** — reemplaza la numeración de revisiones Mercurial por semver (`v1.0.0`)
 - **pysimplesoap vendoreado y mantenido** — incluido como `pyarcaws._vendor.pysimplesoap`, portado a Python 3 (caché WSDL, comparación de versiones, `getargspec`) y con un fix de `elementFormDefault="unqualified"` para que el envelope generado sea aceptado por servicios como WSLSP; instala como wheel. El paquete de PyPI está abandonado/roto.
