@@ -191,9 +191,15 @@ python -m venv .venv
 source .venv/bin/activate        # En Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 pip install -r requirements-dev.txt
+pip install -e .                 # instala el paquete pyarcaws en el venv (editable)
 ```
 
-O usando el `Makefile`:
+> El paso `pip install -e .` es **imprescindible**: instala el propio paquete
+> `pyarcaws` en el entorno. Sin él, `import pyarcaws` (y `python -m pyarcaws.…`)
+> falla con `ModuleNotFoundError: No module named 'pyarcaws'`, aunque hayas
+> instalado las dependencias.
+
+O usando el `Makefile` (hace `setup.py install`, no editable):
 
 ```bash
 make install
@@ -234,26 +240,64 @@ con ARCA. Para **homologación** se obtiene gratis por autogestión en el portal
 
 ### Verificación rápida
 
-```bash
-python -m pyarcaws.wsaa           # obtener ticket de autorización
-python -m pyarcaws.wsfev1 --prueba  # emitir factura de prueba (CAE de homologación)
-```
+#### Nivel 1 — sin certificado (cualquiera, siempre)
 
-### Ejecutar tests
-
-Los tests usan cassettes VCR (respuestas grabadas), así que no le pegan a la red:
+Chequeo universal de que la instalación quedó bien. No requiere certificado ni
+conexión:
 
 ```bash
-pytest tests
-# o con el Makefile:
-make test
+# 1) el paquete importa (confirma que 'pip install -e .' surtió efecto)
+python -c "import pyarcaws; print('OK', pyarcaws.__file__)"
+
+# 2) tests unitarios offline (sin red ni certificado; ~0,2 s)
+pytest -m dontusefix \
+  tests/test_ssl_verify.py \
+  tests/test_ws_sr_padron_a10.py \
+  tests/test_ws_sr_constancia_inscripcion.py \
+  tests/test_pyi25.py \
+  tests/test_pyqr.py
+# -> 28 passed
 ```
 
-Los tests unitarios que no requieren certificado ni conexión se corren con:
+Esos tests validan el paquete y sus dependencias núcleo (`cryptography`,
+`Pillow`, `qrcode`) sin tocar la red.
+
+> **Sobre `pytest` a secas:** la suite completa (`pytest tests`, o `make test`)
+> y buena parte de `pytest -m dontusefix` **no** corren offline en un checkout
+> limpio. De los ~154 tests que selecciona `-m dontusefix`, ~112 pasan sin red
+> pero ~40 (los heredados `test_*_rece*`, `test_wsmtx_recem`, `test_wsaa`,
+> `test_wscdc`) intentan autenticar contra ARCA y **requieren un certificado de
+> homologación válido** — son, de hecho, Nivel 2. Como el `reingart.zip`
+> histórico viene **vencido** (ver aviso de arriba), hasta que configures tu
+> propio certificado esos tests fallan. Por eso el chequeo de arriba apunta al
+> subconjunto offline verdadero.
+
+#### Nivel 2 — con certificado de homologación (requiere WSASS configurado)
+
+Una vez que tenés el `.crt`/`.key` y el **DN ya autorizado a los servicios del
+paso 3**, probá los _smokes_ de `ejemplos/` (son **read-only**: consultan
+catálogos/Dummy, no emiten ni autorizan nada). Ejemplo con el DN autorizado a
+`wslsp`:
 
 ```bash
-pytest -m dontusefix
+python ejemplos/smoke_wslsp_receptor.py \
+  --cert RUTA/cert.crt --key RUTA/clave.key --cuit TU_CUIT
 ```
+
+Lista las operaciones del WSDL vivo y consulta catálogos (provincias, tipos de
+comprobante) y el último comprobante. El _token_/_sign_ del Ticket de Acceso se
+**censuran** en la salida.
+
+Otros smokes read-only en `ejemplos/`, cada uno con el DN autorizado a su
+servicio: `smoke_padron_a10.py` (`ws_sr_padron_a10`, flags
+`--cert/--key/--cuit-repr/--persona`) y `smoke_constancia_inscripcion.py`
+(`ws_sr_constancia_inscripcion`, mismos flags). _(Estos dos quedan plenamente
+funcionales a partir de **v1.2.0**, que corrige el sufijo `?WSDL` en `Conectar`.)_
+
+> Nota: `python -m pyarcaws.wsaa` y `python -m pyarcaws.wsfev1 --prueba` también
+> son de Nivel 2, pero usan rutas/CUIT por defecto (`reingart.crt`, hoy vencido)
+> y no aceptan `--help`; preferí los smokes de `ejemplos/`, que toman
+> `--cert/--key/--cuit` explícitos.
 
 ---
 
