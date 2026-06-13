@@ -1,0 +1,336 @@
+interactions:
+- request:
+    body: '<?xml version="1.0" encoding="UTF-8"?><soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://a10.soap.ws.server.puc.sr/">
+
+      <soapenv:Header/>
+
+      <soapenv:Body><ser:getPersona><token>TOKEN_SANITIZED</token><sign>SIGN_SANITIZED</sign><cuitRepresentada>20111111112</cuitRepresentada><idPersona>30500010912</idPersona></ser:getPersona></soapenv:Body></soapenv:Envelope>'
+    headers:
+      accept-encoding:
+      - gzip, deflate
+      content-length:
+      - '1282'
+      content-type:
+      - text/xml; charset="UTF-8"
+      soapaction:
+      - ''
+      user-agent:
+      - Python-httplib2/0.31.2 (gzip)
+    method: POST
+    uri: https://awshomo.afip.gov.ar/sr-padron/webservices/personaServiceA10
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAEA7Ipzk8ssHLNK0vNyS9IVajIzckrtgKJ2SpllJQUWOnrFydnpOYmFusBpUDievlF
+        6foghn4qVJO+kh3EFKf8lEo7m7xiI6v01JKA1KLi/LzEoNTigvy8YpjJQEm4wYmGBnogfXrlxXrF
+        qUVlqUV6BaXJesVFIAMLYNpLSovy7GxyU0sSUxJLEu1s0lKTMxI98osS7YwMjMx0Dcx0DY1DDE2t
+        TMyASM/S3EjXwNjKwMBGH6HQBmR6Zkp+kV1xaklmeXGGkY0+XMhGH2E21FI7m5TU4uSizILkzPw8
+        x+SSTKDKxJSAosy85MyCxBy7YNegME9nT/9gBRdXBR9HBSdHP2dHBV9PP/8gz+AQRxt9/NptUvJz
+        M5MzczLz7WyS81MC8otLgKKGBsZmNvoIPrIbAoryy0C6E+2cPUNdHF0UHEND/P38fYFWh7r6Ad3h
+        6BnkGoxiL0KLTUpmUWoySMzO1zMkyBXo3KAQfx9/X1cFYyMzhQATBRcTIwugZrgym8wUhHZgSCJz
+        bUoyC/Jd4B5w8wx2dvSx0UcVBRqGYCMxEb7D9G1iSb5jSibIfiDX3w0Yvn6OCq5Ak1AkBnWooLjU
+        FZgS3FxBqQFTDqIcHi4+ru6OPvpBrgQCMhUYUin5zjmJZal2js4hnmH+NvrIYkAHYkltZiaGlsZg
+        52KRBGqB5lM7YwNTAwMDQwNLQyOQYpiwTVFiVX5ecD7Qlzl2nu6e3t4K/gEKru4Knu7eod6eCu5B
+        wQGeIaGe7jb6yCrBPoQ4yznUMwTiLwgfLAUz3is0yNPF0xkaSjBRG/0CdFYQtCDQz8NavAAlQEUJ
+        tAjSL85PLLByzStLzckvSLUDBAAA//8Q04F35AQAAA==
+    headers:
+      Connection:
+      - Keep-Alive
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '658'
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Date:
+      - Sat, 13 Jun 2026 18:46:46 GMT
+      Set-Cookie:
+      - HttpOnly;Secure
+      - f5avraaaaaaaaaaaaaaaa_session_=KGCBKLKKKJGMGLHOCFPHMDLGBOENDGGIILFGDEMNICPIBPCLAEGPJADDCFOJPGDILFGDEIHOLFHCLHLLCDNAKPHLEKLHOKIFMLHPADMIGLAHLCINEACNBGBDLANKHANH; HttpOnly; secure;
+      - 'TS01a1c3b4=01ef919f303d4ffaaabe0a22ca7894703f5b34c8e72be02e11ec380cb08554a95ac59100cda8f128c3758213142831a726ff12e66fb4b3133d867b4356b7dafc67311251dc554fe37fcf8eea7c0257f3b4372a2368; Path=/; '
+      Strict-Transport-Security:
+      - max-age=300; includeSubDomains; preload
+      Vary:
+      - Accept-Encoding
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - sameorigin
+      X-XSS-Protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      accept-encoding:
+      - gzip, deflate
+      user-agent:
+      - Python-httplib2/0.31.2 (gzip)
+    method: GET
+    uri: https://awshomo.afip.gov.ar/sr-padron/webservices/personaServiceA10?wsdl
+  response:
+    body:
+      string: !!binary |
+        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
+    headers:
+      Connection:
+      - Keep-Alive
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '1858'
+      Content-Type:
+      - text/xml
+      Date:
+      - Sat, 13 Jun 2026 18:48:24 GMT
+      Set-Cookie:
+      - HttpOnly;Secure
+      - f5avraaaaaaaaaaaaaaaa_session_=FBFFMJPENNJFIBBJMNGPKCIAIKFNJMNOLLGFFDJKNCKAKCNFHNFIFNPHOGPGPAFBBNKDLBGINFDMEICGCPKAHOKAKKPEOACFKFBPJLKGNEGHHDILIGMNDLFCBFIBFOHI; HttpOnly; secure;
+      - 'TS01a1c3b4=01ef919f30bfb789e8b1f3ab227b00af5315adbe1b54113732f55604211d663cee20bb4dd896d26909c5c2b02b53d50b471230a1593b9a351e52d79982ca0d2a6b3a5cbae2dc7085860040109764d07e53797417d5; Path=/; '
+      Strict-Transport-Security:
+      - max-age=300; includeSubDomains; preload
+      Vary:
+      - Accept-Encoding
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - sameorigin
+      X-XSS-Protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '<?xml version="1.0" encoding="UTF-8"?><soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://a10.soap.ws.server.puc.sr/">
+
+      <soapenv:Header/>
+
+      <soapenv:Body><ser:getPersona><token>TOKEN_SANITIZED</token><sign>SIGN_SANITIZED</sign><cuitRepresentada>20111111112</cuitRepresentada><idPersona>30500010912</idPersona></ser:getPersona></soapenv:Body></soapenv:Envelope>'
+    headers:
+      accept-encoding:
+      - gzip, deflate
+      content-length:
+      - '1282'
+      content-type:
+      - text/xml; charset="UTF-8"
+      soapaction:
+      - ''
+      user-agent:
+      - Python-httplib2/0.31.2 (gzip)
+    method: POST
+    uri: https://awshomo.afip.gov.ar/sr-padron/webservices/personaServiceA10
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAEA7Ipzk8ssHLNK0vNyS9IVajIzckrtgKJ2SpllJQUWOnrFydnpOYmFusBpUDievlF
+        6foghn4qVJO+kh3EFKf8lEo7m7xiI6v01JKA1KLi/LzEoNTigvy8YpjJQEm4wYmGBnogfXrlxXrF
+        qUVlqUV6BaXJesVFIAMLYNpLSovy7GxyU0sSUxJLEu1s0lKTMxI98osS7YwMjMx0Dcx0DY1DDE2t
+        TCysjEz0zC2BQsZWBgY2+giFNiDTM1Pyi+yKU0syy4szjGz04UI2+gizoZba2aSkFicXZRYkZ+bn
+        OSaXZAJVJqYEFGXmJWcWJObYBbsGhXk6e/oHK7i4Kvg4Kjg5+jk7Kvh6+vkHeQaHONro49duk5Kf
+        m5mcmZOZb2eTnJ8SkF9cAhQ1NDA2s9FH8JHdEFCUXwbSnWjn7Bnq4uii4Bga4u/n7wu0OtTVD+gO
+        R88g12AUexFabFIyi1KTQWJ2vp4hQa5A5waF+Pv4+7oqGBuZKQSYKLiYGFkANcOV2WSmILQDQxKZ
+        a1OSWZDvAveAm2ews6OPjT6qKNAwBBuJifAdpm8TS/IdUzJB9gO5/m7A8PVzVHAFmoQiMahDBcWl
+        rsCU4OYKSg2YchDl8HDxcXV39NEPciUQkKnAkErJd85JLEu1c3QO8Qzzt9FHFgM6EEtqMzMxtDQG
+        OxeLJFALNJ/aGRuYGhgYGBpYGhqBFMOEbYoSq/LzgvOBvsyx83T39PZW8A9QcHVX8HT3DvX2VHAP
+        Cg7wDAn1dLfRR1YJ9iHEWc6hniEQf0H4YCmY8V6hQZ4uns7QUIKJ2ugXoLOCoAWBfh7W4gUoASpK
+        oEWQfnF+YoGVa15Zak5+QaodIAAA//+qLJ1I5AQAAA==
+    headers:
+      Connection:
+      - Keep-Alive
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '658'
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Date:
+      - Sat, 13 Jun 2026 18:48:24 GMT
+      Set-Cookie:
+      - HttpOnly;Secure
+      - f5avraaaaaaaaaaaaaaaa_session_=EKIGIHELDNAEKFDABFIILJJMPFENNHINGMEOKMBKOFPHAPMCGPCHICBIJHAJHHFANLKDPFDCNFLGNNBFKKOAGGAGKKBPJBEHGANANOKLEJDEIPLHLJJELKMFCNPJFECN; HttpOnly; secure;
+      - 'TS01a1c3b4=01ef919f3036ef8c1b40bfb5ab9bf0b69bc46b875fc1dbbf00d1e273837284eba62158603c47d8fed6c05d94858077da494663ce1f5caf3afe0d4eb498068f6d6eb7c93507d542d2ab63d01a0b36e3a7722bd78e34; Path=/; '
+      Strict-Transport-Security:
+      - max-age=300; includeSubDomains; preload
+      Vary:
+      - Accept-Encoding
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - sameorigin
+      X-XSS-Protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      accept-encoding:
+      - gzip, deflate
+      user-agent:
+      - Python-httplib2/0.31.2 (gzip)
+    method: GET
+    uri: https://awshomo.afip.gov.ar/sr-padron/webservices/personaServiceA10?wsdl
+  response:
+    body:
+      string: !!binary |
+        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
+    headers:
+      Accept-Ranges:
+      - bytes
+      Age:
+      - '2376'
+      Connection:
+      - Keep-Alive
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '1858'
+      Content-Type:
+      - text/xml
+      Date:
+      - Sat, 13 Jun 2026 19:28:00 GMT
+      Set-Cookie:
+      - f5avraaaaaaaaaaaaaaaa_session_=MCEMJJHOHIDKPICCNPMLDACODKPNBHFPMPGNJBFAJPIDGHOAFKILCJKJLIODBGCONFIDDDGKFOJANGAHNNNADHPGPKGFACANFDKOEPOOPGBFNPABELHGEBPPKODMEFJP; HttpOnly; secure;
+      Strict-Transport-Security:
+      - max-age=300; includeSubDomains; preload
+      Vary:
+      - Accept-Encoding
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - sameorigin
+      X-XSS-Protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '<?xml version="1.0" encoding="UTF-8"?><soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://a10.soap.ws.server.puc.sr/">
+
+      <soapenv:Header/>
+
+      <soapenv:Body><ser:getPersona><token>TOKEN_SANITIZED</token><sign>SIGN_SANITIZED</sign><cuitRepresentada>20111111112</cuitRepresentada><idPersona>30500010912</idPersona></ser:getPersona></soapenv:Body></soapenv:Envelope>'
+    headers:
+      accept-encoding:
+      - gzip, deflate
+      content-length:
+      - '1282'
+      content-type:
+      - text/xml; charset="UTF-8"
+      soapaction:
+      - ''
+      user-agent:
+      - Python-httplib2/0.31.2 (gzip)
+    method: POST
+    uri: https://awshomo.afip.gov.ar/sr-padron/webservices/personaServiceA10
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAEA7Ipzk8ssHLNK0vNyS9IVajIzckrtgKJ2SpllJQUWOnrFydnpOYmFusBpUDievlF
+        6foghn4qVJO+kh3EFKf8lEo7m7xiI6v01JKA1KLi/LzEoNTigvy8YpjJQEm4wYmGBnogfXrlxXrF
+        qUVlqUV6BaXJesVFIAMLYNpLSovy7GxyU0sSUxJLEu1s0lKTMxI98osS7YwMjMx0Dcx0DY1DDM2s
+        jCysDAz0zMwNdQ2MgSwbfYRCG5DpmSn5RXbFqSWZ5cUZRjb6cCEbfYTZUEvtbFJSi5OLMguSM/Pz
+        HJNLMoEqE1MCijLzkjMLEnPsgl2DwjydPf2DFVxcFXwcFZwc/ZwdFXw9/fyDPINDHG308Wu3ScnP
+        zUzOzMnMt7NJzk8JyC8uAYoaGhib2egj+MhuCCjKLwPpTrRz9gx1cXRRcAwN8ffz9wVaHerqB3SH
+        o2eQazCKvQgtNimZRanJIDE7X8+QIFegc4NC/H38fV0VjI3MFAJMFFxMjCyAmuHKbDJTENqBIYnM
+        tSnJLMh3gXvAzTPY2dHHRh9VFGgYgo3ERPgO07eJJfmOKZkg+4Fcfzdg+Po5KrgCTUKRGNShguJS
+        V2BKcHMFpQZMOYhyeLj4uLo7+ugHuRIIyFRgSKXkO+cklqXaOTqHeIb52+gjiwEdiCW1mZkYWhqD
+        nYtFEqgFmk/tjA1MDQwMDA0sDY1AimHCNkWJVfl5wflAX+bYebp7ensr+AcouLoreLp7h3p7KrgH
+        BQd4hoR6utvoI6sE+xDiLOdQzxCIvyB8sBTMeK/QIE8XT2doKMFEbfQL0FlB0IJAPw9r8QKUABUl
+        0CJIvzg/scDKNa8sNSe/INUOEAAA//9k6JKs5AQAAA==
+    headers:
+      Connection:
+      - Keep-Alive
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '658'
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Date:
+      - Sat, 13 Jun 2026 19:28:00 GMT
+      Set-Cookie:
+      - HttpOnly;Secure
+      - f5avraaaaaaaaaaaaaaaa_session_=OEKKOHEAGMNCNJCCOEMGDOEHPIIPLNPKDDDBGDIFIKMNEPEJJMBGHLJOAPIOADHLACADGKNMFOCJIBINLCIANLAMPKJGBAIGFIJLMBBELNBPMGLGHLGOGANHPFGPJNAC; HttpOnly; secure;
+      - 'TS01a1c3b4=01ef919f301326ec7ac334bbdb19e986351b533bbf701b6d6152c49211b1c8ef50cb02a06e57158bf35b728f776cf66500c84ae3e6b3cf79f9cd1dbd822aa9c3984ad392013bef5f72d6f96e75557c9f24d6744ff9; Path=/; '
+      Strict-Transport-Security:
+      - max-age=300; includeSubDomains; preload
+      Vary:
+      - Accept-Encoding
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - sameorigin
+      X-XSS-Protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+version: 1

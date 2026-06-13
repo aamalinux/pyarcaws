@@ -67,6 +67,10 @@ class _FakeClient:
             raise self._exc
         return self._respuesta
 
+    def dummy(self):
+        # personaServiceA10 envuelve el dummy en <return> (no <dummyReturn>)
+        return {"return": {"appserver": "OK", "dbserver": "OK", "authserver": "OK"}}
+
 
 def _nuevo(client):
     w = WSSrPadronA10()
@@ -74,6 +78,19 @@ def _nuevo(client):
     w.Token, w.Sign, w.Cuit = "TK", "SG", 20111111112
     w.client = client
     return w
+
+
+# --- Dummy (envoltorio <return>, no <dummyReturn>) -------------------------
+
+
+def test_dummy_envoltorio_return():
+    """A10 (personaServiceA10) entrega el dummy en <return>, no <dummyReturn>;
+    el Dummy heredado debe tolerar ambos envoltorios."""
+    w = _nuevo(_FakeClient())
+    assert w.Dummy()
+    assert w.AppServerStatus == "OK"
+    assert w.DbServerStatus == "OK"
+    assert w.AuthServerStatus == "OK"
 
 
 # --- consulta exitosa ------------------------------------------------------

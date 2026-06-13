@@ -28,8 +28,23 @@ el proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
   `personaServiceA10`. Flag de CLI `--a10`, alias `PadronA10`, registro COM.
   _(Irá en la próxima v1.2.0, a la espera de la validación del smoke de
   homologación.)_
+- **Padrón Alcance 100** (`WSSrPadronA100`, servicio WSAA `ws_sr_padron_a100`):
+  consulta de **tablas de parámetros** por nombre (`getParameterCollectionByName`).
+  A diferencia del resto de la familia Padrón, vive bajo
+  `sr-parametros/webservices/parameterServiceA100`. Expone `Dummy()`,
+  `Consultar(collection_name)` → `self.parametros` (lista normalizada de
+  `{id, descripcion, atributos}`) y `BuscarParametro(id)`. `parameterList` y
+  `attributeList` (`maxOccurs="unbounded"`) se normalizan con `como_lista`. Flag
+  de CLI `--a100`, alias `PadronA100`, registro COM. Especificado contra el
+  manual oficial V2.1; smoke de homologación gateado (requiere autorizar
+  `ws_sr_padron_a100` en WSASS).
 
 ### Corregido
+- **`WSSrPadronA10.Dummy()`** — el servicio `personaServiceA10` entrega el
+  estado de servidores en `<return>` (no en `<dummyReturn>` como A4/A5), así que
+  el `Dummy()` heredado lanzaba `KeyError: 'dummyReturn'`. Detectado en el smoke
+  de homologación; ahora el `Dummy()` de la familia Padrón tolera ambos
+  envoltorios.
 - **`Conectar` — sufijo `?WSDL` case-insensitive.** La comprobación del sufijo
   del WSDL era case-sensitive (`self.WSDL[-5:] == "?wsdl"`): una URL terminada
   en `?WSDL` (mayúsculas, usada por varios ejemplos/integraciones) no matcheaba
@@ -41,6 +56,26 @@ el proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
   error, el parseo fallaba más adelante con un críptico `Tag not found: message
   (No elements found)`. Ahora se valida la raíz y se surge la causa accionable
   (el `faultstring` real del Fault, o la raíz inesperada + un fragmento).
+
+### Pruebas
+- **Primer lote de cassettes de homologación (replay offline).** Se grabaron
+  contra homologación, con el certificado de autogestión WSASS, interacciones
+  reales de `WSSrPadronA10.Consultar` (getPersona) y
+  `WSSrConstanciaInscripcion.Consultar` (getPersona_v2) — WSDL vivo + respuesta —
+  y se conectaron a tests de replay (`test_ws_sr_padron_a10_vcr.py`,
+  `test_ws_sr_constancia_inscripcion_vcr.py`) que corren **sin red ni
+  certificado** (`vcr` + `dontusefix`), validando el parseo contra el envelope
+  real de ARCA. Cassettes **saneados**: token/sign del Ticket de Acceso
+  reemplazados por placeholders y CUIT del titular por una sintética; la persona
+  consultada es una entidad de homologación con datos de relleno (sin PII real).
+
+### Deprecado
+- **`WSCOC`** (Consulta de Operaciones Cambiarias): el régimen fue
+  discontinuado por ARCA en 2015 y no tiene WS activo ni reemplazo. Instanciarlo
+  emite `DeprecationWarning`; **remoción prevista para la 2.0**.
+- **`WSCTG`** (Código de Trazabilidad de Granos): reemplazado por la Carta de
+  Porte Electrónica (`WSCPE`, `wscpe.py`). Instanciarlo emite
+  `DeprecationWarning`; **remoción prevista para la 2.0**.
 
 ## [1.1.1] - 2026-06-12
 

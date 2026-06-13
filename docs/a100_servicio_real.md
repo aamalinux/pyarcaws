@@ -1,6 +1,8 @@
 # A100 (`ws_sr_padron_a100`) — servicio real encontrado
 
-> Estado: **informe** (no implementado todavía). Fecha: 2026-06-12.
+> Estado: **implementado** (`WSSrPadronA100` en `ws_sr_padron.py`, v1.2.0).
+> Informe original: 2026-06-12. Implementación: 2026-06-13. Smoke de
+> homologación gateado (requiere autorizar `ws_sr_padron_a100` en WSASS).
 
 ## Resumen
 
