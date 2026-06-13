@@ -480,6 +480,171 @@ class WSSrPadronA10(WSSrPadronA4):
         return True
 
 
+class WSSrPadronA100(BaseWS):
+    """Interfaz para Consulta de Tablas de Parámetros — Padrón Alcance 100.
+
+    A diferencia del resto de la familia Padrón (servicios de *persona* bajo
+    ``sr-padron/webservices/personaService*``), A100 es un servicio de *tablas
+    de parámetros* y vive bajo ``sr-parametros/webservices/parameterServiceA100``
+    (``targetNamespace`` ``http://a100.soap.ws.server.pucParam.sr/``,
+    ``elementFormDefault="unqualified"``). Verificado contra el manual oficial
+    V2.1 (20/12/2023); WSDL público (HTTP 200 en homo y producción).
+
+    Operaciones:
+
+    - ``Dummy`` (``dummy``): verificación del servicio, sin auth.
+    - ``Consultar`` (``getParameterCollectionByName``): devuelve los elementos
+      de una colección/tabla por nombre. Misma terna de auth que A4/A5/A10
+      (``token``/``sign``/``cuitRepresentada``) + ``collectionName``.
+
+    La respuesta (``parameterCollectionReturn`` → ``parameterCollection``) trae
+    ``name`` y ``parameterList`` (``parameter[]`` con ``id``/``description`` y un
+    ``attributeList`` anidado). Ambas listas son ``maxOccurs="unbounded"``: con
+    un único elemento el SOAP las entrega como dict, no como lista, así que se
+    normalizan con ``como_lista`` (mismo patrón ya aplicado en el resto del
+    fork). El WSDL no define bloques de error de negocio: una colección
+    inexistente o un servicio no autorizado llegan como SOAP fault (capturado
+    por el decorador en ``Excepcion``/``ErrMsg``).
+    """
+
+    _public_methods_ = [
+        "Consultar",
+        "Dummy",
+        "Conectar",
+        "SetParametros",
+        "SetTicketAcceso",
+        "GetParametro",
+        "AnalizarXml",
+        "ObtenerTagXml",
+        "LoadTestXML",
+        "DebugLog",
+    ]
+    _public_attrs_ = [
+        "Token",
+        "Sign",
+        "Cuit",
+        "AppServerStatus",
+        "DbServerStatus",
+        "AuthServerStatus",
+        "XmlRequest",
+        "XmlResponse",
+        "Version",
+        "InstallDir",
+        "LanzarExcepciones",
+        "Excepcion",
+        "Traceback",
+        "nombre",
+        "parametros",
+        "data",
+    ]
+
+    _reg_progid_ = "WSSrPadronA100"
+    _reg_clsid_ = "{BE1E897C-0BD6-4C5A-AF24-A6CCF9BB4975}"
+
+    # Variables globales para BaseWS:
+    HOMO = HOMO
+    WSDL = (
+        "https://awshomo.afip.gov.ar/sr-parametros/webservices/"
+        "parameterServiceA100?wsdl"
+    )
+    # Producción: https://aws.afip.gov.ar/sr-parametros/webservices/parameterServiceA100
+    Version = "%s %s" % (__version__, HOMO and "Homologación" or "")
+    LanzarExcepciones = LANZAR_EXCEPCIONES
+
+    def inicializar(self):
+        BaseWS.inicializar(self)
+        self.AppServerStatus = self.DbServerStatus = self.AuthServerStatus = None
+        self.nombre = ""
+        self.parametros = []
+        self.data = {}
+
+    def Dummy(self):
+        "Obtener el estado de los servidores de ARCA"
+        ret = self.client.dummy()
+        result = ret["dummyReturn"]
+        self.AppServerStatus = result["appserver"]
+        self.DbServerStatus = result["dbserver"]
+        self.AuthServerStatus = result["authserver"]
+        return True
+
+    @inicializar_y_capturar_excepciones
+    def Consultar(self, collection_name):
+        "Devuelve los elementos de una tabla de parámetros (Padrón Alcance 100)"
+        res = self.client.getParameterCollectionByName(
+            token=self.Token,
+            sign=self.Sign,
+            cuitRepresentada=self.Cuit,
+            collectionName=collection_name,
+        )
+        ret = res.get("parameterCollectionReturn", {})
+        data = ret.get("parameterCollection", {})
+        if isinstance(data, list):
+            data = data[0] if data else {}
+        self.data = data or {}
+        self.nombre = self.data.get("name", "")
+        parametros = []
+        for p in como_lista(self.data.get("parameterList")):
+            parametros.append(
+                {
+                    "id": p.get("id"),
+                    "descripcion": p.get("description"),
+                    # attributeList es maxOccurs="unbounded": normalizar a lista
+                    "atributos": como_lista(p.get("attributeList")),
+                }
+            )
+        self.parametros = parametros
+        return True
+
+    def BuscarParametro(self, id_parametro):
+        "Devuelve el dict {id, descripcion, atributos} de la última consulta por id"
+        for p in self.parametros:
+            if str(p.get("id")) == str(id_parametro):
+                return p
+        return None
+
+
+def _main_a100(DEBUG=False):
+    "Prueba de consulta de tablas de parámetros (Padrón Alcance 100)"
+    from pyarcaws.wsaa import WSAA
+
+    service = "ws_sr_padron_a100"
+    SECTION = "WS-SR-PADRON-A100"
+    config = abrir_conf(CONFIG_FILE, DEBUG)
+    if config.has_section("WSAA"):
+        crt = config.get("WSAA", "CERT")
+        key = config.get("WSAA", "PRIVATEKEY")
+        cuit = config.get(SECTION, "CUIT") if config.has_section(SECTION) else ""
+    else:
+        crt, key, cuit = "reingart.crt", "reingart.key", "20267565393"
+    url_wsaa = config.get("WSAA", "URL") if config.has_option("WSAA", "URL") else None
+    url_ws = config.get(SECTION, "URL") if (config.has_option(SECTION, "URL") and not HOMO) else None
+
+    padron = WSSrPadronA100()
+    wsaa = WSAA()
+    ta = wsaa.Autenticar(service, crt, key, url_wsaa)
+    padron.SetTicketAcceso(ta)
+    padron.Cuit = cuit
+    padron.Conectar("", url_ws)
+
+    if "--dummy" in sys.argv:
+        padron.Dummy()
+        print("AppServerStatus", padron.AppServerStatus)
+        print("DbServerStatus", padron.DbServerStatus)
+        print("AuthServerStatus", padron.AuthServerStatus)
+
+    # nombre de la tabla a consultar (columna CollectionName del manual):
+    args = [a for a in sys.argv[1:] if not a.startswith("--")]
+    collection_name = args[0] if args else "Provincias"
+    print("Consultando colección de parámetros:", collection_name)
+    ok = padron.Consultar(collection_name)
+    print("ok" if ok else "error", padron.Excepcion)
+    print("Coleccion:", padron.nombre)
+    for p in padron.parametros[:20]:
+        print("  -", p["id"], p["descripcion"])
+    print("(%d elementos)" % len(padron.parametros))
+    return padron
+
+
 def main():
     "Función principal de pruebas (obtener CAE)"
     import os, time
@@ -488,6 +653,9 @@ def main():
 
     DEBUG = "--debug" in sys.argv
     safe_console()
+
+    if "--a100" in sys.argv:
+        return _main_a100(DEBUG)
 
     if "--constancia" in sys.argv:
         padron = WSSrConstanciaInscripcion()
@@ -626,10 +794,12 @@ def main():
 INSTALL_DIR = WSSrPadronA4.InstallDir = WSSrPadronA5.InstallDir = get_install_dir()
 WSSrConstanciaInscripcion.InstallDir = INSTALL_DIR
 WSSrPadronA10.InstallDir = INSTALL_DIR
+WSSrPadronA100.InstallDir = INSTALL_DIR
 
 PadronA5 = WSSrPadronA5  # alias: nombre corto derivado del servicio ws_sr_padron_a5
 ConstanciaInscripcion = WSSrConstanciaInscripcion  # alias corto del servicio nuevo
 PadronA10 = WSSrPadronA10  # alias: nombre corto derivado del servicio ws_sr_padron_a10
+PadronA100 = WSSrPadronA100  # alias: nombre corto derivado del servicio ws_sr_padron_a100
 
 if __name__ == "__main__":
 
@@ -640,5 +810,6 @@ if __name__ == "__main__":
         win32com.server.register.UseCommandLine(WSSrPadronA5)
         win32com.server.register.UseCommandLine(WSSrConstanciaInscripcion)
         win32com.server.register.UseCommandLine(WSSrPadronA10)
+        win32com.server.register.UseCommandLine(WSSrPadronA100)
     else:
         main()

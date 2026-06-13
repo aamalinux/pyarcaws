@@ -23,6 +23,7 @@ import os
 import socket
 import sys
 import traceback
+import warnings
 import pyarcaws._vendor.pysimplesoap as pysimplesoap
 from pyarcaws._vendor.pysimplesoap.client import SoapClient, SoapFault, parse_proxy, set_http_wrapper
 from pyarcaws._vendor.pysimplesoap.simplexml import SimpleXMLElement
@@ -189,6 +190,18 @@ class WSCOC(object):
     LanzarExcepciones = False
 
     def __init__(self):
+        # ARCA discontinuó el régimen de Operaciones Cambiarias (RG 3210) en
+        # 2015: el WS WSCOC ya no tiene endpoint activo. Se mantiene la interfaz
+        # por compatibilidad histórica pero está deprecada y sin reemplazo;
+        # será removida en la 2.0.
+        if type(self) is WSCOC:
+            warnings.warn(
+                "WSCOC (Consulta de Operaciones Cambiarias) está deprecado: el "
+                "régimen fue discontinuado por ARCA en 2015 y no tiene WS activo "
+                "ni reemplazo. Será removido en pyarcaws 2.0.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
         self.Token = self.Sign = self.Cuit = None
         self.AppServerStatus = None
         self.DbServerStatus = None

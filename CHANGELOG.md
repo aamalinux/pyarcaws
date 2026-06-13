@@ -28,6 +28,24 @@ el proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
   `personaServiceA10`. Flag de CLI `--a10`, alias `PadronA10`, registro COM.
   _(Irá en la próxima v1.2.0, a la espera de la validación del smoke de
   homologación.)_
+- **Padrón Alcance 100** (`WSSrPadronA100`, servicio WSAA `ws_sr_padron_a100`):
+  consulta de **tablas de parámetros** por nombre (`getParameterCollectionByName`).
+  A diferencia del resto de la familia Padrón, vive bajo
+  `sr-parametros/webservices/parameterServiceA100`. Expone `Dummy()`,
+  `Consultar(collection_name)` → `self.parametros` (lista normalizada de
+  `{id, descripcion, atributos}`) y `BuscarParametro(id)`. `parameterList` y
+  `attributeList` (`maxOccurs="unbounded"`) se normalizan con `como_lista`. Flag
+  de CLI `--a100`, alias `PadronA100`, registro COM. Especificado contra el
+  manual oficial V2.1; smoke de homologación gateado (requiere autorizar
+  `ws_sr_padron_a100` en WSASS).
+
+### Deprecado
+- **`WSCOC`** (Consulta de Operaciones Cambiarias): el régimen fue
+  discontinuado por ARCA en 2015 y no tiene WS activo ni reemplazo. Instanciarlo
+  emite `DeprecationWarning`; **remoción prevista para la 2.0**.
+- **`WSCTG`** (Código de Trazabilidad de Granos): reemplazado por la Carta de
+  Porte Electrónica (`WSCPE`, `wscpe.py`). Instanciarlo emite
+  `DeprecationWarning`; **remoción prevista para la 2.0**.
 
 ## [1.1.1] - 2026-06-12
 

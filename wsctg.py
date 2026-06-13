@@ -69,7 +69,7 @@ Opciones:
 Ver wsctg.ini para parámetros de configuración (URL, certificados, etc.)"
 """
 
-import os, sys, time, base64
+import os, sys, time, base64, warnings
 from pyarcaws.utils import date
 import traceback
 from pyarcaws._vendor.pysimplesoap.client import SoapFault
@@ -229,6 +229,21 @@ class WSCTG(BaseWS):
     WSDL = WSDL
     LanzarExcepciones = False
     Version = "%s %s" % (__version__, HOMO and "Homologación" or "")
+
+    def __init__(self, *args, **kwargs):
+        # El Código de Trazabilidad de Granos (CTG) fue reemplazado por la
+        # Carta de Porte Electrónica (CPE). Se mantiene la interfaz por
+        # compatibilidad histórica pero está deprecada; usar WSCPE (wscpe.py).
+        # Será removida en pyarcaws 2.0.
+        if type(self) is WSCTG:
+            warnings.warn(
+                "WSCTG (Código de Trazabilidad de Granos) está deprecado: el "
+                "régimen fue reemplazado por la Carta de Porte Electrónica. "
+                "Usá WSCPE (wscpe.py). Será removido en pyarcaws 2.0.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
+        BaseWS.__init__(self, *args, **kwargs)
 
     def Conectar(self, *args, **kwargs):
         ret = BaseWS.Conectar(self, *args, **kwargs)
