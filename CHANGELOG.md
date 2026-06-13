@@ -46,6 +46,18 @@ el proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
   de homologación; ahora el `Dummy()` de la familia Padrón tolera ambos
   envoltorios.
 
+### Pruebas
+- **Primer lote de cassettes de homologación (replay offline).** Se grabaron
+  contra homologación, con el certificado de autogestión WSASS, interacciones
+  reales de `WSSrPadronA10.Consultar` (getPersona) y
+  `WSSrConstanciaInscripcion.Consultar` (getPersona_v2) — WSDL vivo + respuesta —
+  y se conectaron a tests de replay (`test_ws_sr_padron_a10_vcr.py`,
+  `test_ws_sr_constancia_inscripcion_vcr.py`) que corren **sin red ni
+  certificado** (`vcr` + `dontusefix`), validando el parseo contra el envelope
+  real de ARCA. Cassettes **saneados**: token/sign del Ticket de Acceso
+  reemplazados por placeholders y CUIT del titular por una sintética; la persona
+  consultada es una entidad de homologación con datos de relleno (sin PII real).
+
 ### Deprecado
 - **`WSCOC`** (Consulta de Operaciones Cambiarias): el régimen fue
   discontinuado por ARCA en 2015 y no tiene WS activo ni reemplazo. Instanciarlo
