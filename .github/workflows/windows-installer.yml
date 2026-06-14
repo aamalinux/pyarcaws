@@ -29,6 +29,15 @@ jobs:
         python -m pip install --upgrade pip
         python -m pip install "setuptools==65.5.0" wheel
         python -m pip install --upgrade cachetools pefile
+    - name: Pin cryptography to a wheel build (x86 32-bit)
+      if: matrix.targetplatform == 'x86'
+      # cryptography dejó de publicar wheels win32 a partir de 49.0.0: en el
+      # runner de 32 bits pip intentaba compilarla desde fuente (Rust +
+      # openssl-sys) y fallaba. La 48.0.1 (última con wheel cp39-abi3-win32,
+      # válida para 3.10) satisface el >=42.0.0 de requirements.txt, así que el
+      # siguiente `pip install -r requirements.txt` la reusa sin compilar.
+      run: |
+        pip install "cryptography<49"
     - name: Install production dependencies
       run: |
         pip install -r requirements.txt

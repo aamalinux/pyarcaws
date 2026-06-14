@@ -40,7 +40,10 @@ data_files = [("pyarcaws/plantillas", glob.glob("plantillas/*"))]
 kwargs["package_data"] = {"pyarcaws": ["plantillas/*"]}
 
 parent_dir = os.path.dirname(__file__) or os.getcwd()
-long_desc = open(os.path.join(parent_dir, "README.md")).read()
+# encoding explícito: el README es UTF-8 (acentos, emoji U+FE0F). En Windows el
+# default de open() es cp1252 y `setup.py install` reventaba con
+# `UnicodeDecodeError: 'charmap' codec can't decode byte 0x8f` (CI x86/x64).
+long_desc = open(os.path.join(parent_dir, "README.md"), encoding="utf-8").read()
 
 setuptools.setup(
     name="pyarcaws",
