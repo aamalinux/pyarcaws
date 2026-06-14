@@ -31,6 +31,7 @@ CONFIG_FILE = "conf/rece.ini"
 
 pytestmark =[pytest.mark.vcr, pytest.mark.dontusefix, pytest.mark.freeze_time('2021-07-30')]
 
+@pytest.mark.online
 def test_main_prueba():
     sys.argv = []
     sys.argv.append("/debug")
@@ -43,11 +44,13 @@ def test_main_ayuda():
     sys.argv.append("debug")
     rece1.main()
 
+@pytest.mark.online
 def test_main_dummy():
     sys.argv = []
     sys.argv.append("/dummy")
     rece1.main()
 
+@pytest.mark.online
 def test_main_formato():
     sys.argv = []
     sys.argv.append("/formato")
@@ -55,30 +58,35 @@ def test_main_formato():
 
 
 
+@pytest.mark.online
 def test_prueba_proyectus():
     sys.argv = []
     sys.argv.append("/prueba")
     sys.argv.append("--proyectus")
     rece1.main()
 
+@pytest.mark.online
 def test_prueba_rg3668():
     sys.argv = []
     sys.argv.append("/prueba")
     sys.argv.append("--rg3668")
     rece1.main()
 
+@pytest.mark.online
 def test_prueba_rg3749():
     sys.argv = []
     sys.argv.append("/prueba")
     sys.argv.append("--rg3749")
     rece1.main()
 
+@pytest.mark.online
 def test_prueba_rg4109():
     sys.argv = []
     sys.argv.append("/prueba")
     sys.argv.append("--rg4109")
     rece1.main()
 
+@pytest.mark.online
 def test_prueba_fce():
     sys.argv = []
     sys.argv.append("/prueba")
@@ -86,6 +94,7 @@ def test_prueba_fce():
     rece1.main()
 
 
+@pytest.mark.online
 def test_main_ult():
     sys.argv = []
     sys.argv.append("/ult")
@@ -93,6 +102,7 @@ def test_main_ult():
     sys.argv.append("4002")
     rece1.main()
 
+@pytest.mark.online
 def test_main_get():
     sys.argv = []
     sys.argv.append("/prueba")
@@ -102,6 +112,7 @@ def test_main_get():
     sys.argv.append("9070")
     rece1.main()
 
+@pytest.mark.online
 def test_main_solicitar_caea():
     sys.argv = []
     sys.argv.append("/solicitarcaea")
@@ -109,6 +120,7 @@ def test_main_solicitar_caea():
     sys.argv.append("2")
     rece1.main()
 
+@pytest.mark.online
 def test_main_consultar_caea():
     sys.argv = []
     sys.argv.append("/consultarcaea")
@@ -116,6 +128,7 @@ def test_main_consultar_caea():
     sys.argv.append("2")
     rece1.main()
 
+@pytest.mark.online
 def test_main_informarcaeanoutilizadoptovta():
     sys.argv = []
     sys.argv.append("/informarcaeanoutilizadoptovta")
@@ -123,11 +136,13 @@ def test_main_informarcaeanoutilizadoptovta():
     sys.argv.append("4002")
     rece1.main()
 
+@pytest.mark.online
 def test_main_ptosventa():
     sys.argv = []
     sys.argv.append("/ptosventa")
     rece1.main()
 
+@pytest.mark.online
 def test_main_testing():
     sys.argv = []
     sys.argv.append("--testing")

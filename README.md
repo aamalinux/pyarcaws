@@ -249,28 +249,23 @@ conexión:
 # 1) el paquete importa (confirma que 'pip install -e .' surtió efecto)
 python -c "import pyarcaws; print('OK', pyarcaws.__file__)"
 
-# 2) tests unitarios offline (sin red ni certificado; ~0,2 s)
-pytest -m dontusefix \
-  tests/test_ssl_verify.py \
-  tests/test_ws_sr_padron_a10.py \
-  tests/test_ws_sr_constancia_inscripcion.py \
-  tests/test_pyi25.py \
-  tests/test_pyqr.py
-# -> 28 passed
+# 2) tests offline (sin red ni certificado)
+pytest -m dontusefix
+# -> 107 passed, 63 skipped
 ```
 
-Esos tests validan el paquete y sus dependencias núcleo (`cryptography`,
-`Pillow`, `qrcode`) sin tocar la red.
+Los **63 _skipped_** son tests de integración marcados `online` (autentican
+contra ARCA y/o requieren certificado): se saltan solos en un checkout limpio y
+se corren aparte con `pytest --run-online` (Nivel 2, con tu certificado). El
+resto valida el paquete y sus dependencias núcleo (`cryptography`, `Pillow`,
+`qrcode`, `fpdf`) sin tocar la red. _(Algún test de generación de PDF tarda; el
+conjunto completo demora ~1-2 min.)_
 
-> **Sobre `pytest` a secas:** la suite completa (`pytest tests`, o `make test`)
-> y buena parte de `pytest -m dontusefix` **no** corren offline en un checkout
-> limpio. De los ~154 tests que selecciona `-m dontusefix`, ~112 pasan sin red
-> pero ~40 (los heredados `test_*_rece*`, `test_wsmtx_recem`, `test_wsaa`,
-> `test_wscdc`) intentan autenticar contra ARCA y **requieren un certificado de
-> homologación válido** — son, de hecho, Nivel 2. Como el `reingart.zip`
-> histórico viene **vencido** (ver aviso de arriba), hasta que configures tu
-> propio certificado esos tests fallan. Por eso el chequeo de arriba apunta al
-> subconjunto offline verdadero.
+> **`pytest tests` / `make test` (suite completa)** incluye además los tests con
+> cassettes VCR que usan la fixture de autenticación del `conftest`: ésos también
+> requieren un certificado de homologación válido (el `reingart.zip` histórico
+> viene **vencido**, ver aviso de arriba). Para el chequeo de instalación usá
+> `pytest -m dontusefix`, que es el subconjunto offline verdadero.
 
 #### Nivel 2 — con certificado de homologación (requiere WSASS configurado)
 

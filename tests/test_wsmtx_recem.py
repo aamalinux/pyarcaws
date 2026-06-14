@@ -32,12 +32,14 @@ CONFIG_FILE = "conf/rece.ini"
 pytestmark =[pytest.mark.vcr, pytest.mark.dontusefix]
 
 
+@pytest.mark.online
 def test_main_prueba():
     sys.argv = []
     sys.argv.append("/debug")
     sys.argv.append("/prueba")
     recem.main()
 
+@pytest.mark.online
 def test_main_prueba_fce():
     sys.argv = []
     sys.argv.append("/prueba")
@@ -50,22 +52,26 @@ def test_main_ayuda():
     sys.argv.append("/ayuda")
     recem.main()
 
+@pytest.mark.online
 def test_main_dummy():
     sys.argv = []
     sys.argv.append("/debug")
     sys.argv.append("/dummy")
     recem.main()
 
+@pytest.mark.online
 def test_main_formato():
     sys.argv = []
     sys.argv.append("/formato")
     recem.main()
 
+@pytest.mark.online
 def test_main_puntosventa():
     sys.argv = []
     sys.argv.append("/puntosventa")
     recem.main()
 
+@pytest.mark.online
 def test_main_ult():
     sys.argv = []
     sys.argv.append("/ult")
@@ -73,6 +79,7 @@ def test_main_ult():
     sys.argv.append("4000")
     recem.main()
 
+@pytest.mark.online
 def test_main_get():
     sys.argv = []
     sys.argv.append("/get")
@@ -81,6 +88,7 @@ def test_main_get():
     sys.argv.append("1845")
     recem.main()
 
+@pytest.mark.online
 def test_main_solicitarcaea():
     sys.argv = []
     sys.argv.append("/solicitarcaea")
@@ -88,6 +96,7 @@ def test_main_solicitarcaea():
     sys.argv.append("1")
     recem.main()
 
+@pytest.mark.online
 def test_main_consultarcaea():
     sys.argv = []
     sys.argv.append("/consultarcaea")
@@ -95,18 +104,21 @@ def test_main_consultarcaea():
     sys.argv.append("1")
     recem.main()
 
+@pytest.mark.online
 def test_main_ptosventa():
     sys.argv = []
     sys.argv.append("/ptosventa")
     recem.main()
 
 
+@pytest.mark.online
 def test_main_informarcaeanoutilizado():
     sys.argv = []
     sys.argv.append("/informarcaeanoutilizado")
     sys.argv.append("21353598240916")
     recem.main()
 
+@pytest.mark.online
 def test_main_informarcaeanoutilizadoptovta():
     sys.argv = []
     sys.argv.append("/informarcaeanoutilizadoptovta")

@@ -37,6 +37,24 @@ fepdf = FEPDF()
 pytestmark = [pytest.mark.dontusefix]
 shutil.copy("tests/facturas.json", "facturas.json")
 
+_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
+@pytest.fixture(scope="module", autouse=True)
+def _provee_rece_ini():
+    """Provee ``rece.ini`` en el cwd (sección ``[FACTURA]``) para los tests que
+    leen la config / llaman ``main()``. En un checkout limpio sólo está en
+    ``conf/`` — esto reemplaza el ``cp conf/rece.ini rece.ini`` que hace el CI,
+    para que ``pytest`` quede verde offline sin pasos manuales. Se limpia al
+    final si lo creamos este módulo."""
+    src = os.path.join(_ROOT, "conf", "rece.ini")
+    creado = not os.path.exists(CONFIG_FILE) and os.path.exists(src)
+    if creado:
+        shutil.copy(src, CONFIG_FILE)
+    yield
+    if creado and os.path.exists(CONFIG_FILE):
+        os.remove(CONFIG_FILE)
+
 
 def test_crear_factura():
     """Test de creación de una factura (Interna)."""

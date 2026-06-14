@@ -40,6 +40,7 @@ def key_and_cert():
     return [KEY, CERT]
 
 
+@pytest.mark.online
 def test_analizar_certificado(key_and_cert):
     """Test analizar datos en certificado."""
     wsaa = WSAA()
@@ -85,6 +86,7 @@ def test_expirado():
 
 
 @pytest.mark.vcr
+@pytest.mark.online
 def test_login_cms(key_and_cert):
     """comprobando si LoginCMS está funcionando correctamente"""
     wsaa = WSAA()
@@ -119,6 +121,7 @@ def test_login_cms(key_and_cert):
     assert ta_xml.endswith("</loginTicketResponse>\n")
 
 
+@pytest.mark.online
 def test_wsaa_create_tra():
     wsaa = WSAA()
     tra = wsaa.CreateTRA(service="wsfe")
@@ -134,6 +137,7 @@ def test_wsaa_create_tra():
     assert tra.endswith("<service>wsfe</service></loginTicketRequest>")
 
 
+@pytest.mark.online
 def test_wsaa_sign():
     wsaa = WSAA()
     tra = '<?xml version="1.0" encoding="UTF-8"?><loginTicketRequest version="1.0"/>'
@@ -148,6 +152,7 @@ def test_wsaa_sign():
     assert tra.encode("utf8") in out
 
 
+@pytest.mark.online
 def test_wsaa_sign_tra(key_and_cert):
     wsaa = WSAA()
 
@@ -160,6 +165,7 @@ def test_wsaa_sign_tra(key_and_cert):
     assert isinstance(sign, str)
     assert sign.startswith("MII")
 
+@pytest.mark.online
 def test_wsaa_sign_openssl(key_and_cert):
     wsaa = WSAA()
 
@@ -176,6 +182,7 @@ def test_wsaa_sign_openssl(key_and_cert):
 
 
 
+@pytest.mark.online
 def test_wsaa_sign_tra_inline(key_and_cert):
     wsaa = WSAA()
 
@@ -200,6 +207,7 @@ def test_wsaa_sign_tra_inline(key_and_cert):
 
 
 @pytest.mark.vcr
+@pytest.mark.online
 def test_main():
     sys.argv = []
     sys.argv.append("--debug")
@@ -218,6 +226,7 @@ def test_main_crear_pedido_cert():
 
 
 @pytest.mark.vcr
+@pytest.mark.online
 def test_main_analizar():
     sys.argv = []
     sys.argv.append("--analizar")
@@ -225,6 +234,7 @@ def test_main_analizar():
 
 
 @pytest.mark.vcr
+@pytest.mark.online
 def test_CallWSAA(key_and_cert):
     wsaa = WSAA()
     tra = wsaa.CreateTRA(service="wsfe", ttl=DEFAULT_TTL)
@@ -233,6 +243,7 @@ def test_CallWSAA(key_and_cert):
 
 
 @pytest.mark.vcr
+@pytest.mark.online
 def test_call_wsaa(key_and_cert):
     wsaa = WSAA()
     tra = wsaa.CreateTRA(service="wsfe", ttl=DEFAULT_TTL)

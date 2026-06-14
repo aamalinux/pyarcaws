@@ -48,16 +48,19 @@ def test_main_prueba():
     sys.argv.append('/prueba')
     recex1.main()
 
+@pytest.mark.online
 def test_main_dummy():
     sys.argv = []
     sys.argv.append('/dummy')
     recex1.main()
 
+@pytest.mark.online
 def test_main_formato():
     sys.argv = []
     sys.argv.append('/formato')
     recex1.main()
 
+@pytest.mark.online
 def test_main_ult():
     sys.argv = []
     sys.argv.append('/ult')
@@ -65,6 +68,7 @@ def test_main_ult():
     sys.argv.append('7')
     recex1.main()
 
+@pytest.mark.online
 def test_main_get():
     sys.argv = []
     sys.argv.append('/get')
@@ -73,12 +77,14 @@ def test_main_get():
     sys.argv.append('28')
     recex1.main()
 
+@pytest.mark.online
 def test_main_ctz():
     sys.argv = []
     sys.argv.append('/ctz')
     sys.argv.append('DOL')
     recex1.main()
 
+@pytest.mark.online
 def test_main_monctz():
     sys.argv = []
     sys.argv.append('/monctz')
