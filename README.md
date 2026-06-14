@@ -75,7 +75,8 @@ Servicios web soportados:
 - [WSFEcred][30]: facturas de crédito electrónicas MiPyME _(sin validar)_
 - [WSCDC][23]: constatación de comprobantes
 - [Padrón de contribuyentes][26]: verificación de vendedores y compradores
-  (Alcance 4, Alcance 5 / Constancia de Inscripción, Alcance 10, Alcance 100)
+  (Alcance 4, Alcance 5 / Constancia de Inscripción, Alcance 10, Alcance 13, Alcance 100)
+  — Alcance 13 agrega la búsqueda inversa documento→CUIT _(sin validar en vivo)_
 - [SIRE][30]: sistema integral de retenciones electrónicas — certificado C2005 _(sin validar)_
 
 **ARCA — agricultura, ganadería y remitos:**
@@ -84,6 +85,7 @@ Servicios web soportados:
 - [WSLTV][17b]: liquidación de tabaco verde
 - [WSLUM][17c]: liquidación mensual de lechería
 - [WSLSP][17d]: liquidación del sector pecuario/ganadero
+- [WSLCA][30]: liquidación de caña de azúcar _(sin validar en vivo)_
 - [WSCPE][30]: carta de porte electrónica (reemplaza a WSCTG)
 - [WSREMCARNE][30]: remito electrónico cárnico
 - [WSREMAZUCAR][30]: remito electrónico de azúcar/alcohol _(sin validar)_

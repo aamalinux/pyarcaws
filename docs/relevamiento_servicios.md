@@ -97,11 +97,11 @@ familia/dominio nuevo o muy fragmentado).
 
 | Candidato | Qué resuelve | WSDL/API pública | Esfuerzo | Acuerdo especial |
 |-----------|--------------|:---:|:---:|---|
+| ~~**ws_sr_padron_a13**~~ | Padrón Alcance 13 (búsqueda inversa documento→CUIT) | Sí | **BAJO** | ✅ **IMPLEMENTADO** (v1.3.0, pendiente validación en vivo) |
+| ~~**WSLCA**~~ | Liquidación de **caña de azúcar** | Sí | **BAJO** | ✅ **IMPLEMENTADO** (v1.3.0, pendiente validación en vivo) |
 | **TRABAJO_F931** | Consulta de DDJJ F931 de Seguridad Social (SICOSS) | Sí (catálogo) | MEDIO | No aparente |
 | **SETIWS / VEP** (`SETIWS-PAGO-API`) | Crear y gestionar VEP (volantes electrónicos de pago) | Sí (catálogo) | MEDIO | No aparente |
 | **WSAPOC** | Consulta de contribuyentes **apócrifos** (validar proveedores) | Sí (catálogo) | BAJO-MEDIO | No aparente |
-| **ws_sr_padron_a13** | Padrón Alcance 13 | Sí | **BAJO** (patrón A10) | No |
-| **WSLCA** | Liquidación de **caña de azúcar** (completa familia agro) | Sí | **BAJO** (patrón wsltv/wslum) | No |
 | **WSCTA** | Consulta de certificados DNRPA (transferencias automotores) | Sí | BAJO-MEDIO | No aparente |
 | **WSSEG** | Operaciones de seguros de caución | Sí | MEDIO | No aparente |
 | **WSTABACO** | Régimen tabacalero | Sí | MEDIO | No aparente |
@@ -147,19 +147,25 @@ general que falten; la prioridad acá es **validar** lo que ya hay (cassettes), 
 
 ## Tarea 3 — Matriz de priorización
 
-### Top candidatos por valor/esfuerzo (a sumar)
+### Implementados en esta tanda (v1.3.0, pendiente validación en vivo)
 
-1. **ws_sr_padron_a13** — esfuerzo **BAJO** (patrón A10 ya dominado). Sumar **solo si
-   aparece un caso de uso** que el A4/A10/Constancia no cubra.
-2. **WSLCA (liquidación caña de azúcar)** — esfuerzo **BAJO** (patrón wsltv/wslum).
-   Completa la familia agro. Nicho: solo si hay demanda azucarera.
-3. **TRABAJO_F931 (Seguridad Social)** — esfuerzo **MEDIO**, **valor general alto**
+- ✅ **ws_sr_padron_a13** (`WSSrPadronA13`) — resultó **NO redundante** con A10: aporta
+  `getIdPersonaListByDocumento` (búsqueda inversa documento→CUIT). Tests offline.
+- ✅ **WSLCA** (`wslca.py`) — liquidación de caña de azúcar; superficie de lectura
+  (Dummy + catálogos + consultas) con tests offline; generación modelada del WSDL.
+- Falta: correr los smokes gateados (`ejemplos/smoke_padron_a13.py`,
+  `ejemplos/smoke_wslca.py`) con cert autorizado a `ws_sr_padron_a13` y `wslca`, y
+  grabar cassettes de homologación.
+
+### Top candidatos por valor/esfuerzo (próximos a sumar)
+
+1. **TRABAJO_F931 (Seguridad Social)** — esfuerzo **MEDIO**, **valor general alto**
    (uso contable/liquidación de sueldos transversal). Mejor relación valor/esfuerzo de
    los "grandes".
-4. **SETIWS / VEP (volantes de pago)** — esfuerzo **MEDIO**, valor general alto
+2. **SETIWS / VEP (volantes de pago)** — esfuerzo **MEDIO**, valor general alto
    (generar VEP es una necesidad muy común). Buen candidato si se quiere ampliar más
    allá de facturación.
-5. **WSAPOC (apócrifos)** — esfuerzo **BAJO-MEDIO**, valor de control (validar
+3. **WSAPOC (apócrifos)** — esfuerzo **BAJO-MEDIO**, valor de control (validar
    proveedores). Complementa bien el Padrón.
 
 **Solo si aparece caso de uso concreto**: WSCTA (automotores), WSSEG (caución),

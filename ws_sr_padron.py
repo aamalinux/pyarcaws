@@ -482,6 +482,51 @@ class WSSrPadronA10(WSSrPadronA4):
         return True
 
 
+class WSSrPadronA13(WSSrPadronA10):
+    """Interfaz para Consulta a Padrón Alcance 13 (manual padrón A13).
+
+    Verificado contra el WSDL vivo de homologación (personaServiceA13). Comparte
+    con A10 la operación ``getPersona`` (misma firma de auth y misma estructura
+    ``personaReturn`` → ``persona``, con un set de campos algo más amplio que el
+    parseo heredado de A10 tolera). Lo distintivo de A13 es la **búsqueda inversa
+    por número de documento**: ``getIdPersonaListByDocumento`` devuelve la lista
+    de ``idPersona`` (CUIT/CUIL/CDI) asociados a un documento — caso de uso que
+    ninguna otra clase de la familia (A4/A5/A10) cubre. Como A10, el WSDL no
+    define bloques de error de negocio: documento inexistente / servicio no
+    autorizado llegan como SOAP fault (capturado en ``Excepcion``/``ErrMsg``).
+    """
+
+    _public_methods_ = WSSrPadronA10._public_methods_ + [
+        "ConsultarListaPersonaPorDocumento",
+    ]
+    _public_attrs_ = WSSrPadronA10._public_attrs_ + [
+        "personas",
+    ]
+
+    _reg_progid_ = "WSSrPadronA13"
+    _reg_clsid_ = "{6E4D9A2B-3C7F-4A1E-9B62-0F5D8C1A47E0}"
+
+    WSDL = WSDL.replace("personaServiceA4", "personaServiceA13")
+    # Producción: https://aws.afip.gov.ar/sr-padron/webservices/personaServiceA13
+
+    def inicializar(self):
+        WSSrPadronA10.inicializar(self)
+        self.personas = []  # lista de idPersona devueltos por la búsqueda inversa
+
+    @inicializar_y_capturar_excepciones
+    def ConsultarListaPersonaPorDocumento(self, documento):
+        "Devuelve la lista de CUIT/CUIL/CDI asociados a un número de documento"
+        res = self.client.getIdPersonaListByDocumento(
+            sign=self.Sign,
+            token=self.Token,
+            cuitRepresentada=self.Cuit,
+            documento=documento,
+        )
+        ret = res.get("idPersonaListReturn", {})
+        self.personas = [int(x) for x in como_lista(ret.get("idPersona"))]
+        return True
+
+
 class WSSrPadronA100(BaseWS):
     """Interfaz para Consulta de Tablas de Parámetros — Padrón Alcance 100.
 
@@ -669,6 +714,10 @@ def main():
         padron = WSSrPadronA10()
         SECTION = "WS-SR-PADRON-A10"
         service = "ws_sr_padron_a10"
+    elif "--a13" in sys.argv:
+        padron = WSSrPadronA13()
+        SECTION = "WS-SR-PADRON-A13"
+        service = "ws_sr_padron_a13"
     else:
         padron = WSSrPadronA4()
         SECTION = "WS-SR-PADRON-A4"
@@ -760,6 +809,16 @@ def main():
 
         if "--testing" in sys.argv:
             padron.LoadTestXML("tests/xml/%s_resp.xml" % service)
+
+        # A13: búsqueda inversa por número de documento (getIdPersonaListByDocumento)
+        if "--a13" in sys.argv and "--documento" in sys.argv:
+            documento = sys.argv[sys.argv.index("--documento") + 1]
+            print("Buscando CUIT/CUIL/CDI por documento", documento, "...", end=" ")
+            ok = padron.ConsultarListaPersonaPorDocumento(documento)
+            print("ok" if ok else "error", padron.Excepcion)
+            print("Personas (idPersona):", padron.personas)
+            return padron
+
         print("Consultando AFIP online via webservice...", end=" ")
         ok = padron.Consultar(id_persona)
 
@@ -798,11 +857,13 @@ def main():
 INSTALL_DIR = WSSrPadronA4.InstallDir = WSSrPadronA5.InstallDir = get_install_dir()
 WSSrConstanciaInscripcion.InstallDir = INSTALL_DIR
 WSSrPadronA10.InstallDir = INSTALL_DIR
+WSSrPadronA13.InstallDir = INSTALL_DIR
 WSSrPadronA100.InstallDir = INSTALL_DIR
 
 PadronA5 = WSSrPadronA5  # alias: nombre corto derivado del servicio ws_sr_padron_a5
 ConstanciaInscripcion = WSSrConstanciaInscripcion  # alias corto del servicio nuevo
 PadronA10 = WSSrPadronA10  # alias: nombre corto derivado del servicio ws_sr_padron_a10
+PadronA13 = WSSrPadronA13  # alias: nombre corto derivado del servicio ws_sr_padron_a13
 PadronA100 = WSSrPadronA100  # alias: nombre corto derivado del servicio ws_sr_padron_a100
 
 if __name__ == "__main__":
@@ -814,6 +875,7 @@ if __name__ == "__main__":
         win32com.server.register.UseCommandLine(WSSrPadronA5)
         win32com.server.register.UseCommandLine(WSSrConstanciaInscripcion)
         win32com.server.register.UseCommandLine(WSSrPadronA10)
+        win32com.server.register.UseCommandLine(WSSrPadronA13)
         win32com.server.register.UseCommandLine(WSSrPadronA100)
     else:
         main()
