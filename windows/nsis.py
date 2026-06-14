@@ -304,7 +304,13 @@ class NSISScript(object):
         ofi.close()
 
     def compile(self, pathname="base.nsi"):
-        os.startfile(pathname, "compile")
+        try:
+            os.startfile(pathname, "compile")
+        except OSError as e:
+            # sin NSIS instalado (p.ej. runner de CI) no hay aplicación asociada
+            # al .nsi; el instalador se compila aparte con makensis.exe
+            print("ADVERTENCIA: no se pudo compilar %s (%s); "
+                  "ejecutar makensis.exe manualmente" % (pathname, e))
 
 
 class Target(object):
