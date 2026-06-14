@@ -6,6 +6,33 @@ Todos los cambios notables de **pyarcaws** (fork de
 El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y
 el proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
 
+## [Sin publicar]
+
+### Agregado
+- **Padrón Alcance 13** (`WSSrPadronA13`, servicio WSAA `ws_sr_padron_a13`):
+  verificado contra el WSDL vivo de homologación (`personaServiceA13`). Hereda
+  `getPersona` de Alcance 10 (mismo parseo de `personaReturn` → `persona`) y
+  agrega lo distintivo del alcance: la **búsqueda inversa por documento**
+  (`getIdPersonaListByDocumento` → `ConsultarListaPersonaPorDocumento(documento)`
+  → `self.personas`, lista de CUIT/CUIL/CDI), que A4/A5/A10 no cubren. Flag de
+  CLI `--a13` (con `--documento`), alias `PadronA13`, registro COM. Tests
+  offline con fakes. _Pendiente validación en vivo (smoke gateado, requiere
+  autorizar `ws_sr_padron_a13` en WSASS)._
+- **Liquidación de Caña de Azúcar** (`WSLCA`, módulo `wslca.py`, servicio WSAA
+  `wslca`): verificado contra el WSDL vivo de homologación
+  (`wslca/services/soap`, esquema `unqualified` como WSLSP → aplica el fix de
+  marshalling del pysimplesoap vendoreado). Expone `Dummy`, los catálogos
+  `Consultar*` (provincias, localidades, tipos de comprobante, tributos, puntos
+  de venta, condiciones de venta, medios de pago, otros conceptos),
+  `ConsultarUltimoComprobante`, `ConsultarLiquidacion` (por nro de comprobante)
+  y el builder `CrearLiquidacion`/`AgregarDetalle`/`AgregarTributo`/
+  `AgregarOtroConcepto`/`AutorizarLiquidacion` (`generarLiquidacion`, modelado
+  fielmente contra el WSDL). Auth con `cuitRepresentada`. Errores tolerantes
+  (`normalizar_lista_soap`). Alias `LiquidacionCanaAzucar`, registro COM, CLI.
+  Tests offline (catálogos single/lista, errores uno/varios, consultas,
+  builder). _La superficie de generación queda pendiente de validación en vivo
+  (smoke gateado, requiere autorizar `wslca` en WSASS)._
+
 ## [1.2.0] - 2026-06-13
 
 ### Seguridad
