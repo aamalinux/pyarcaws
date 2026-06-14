@@ -1,0 +1,199 @@
+# Relevamiento de servicios — pyarcaws
+
+> Fecha: 2026-06-14 · Branch base: `main` (v1.2.0) · Método: **medido, no asumido**.
+>
+> - **Import**: `python -c "import pyarcaws.<mod>"` en venv con `pip install -e .` (Python 3).
+> - **WSDL vivo**: descarga pública del WSDL de **homologación** (sin autenticar);
+>   se reporta el código HTTP real. Sin llamadas autenticadas a ARCA en esta tanda.
+> - **Tests/cassettes**: presencia de `tests/test_<mod>.py` y de cassettes VCR
+>   (replay **offline**) o marca `online` (requiere cert/red).
+>
+> Convención de estado:
+> - **ACTIVO (live)** — anda y fue validado en vivo contra homologación en el fork.
+> - **ACTIVO (cassette)** — importa + WSDL vivo + tiene cassette offline que pasa,
+>   pero sin validación en vivo en el fork (forma de request/response probada).
+> - **IMPORTA-SIN-PROBAR** — importa limpio y (si aplica) el WSDL responde, pero
+>   **no hay test ni evidencia de uso en Py3** en el fork. Heredado de pyafipws.
+> - **DEPRECADO** — marcado con `DeprecationWarning` en código y WSDL caído.
+
+---
+
+## Tarea 1 — Auditoría de módulos presentes
+
+Resultado global: **los 31 módulos de servicio importan limpio en Python 3** (0 errores
+de import). La diferencia de madurez está en *tests* y *validación en vivo*, no en el import.
+
+### ARCA — fiscal / factura electrónica
+
+| Módulo | Dominio | Import Py3 | Tests / cassettes | WSDL homo | Estado | Nota |
+|--------|---------|:---:|---|:---:|---|---|
+| `wsaa` | Autenticación (base) | OK | sí · cassette + `online` | 200 | **ACTIVO (live)** | Lo usa todo el resto |
+| `wsfev1` | Factura mercado interno | OK | sí · cassette offline (dummy/obs/errores) + `online` | 200 | **ACTIVO (live)** | Validado en vivo; fixes `<Errors>`/`<Obs>` |
+| `wsmtx` (MTXCA) | Factura con ítems/código de barras | OK | sí · cassette + `online` | 200 | **ACTIVO (cassette)** | |
+| `wsct` | Factura turismo (IVA tax-free) | OK | sí · cassette | 200 | **ACTIVO (cassette)** | |
+| `wsbfev1` | Bonos fiscales | OK | sí · cassette + `online` | 200 | **ACTIVO (cassette)** | |
+| `wsfexv1` | Factura exportación | OK | sí · cassette + `online` | 200 | **ACTIVO (cassette)** | |
+| `wscdc` | Constatación de comprobantes | OK | sí · cassette offline (errores/obs) | 200 | **ACTIVO (live)** | Validado; parseo tolerante |
+| `ws_sr_padron` | Padrón A4 / Constancia (ex A5) / A10 / A100 | OK | sí · cassettes offline (a10_vcr, constancia_vcr) + tests | 200 (A4/A5/A10/A100) | **ACTIVO (live)** | A10 y constancia validados en vivo |
+| `wsfecred` | Facturas de Crédito Electrónicas MiPyME | OK | **no** | 200 | **IMPORTA-SIN-PROBAR** | Candidato a cassette |
+| `ws_sire` | SIRE — certificado retención C2005 (IVA) | OK | **no** | 200 (reca.homo) | **IMPORTA-SIN-PROBAR** | WSDL distinto: `ws-aplicativos-reca.homo.afip.gob.ar` |
+| `wscoc` | Operaciones cambiarias (RG 3210) | OK | no | **404** | **DEPRECADO** | `DeprecationWarning`; régimen discontinuado 2015, sin reemplazo |
+
+### ARCA — agro / liquidaciones / remitos
+
+| Módulo | Dominio | Import Py3 | Tests / cassettes | WSDL homo | Estado | Nota |
+|--------|---------|:---:|---|:---:|---|---|
+| `wslsp` | Liquidación sector pecuario | OK | sí · cassette offline (marshalling/receptor) | 200 | **ACTIVO (live)** | Validado; fix `elementFormDefault` |
+| `wsltv` | Liquidación tabaco verde | OK | sí · cassette | 200 | **ACTIVO (cassette)** | |
+| `wslum` | Liquidación lechería | OK | sí · cassette | 200 | **ACTIVO (cassette)** | |
+| `wslpg` | Liquidación primaria de granos | OK | **no** | 200 | **IMPORTA-SIN-PROBAR** | ⚠️ Servicio grande e importante, **sin un solo test** |
+| `wscpe` | Carta de Porte Electrónica | OK | sí · cassettes offline (14) | **404** | **ACTIVO (cassette)** | ⚠️ WSDL homo **404 hoy** en la URL hardcodeada (`fwshomo/wscpe/services/soap`); los cassettes se grabaron contra esa misma URL → endpoint **movido o caída temporal de homo**. Verificar URL vigente |
+| `wsctg` | Trazabilidad de granos | OK | no | **404** | **DEPRECADO** | `DeprecationWarning` → usar **WSCPE** |
+| `wsremcarne` | Remito electrónico cárnico | OK | sí · cassette | 200 | **ACTIVO (cassette)** | |
+| `wsremazucar` | Remito azúcar/alcohol | OK | **no** | 200 | **IMPORTA-SIN-PROBAR** | |
+| `wsremharina` | Remito harina de trigo | OK | **no** | 200 | **IMPORTA-SIN-PROBAR** | |
+
+### Provincial / otros organismos
+
+| Módulo | Organismo | Import Py3 | Tests | Endpoint | Estado | Nota |
+|--------|-----------|:---:|:---:|:---:|---|---|
+| `cot` | ARBA (Bs. As.) | OK | no | 200 (test) | **IMPORTA-SIN-PROBAR** | Remito electrónico; **REST/POST, no SOAP** |
+| `iibb` | ARBA (Bs. As.) | OK | no | timeout | **IMPORTA-SIN-PROBAR** | Percepciones/retenciones IIBB; el endpoint `dfe.test.arba.gov.ar` no respondió (timeout) |
+| `padron` | ARCA (padrón bulk) | OK | no | 200 (SOA) | **IMPORTA-SIN-PROBAR** | Descarga el ZIP de padrón + API SOA; no es WS SOAP por contribuyente |
+| `trazamed` | ANMAT/PAMI (SNT) | OK | no | 200 | **IMPORTA-SIN-PROBAR** | Trazabilidad medicamentos |
+| `trazarenpre` | RENPRE/SEDRONAR (SNT) | OK | no | 200 | **IMPORTA-SIN-PROBAR** | Precursores químicos |
+| `trazafito` | SENASA (SNT) | OK | no | 200 | **IMPORTA-SIN-PROBAR** | Fitosanitarios |
+| `trazaprodmed` | ANMAT (SNT) | OK | no | 200 | **IMPORTA-SIN-PROBAR** | Productos médicos |
+| `trazavet` | SENASA (SNT) | OK | no | 200 | **IMPORTA-SIN-PROBAR** | Productos veterinarios |
+
+**Hallazgos de la auditoría**
+
+- **Ningún módulo roto por import.** La deuda real es de *cobertura de tests*: 15 de 31
+  módulos no tienen ni un test (todos los `traza*`, `wslpg`, `wsfecred`, `ws_sire`,
+  `wsremazucar`, `wsremharina`, `cot`, `iibb`, `padron`).
+- **`wscpe` (Carta de Porte): WSDL homo 404.** La URL hardcodeada
+  `https://fwshomo.afip.gov.ar/wscpe/services/soap?wsdl` devuelve 404 en todas sus
+  variantes (homo y prod-java), pese a que el servicio figura **activo** en el catálogo
+  oficial de ARCA y a que el módulo tiene 14 cassettes grabados contra esa misma URL.
+  Probable cambio de endpoint o caída temporal de homologación → **verificar la URL
+  vigente** antes de prometer que `wscpe` opera en vivo.
+- **`wsctg` y `wscoc`**: confirmados **DEPRECADOS** — `DeprecationWarning` en código y
+  WSDL **404**. WSCTG se reemplaza por **WSCPE**; WSCOC no tiene reemplazo.
+- **`wslpg`** (liquidación primaria de granos): servicio mayor, WSDL vivo, pero **sin un
+  solo test** → prioridad alta para cassettes si hay caso de uso de granos.
+- **`ws_sire`** usa un dominio distinto al resto (`ws-aplicativos-reca.homo.afip.gob.ar`),
+  WSDL vivo (200): es la familia "aplicativos RECA", no el `fwshomo` clásico.
+
+---
+
+## Tarea 2 — Catálogo de lo NO implementado
+
+Base: [catálogo oficial de WSN de ARCA](https://www.afip.gob.ar/ws/documentacion/catalogo.asp),
+contrastado contra el árbol del repo. Esfuerzo estimado **relativo al patrón A10/A100**
+ya conocido (BAJO = misma forma; MEDIO = nuevo schema con varias operaciones; ALTO =
+familia/dominio nuevo o muy fragmentado).
+
+### ARCA — servicios faltantes
+
+| Candidato | Qué resuelve | WSDL/API pública | Esfuerzo | Acuerdo especial |
+|-----------|--------------|:---:|:---:|---|
+| **TRABAJO_F931** | Consulta de DDJJ F931 de Seguridad Social (SICOSS) | Sí (catálogo) | MEDIO | No aparente |
+| **SETIWS / VEP** (`SETIWS-PAGO-API`) | Crear y gestionar VEP (volantes electrónicos de pago) | Sí (catálogo) | MEDIO | No aparente |
+| **WSAPOC** | Consulta de contribuyentes **apócrifos** (validar proveedores) | Sí (catálogo) | BAJO-MEDIO | No aparente |
+| **ws_sr_padron_a13** | Padrón Alcance 13 | Sí | **BAJO** (patrón A10) | No |
+| **WSLCA** | Liquidación de **caña de azúcar** (completa familia agro) | Sí | **BAJO** (patrón wsltv/wslum) | No |
+| **WSCTA** | Consulta de certificados DNRPA (transferencias automotores) | Sí | BAJO-MEDIO | No aparente |
+| **WSSEG** | Operaciones de seguros de caución | Sí | MEDIO | No aparente |
+| **WSTABACO** | Régimen tabacalero | Sí | MEDIO | No aparente |
+| **wscec** | Consultas Ley Economía del Conocimiento | Sí | BAJO-MEDIO | No aparente |
+| **Plataformas digitales** (RG 5319) | Percepción IVA plataformas / situación fiscal | Restringida | MEDIO | **Sí (RG 5319/2023)** |
+| **sud_restricciones / sud_contrataciones** | Consulta de deuda por CUIT | Restringida | MEDIO | **Sí** (bancos / proveedores del Estado) |
+| **WSCCOMU** (Ventanilla Electrónica) | Consumo de comunicaciones de Ventanilla | Sí | MEDIO | No aparente |
+| **Aduana** (WGESINV, wConsDepFiel, WSSV, wGesTabRef, etc.) | Operatoria aduanera por rol de agente | Restringida | ALTO | **Sí** (rol OTEN/PSAD/DESP/etc.) |
+
+> Nota: `WSFEcred`, `WSCPE`, `WSCDCV1`, `ws_sr_padron_a4/a10/a100`,
+> `ws_sr_constancia_inscripcion`, `WSLPG/LSP/LTV/LUM`, `WSREMCARNE/AZUCAR/HARINA`,
+> `WSBFE`, `WSSEG`(no), `SIRE` **ya están en el repo** (algunos como IMPORTA-SIN-PROBAR).
+> `ws_sr_padron_a5` figura **deprecado** también en el catálogo oficial (coincide con el
+> fork: A5 → Constancia de Inscripción).
+
+### Ingresos Brutos provinciales — **FRENTE, no un servicio**
+
+Es un esfuerzo **grande y fragmentado**: cada jurisdicción tiene su propia agencia, su
+propio WS/API (muchos REST, no SOAP), su propia autenticación y su propio padrón de
+alícuotas. Panorama de cobertura:
+
+| Jurisdicción | Agencia | WS/API | En repo | Nota |
+|--------------|---------|:---:|:---:|---|
+| Buenos Aires (pcia.) | **ARBA** | COT + DFE (alícuotas/deuda IIBB) | **Parcial** (`cot`, `iibb`) | REST/POST; `iibb` sin probar |
+| CABA | **AGIP** | `ISIBWS` (datos ISIB) + Consulta Deuda ISIB | No | WS documentado; candidato más claro tras ARBA |
+| Santa Fe | **API** | API/WS propio | No | Documentación dispersa |
+| Córdoba | **DGR / Rentas** | API propio | No | Fragmentado |
+| Mendoza / otras (ATM, etc.) | varias | heterogéneo | No | Caso por caso |
+| **Multilateral** | **SIRCREB / Convenio Multilateral** | padrón de regímenes de recaudación | No | Transversal; alto valor pero complejo |
+
+**Recomendación del frente IIBB**: no encararlo "en bloque". Tratar cada jurisdicción
+como mini-proyecto **disparado por demanda concreta** de un usuario. El próximo paso
+natural y de mayor cobertura tras ARBA es **AGIP (CABA)** por tener WS documentado.
+
+### Otros organismos (SNT — trazabilidad)
+
+Los 5 módulos `traza*` ya presentes cubren ANMAT (medicamentos/productos médicos),
+SENASA (fito/veterinaria) y RENPRE (precursores). Todos con **WSDL vivo (200)** pero
+**sin tests**. No se detectaron servicios nuevos de esos organismos con caso de uso
+general que falten; la prioridad acá es **validar** lo que ya hay (cassettes), no sumar.
+
+---
+
+## Tarea 3 — Matriz de priorización
+
+### Top candidatos por valor/esfuerzo (a sumar)
+
+1. **ws_sr_padron_a13** — esfuerzo **BAJO** (patrón A10 ya dominado). Sumar **solo si
+   aparece un caso de uso** que el A4/A10/Constancia no cubra.
+2. **WSLCA (liquidación caña de azúcar)** — esfuerzo **BAJO** (patrón wsltv/wslum).
+   Completa la familia agro. Nicho: solo si hay demanda azucarera.
+3. **TRABAJO_F931 (Seguridad Social)** — esfuerzo **MEDIO**, **valor general alto**
+   (uso contable/liquidación de sueldos transversal). Mejor relación valor/esfuerzo de
+   los "grandes".
+4. **SETIWS / VEP (volantes de pago)** — esfuerzo **MEDIO**, valor general alto
+   (generar VEP es una necesidad muy común). Buen candidato si se quiere ampliar más
+   allá de facturación.
+5. **WSAPOC (apócrifos)** — esfuerzo **BAJO-MEDIO**, valor de control (validar
+   proveedores). Complementa bien el Padrón.
+
+**Solo si aparece caso de uso concreto**: WSCTA (automotores), WSSEG (caución),
+WSTABACO, wscec, WSCCOMU (Ventanilla), y todo **Aduana** (requiere rol de agente →
+acceso restringido, esfuerzo ALTO). **Plataformas digitales RG 5319** y
+`sud_*` requieren **acuerdo/autorización especial** con ARCA → no encarar sin ese
+acceso.
+
+**Frente IIBB provincial**: encarar **AGIP (CABA)** como siguiente jurisdicción solo
+ante demanda; el resto, caso por caso. No es un "servicio" sino un programa.
+
+### Estado del inventario existente (acciones sugeridas)
+
+- **IMPORTA-SIN-PROBAR → validar con cassettes** (futura tanda con certificado, por
+  orden de valor): **`wslpg`** (el más importante sin test), `wsfecred`, `ws_sire`,
+  `wsremazucar`, `wsremharina`, y los `traza*`. `cot`/`iibb`/`padron` validan contra
+  endpoints provinciales/bulk (no requieren cert ARCA pero sí datos de prueba).
+- **A verificar (posible roto de entorno, no de código)**: **`wscpe`** — confirmar la
+  URL vigente del WSDL (homo 404 hoy); si el endpoint se movió, actualizar el módulo.
+- **DEPRECADOS** (ya señalizados, remoción prevista 2.0): **`wscoc`**, **`wsctg`**.
+  No invertir; mantener el `DeprecationWarning`.
+
+---
+
+## Metodología y reproducibilidad
+
+```bash
+python3 -m venv /tmp/audit_venv
+/tmp/audit_venv/bin/pip install -e .
+# import de cada módulo:
+/tmp/audit_venv/bin/python -c "import pyarcaws.<mod>"
+# liveness WSDL (GET público, sin autenticar) → código HTTP real
+```
+
+Sin llamadas autenticadas a ARCA. Las descargas de WSDL son públicas. Los endpoints que
+no respondieron (`iibb` ARBA timeout, `wscpe`/`wsctg`/`wscoc` 404) se reportan tal cual,
+sin reintentos insistentes.

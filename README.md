@@ -58,7 +58,13 @@ Funcionalidades:
 Servicios web soportados:
 -------------------------
 
-**ARCA (ex AFIP):**
+> Estado de madurez en el fork: los servicios marcados _(sin validar)_ importan
+> limpio en Python 3 y su WSDL responde, pero todavía **no tienen tests ni
+> validación en vivo** en el fork (heredados de pyafipws). Ver
+> [`docs/relevamiento_servicios.md`](docs/relevamiento_servicios.md) para el
+> estado real módulo por módulo.
+
+**ARCA (ex AFIP) — facturación y comprobantes:**
 
 - [WSAA][10]: autenticación y autorización con firma criptográfica digital
 - [WSFEv1][11]: mercado interno (factura electrónica) — [English][12]
@@ -66,24 +72,40 @@ Servicios web soportados:
 - [WSCT][22b]: turismo (factura electrónica) — devolución de IVA para turistas extranjeros
 - [WSBFEv1][13]: bonos fiscales (factura electrónica)
 - [WSFEXv1][14]: comercio exterior (factura electrónica) — [English][15]
-- [WSCTG][16]: agricultura (código de trazabilidad de granos)
-- [WSLPG][17]: agricultura (liquidación primaria de granos)
-- [WSLTV][17b]: agricultura (tabaco verde)
-- [WSLUM][17c]: agricultura (lechería)
-- [WSLSP][17d]: agricultura (sector pecuario/ganadero)
+- [WSFEcred][30]: facturas de crédito electrónicas MiPyME _(sin validar)_
 - [WSCDC][23]: constatación de comprobantes
 - [Padrón de contribuyentes][26]: verificación de vendedores y compradores
-  (Alcance 4, Alcance 5 / Constancia de Inscripción, Alcance 10)
+  (Alcance 4, Alcance 5 / Constancia de Inscripción, Alcance 10, Alcance 100)
+- [SIRE][30]: sistema integral de retenciones electrónicas — certificado C2005 _(sin validar)_
 
-**ARBA:**
+**ARCA — agricultura, ganadería y remitos:**
+
+- [WSLPG][17]: liquidación primaria de granos _(sin validar)_
+- [WSLTV][17b]: liquidación de tabaco verde
+- [WSLUM][17c]: liquidación mensual de lechería
+- [WSLSP][17d]: liquidación del sector pecuario/ganadero
+- [WSCPE][30]: carta de porte electrónica (reemplaza a WSCTG)
+- [WSREMCARNE][30]: remito electrónico cárnico
+- [WSREMAZUCAR][30]: remito electrónico de azúcar/alcohol _(sin validar)_
+- [WSREMHARINA][30]: remito electrónico de harina de trigo _(sin validar)_
+
+**ARBA (Ingresos Brutos provinciales — Bs. As.):**
 
 - [COT][20]: Código de Operación de Traslado (remito electrónico provincial)
+- [IIBB][33]: percepciones / retenciones de Ingresos Brutos _(sin validar)_
 
-**ANMAT/SEDRONAR/SENASA (SNT):**
+**SNT — trazabilidad (ANMAT / SENASA / RENPRE):**
 
-- [TrazaMed][21]: trazabilidad de medicamentos
-- [TrazaRenpre][24]: trazabilidad de precursores químicos controlados
-- [TrazaFito][25]: trazabilidad de productos fitosanitarios
+- [TrazaMed][21]: trazabilidad de medicamentos _(sin validar)_
+- [TrazaProdMed][30]: trazabilidad de productos médicos _(sin validar)_
+- [TrazaRenpre][24]: trazabilidad de precursores químicos controlados _(sin validar)_
+- [TrazaFito][25]: trazabilidad de productos fitosanitarios _(sin validar)_
+- [TrazaVet][30]: trazabilidad de productos veterinarios _(sin validar)_
+
+**Deprecados** (emiten `DeprecationWarning`, remoción prevista para la 2.0):
+
+- WSCTG (código de trazabilidad de granos) → usar **WSCPE**
+- WSCOC (consulta de operaciones cambiarias) — régimen discontinuado por ARCA, sin reemplazo
 
 ---
 
@@ -332,3 +354,5 @@ https://github.com/reingart/pyafipws
  [27]: https://github.com/reingart/openerp_pyafipws
  [28]: https://github.com/tryton-ar/account_invoice_ar
  [29]: http://www.sistemasagiles.com.ar/trac/wiki/ManualPyAfipWs#Certificados
+ [30]: https://www.afip.gob.ar/ws/documentacion/catalogo.asp
+ [33]: http://www.sistemasagiles.com.ar/trac/wiki/IngresosBrutosArba
