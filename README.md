@@ -249,23 +249,22 @@ conexión:
 # 1) el paquete importa (confirma que 'pip install -e .' surtió efecto)
 python -c "import pyarcaws; print('OK', pyarcaws.__file__)"
 
-# 2) tests offline (sin red ni certificado)
-pytest -m dontusefix
-# -> 107 passed, 63 skipped
+# 2) tests offline (sin red ni certificado) — es lo mismo que corre el CI
+pytest -m "not online" --timeout=60
+# -> 106 passed, 357 skipped, 63 deselected, 0 failed
 ```
 
-Los **63 _skipped_** son tests de integración marcados `online` (autentican
-contra ARCA y/o requieren certificado): se saltan solos en un checkout limpio y
-se corren aparte con `pytest --run-online` (Nivel 2, con tu certificado). El
-resto valida el paquete y sus dependencias núcleo (`cryptography`, `Pillow`,
-`qrcode`, `fpdf`) sin tocar la red. _(Algún test de generación de PDF tarda; el
-conjunto completo demora ~1-2 min.)_
+Los tests de integración que autentican contra ARCA y/o requieren certificado
+están marcados **`online`**: `-m "not online"` los deja afuera (los `online`
+*deselected*, y los que usan la fixture de auth del `conftest` *skipped*), así
+que el chequeo corre **verde sin certificado ni red**. Lo que sí corre valida el
+paquete y sus dependencias núcleo (`cryptography`, `Pillow`, `qrcode`, `fpdf`).
+_(Algún test de generación de PDF tarda; el conjunto demora ~2-4 min.)_
 
-> **`pytest tests` / `make test` (suite completa)** incluye además los tests con
-> cassettes VCR que usan la fixture de autenticación del `conftest`: ésos también
-> requieren un certificado de homologación válido (el `reingart.zip` histórico
-> viene **vencido**, ver aviso de arriba). Para el chequeo de instalación usá
-> `pytest -m dontusefix`, que es el subconjunto offline verdadero.
+> Para correr **también** los tests `online` (integración / cassettes que firman
+> con certificado), configurá tu cert de homologación y usá `pytest --run-online`
+> (Nivel 2). El `reingart.zip` histórico viene **vencido** (ver aviso de arriba),
+> así que sin tu propio certificado esos tests no corren.
 
 #### Nivel 2 — con certificado de homologación (requiere WSASS configurado)
 

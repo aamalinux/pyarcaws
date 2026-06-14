@@ -2,6 +2,7 @@ pytest>=7.2.0
 pytest-html>=3.2.0
 pytest-vcr>=1.0.2
 pytest-cov>=4.0.0
+pytest-timeout>=2.1.0
 # pytest-freezegun importa distutils (removido en Python 3.12); setuptools provee el shim
 setuptools>=40
 pytest-freezegun>=0.4.2

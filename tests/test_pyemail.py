@@ -41,8 +41,10 @@ def conf_mail():
     config.read(os.path.join(CONF_DIR, "rece.ini"), encoding="latin1")
     return dict(config.items("MAIL"))
 
+@pytest.mark.online
 def test_Connectar_Enviar(mocker, conf_mail):
-    """Test de conexion"""
+    """Test de conexion (abre SMTP real: el patch de smtplib.SMTP no cubre el
+    punto de conexión efectivo, así que pega a la red -> 'online')."""
     mocker.patch("smtplib.SMTP")
     pyemail.Conectar(
             conf_mail["servidor"],

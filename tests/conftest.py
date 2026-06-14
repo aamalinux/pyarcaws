@@ -70,6 +70,13 @@ def vcr_cassette_dir(request):
 def auth(request):
     if 'dontusefix' in request.keywords:
         return
+    # Esta fixture autentica contra WSAA firmando el TRA con un certificado
+    # (lado cliente, antes de cualquier cassette): los tests que la usan
+    # requieren cert + servicio autorizado, así que son 'online'. En un checkout
+    # limpio (CI sin cert) se saltan, salvo que se pase --run-online con un
+    # certificado de homologación configurado.
+    if not request.config.getoption("--run-online"):
+        pytest.skip("requiere certificado ARCA (correr con --run-online)")
     z=request.module.__obj__
     z.Cuit = CUIT
     wsaa=WSAA()

@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.9", "3.11", "3.12", "3.13"]
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
 
     steps:
     - uses: actions/checkout@v2
@@ -39,10 +39,6 @@ jobs:
     - name: Install package
       run: |
         python setup.py install
-    - name: Download certificate and private key
-      run: |
-        wget  "https://www.sistemasagiles.com.ar/soft/pyafipws/reingart2021.zip" -O reingart2019.zip
-        unzip reingart2019.zip
     - name: Copy rece.ini file
       run: |
         sudo cp conf/rece.ini rece.ini
@@ -60,7 +56,7 @@ jobs:
         sudo cp conf/wslsp.ini wslsp.ini
     - name: Test with pytest
       run: |
-        pytest --html=report.html --self-contained-html
+        pytest -m "not online" --timeout=60 --html=report.html --self-contained-html
     - name: Upload test report
       uses: actions/upload-artifact@v4
       if: ${{ always() }}
@@ -70,7 +66,7 @@ jobs:
 
     - name: Coverage Report
       run: |
-        pytest --cov-config=.coveragerc --cov-report=html --cov=pyarcaws tests/
+        pytest -m "not online" --timeout=60 --cov-config=.coveragerc --cov-report=html --cov=pyarcaws tests/
     - name: Upload coverage report
       uses: actions/upload-artifact@v4
       if: ${{ always() }}
