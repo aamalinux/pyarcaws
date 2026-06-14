@@ -249,28 +249,22 @@ conexión:
 # 1) el paquete importa (confirma que 'pip install -e .' surtió efecto)
 python -c "import pyarcaws; print('OK', pyarcaws.__file__)"
 
-# 2) tests unitarios offline (sin red ni certificado; ~0,2 s)
-pytest -m dontusefix \
-  tests/test_ssl_verify.py \
-  tests/test_ws_sr_padron_a10.py \
-  tests/test_ws_sr_constancia_inscripcion.py \
-  tests/test_pyi25.py \
-  tests/test_pyqr.py
-# -> 28 passed
+# 2) tests offline (sin red ni certificado) — es lo mismo que corre el CI
+pytest -m "not online" --timeout=60
+# -> 106 passed, 357 skipped, 63 deselected, 0 failed
 ```
 
-Esos tests validan el paquete y sus dependencias núcleo (`cryptography`,
-`Pillow`, `qrcode`) sin tocar la red.
+Los tests de integración que autentican contra ARCA y/o requieren certificado
+están marcados **`online`**: `-m "not online"` los deja afuera (los `online`
+*deselected*, y los que usan la fixture de auth del `conftest` *skipped*), así
+que el chequeo corre **verde sin certificado ni red**. Lo que sí corre valida el
+paquete y sus dependencias núcleo (`cryptography`, `Pillow`, `qrcode`, `fpdf`).
+_(Algún test de generación de PDF tarda; el conjunto demora ~2-4 min.)_
 
-> **Sobre `pytest` a secas:** la suite completa (`pytest tests`, o `make test`)
-> y buena parte de `pytest -m dontusefix` **no** corren offline en un checkout
-> limpio. De los ~154 tests que selecciona `-m dontusefix`, ~112 pasan sin red
-> pero ~40 (los heredados `test_*_rece*`, `test_wsmtx_recem`, `test_wsaa`,
-> `test_wscdc`) intentan autenticar contra ARCA y **requieren un certificado de
-> homologación válido** — son, de hecho, Nivel 2. Como el `reingart.zip`
-> histórico viene **vencido** (ver aviso de arriba), hasta que configures tu
-> propio certificado esos tests fallan. Por eso el chequeo de arriba apunta al
-> subconjunto offline verdadero.
+> Para correr **también** los tests `online` (integración / cassettes que firman
+> con certificado), configurá tu cert de homologación y usá `pytest --run-online`
+> (Nivel 2). El `reingart.zip` histórico viene **vencido** (ver aviso de arriba),
+> así que sin tu propio certificado esos tests no corren.
 
 #### Nivel 2 — con certificado de homologación (requiere WSASS configurado)
 

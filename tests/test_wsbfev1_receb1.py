@@ -39,22 +39,26 @@ def test_main_ayuda():
     receb1.main()
 
 
+@pytest.mark.online
 def test_main_formato():
     sys.argv = []
     sys.argv.append('/formato')
     receb1.main()
 
+@pytest.mark.online
 def test_main_prueba():
     sys.argv = []
     sys.argv.append('/prueba')
     sys.argv.append('/debug')
     receb1.main()
 
+@pytest.mark.online
 def test_main_dummy():
     sys.argv = []
     sys.argv.append('/dummy')
     receb1.main()
 
+@pytest.mark.online
 def test_main_ult():
     sys.argv = []
     sys.argv.append('/ult')
@@ -62,11 +66,13 @@ def test_main_ult():
     sys.argv.append('2')
     receb1.main()
 
+@pytest.mark.online
 def test_main_id():
     sys.argv = []
     sys.argv.append('/id')
     receb1.main()
 
+@pytest.mark.online
 def test_main_get():
     sys.argv = []
     sys.argv.append('/get')

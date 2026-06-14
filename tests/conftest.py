@@ -31,6 +31,34 @@ CACHE=""
 
 os.environ["CUIT"] = str(CUIT)
 
+
+def pytest_addoption(parser):
+    parser.addoption(
+        "--run-online",
+        action="store_true",
+        default=False,
+        help="ejecutar los tests marcados 'online' (requieren red y/o certificado ARCA)",
+    )
+
+
+def pytest_collection_modifyitems(config, items):
+    """Auto-saltea los tests marcados 'online' salvo que se pase --run-online.
+
+    Son tests de integración (típicamente vía ``main()`` de cada módulo) que
+    autentican contra WSAA y/o pegan a la red: en un checkout limpio sin
+    certificado fallan o cuelgan. Se mantienen para correrse explícitamente
+    (``pytest --run-online``) con un certificado de homologación configurado.
+    """
+    if config.getoption("--run-online"):
+        return
+    skip_online = pytest.mark.skip(
+        reason="requiere red/certificado ARCA (correr con --run-online)"
+    )
+    for item in items:
+        if "online" in item.keywords:
+            item.add_marker(skip_online)
+
+
 #fixture for setting directory
 @pytest.fixture(scope='module')
 def vcr_cassette_dir(request):
@@ -42,6 +70,13 @@ def vcr_cassette_dir(request):
 def auth(request):
     if 'dontusefix' in request.keywords:
         return
+    # Esta fixture autentica contra WSAA firmando el TRA con un certificado
+    # (lado cliente, antes de cualquier cassette): los tests que la usan
+    # requieren cert + servicio autorizado, así que son 'online'. En un checkout
+    # limpio (CI sin cert) se saltan, salvo que se pase --run-online con un
+    # certificado de homologación configurado.
+    if not request.config.getoption("--run-online"):
+        pytest.skip("requiere certificado ARCA (correr con --run-online)")
     z=request.module.__obj__
     z.Cuit = CUIT
     wsaa=WSAA()

@@ -27,7 +27,7 @@ import warnings
 import pytest
 
 from pyarcaws._vendor.pysimplesoap import client as C
-from ws_sr_padron import WSSrConstanciaInscripcion
+from pyarcaws.ws_sr_padron import WSSrConstanciaInscripcion
 
 pytestmark = pytest.mark.dontusefix
 

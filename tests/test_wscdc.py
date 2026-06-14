@@ -30,7 +30,10 @@ CERT = "reingart.crt"
 PKEY = "reingart.key"
 CACHE = ""
 
-pytestmark = [pytest.mark.vcr ,pytest.mark.dontusefix]
+# 'online': la fixture autouse wscdc_ autentica con WSAA (firma el TRA con el
+# certificado del lado cliente, antes de cualquier cassette), así que todo el
+# módulo requiere el cert/TA — se salta salvo --run-online.
+pytestmark = [pytest.mark.vcr, pytest.mark.dontusefix, pytest.mark.online]
 
 
 wscdc = WSCDC()

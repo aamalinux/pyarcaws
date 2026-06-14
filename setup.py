@@ -33,6 +33,12 @@ kwargs["packages"] = [
 opts = {}
 data_files = [("pyarcaws/plantillas", glob.glob("plantillas/*"))]
 
+# Plantillas PDF (CSV/PNG) DENTRO del paquete: pyfepdf las busca en
+# InstallDir/plantillas (= site-packages/pyarcaws/plantillas). El data_files de
+# arriba las deja en sys.prefix/pyarcaws, donde pyfepdf no las encuentra al
+# instalar con `setup.py install` (FileNotFoundError en main()/plantillas).
+kwargs["package_data"] = {"pyarcaws": ["plantillas/*"]}
+
 parent_dir = os.path.dirname(__file__) or os.getcwd()
 long_desc = open(os.path.join(parent_dir, "README.md")).read()
 
