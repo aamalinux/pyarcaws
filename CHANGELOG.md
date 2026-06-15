@@ -9,6 +9,17 @@ el proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
 ## [Sin publicar]
 
 ### Agregado
+- **Consulta de Apócrifos** (`WSAPOC`, módulo `wsapoc.py`, servicio WSAA
+  `wsapoc`): verificado contra el WSDL vivo de homologación
+  (`eapoc-ws-qaext.afip.gob.ar/Service.asmx`, .NET `asmx`, esquema `qualified`).
+  Consulta el registro de facturas/contribuyentes apócrifos (base APOC) — caso
+  de uso de validación de proveedores. Expone `Dummy`, `Consultar(cuit)`
+  (`GetPublicacionAPOC` → `self.EsApocrifo` + `self.resultados`),
+  `ConsultarTodos` (`GetAll`) y `ConsultarPorPublicacion(desde, hasta)`
+  (`GetAllByPublicacion`). La autenticación va en `Credencial` con `Token`,
+  `Sign` y **`CUITDelegado`** (no `cuit`/`cuitRepresentada`). Alias `Apocrifos`,
+  registro COM, CLI. Tests offline con fakes. _Pendiente validación en vivo
+  (smoke gateado, requiere autorizar `wsapoc` en WSASS)._
 - **Padrón Alcance 13** (`WSSrPadronA13`, servicio WSAA `ws_sr_padron_a13`):
   verificado contra el WSDL vivo de homologación (`personaServiceA13`). Hereda
   `getPersona` de Alcance 10 (mismo parseo de `personaReturn` → `persona`) y
