@@ -99,10 +99,11 @@ familia/dominio nuevo o muy fragmentado).
 |-----------|--------------|:---:|:---:|---|
 | ~~**ws_sr_padron_a13**~~ | Padrón Alcance 13 (búsqueda inversa documento→CUIT) | Sí | **BAJO** | ✅ **IMPLEMENTADO** (v1.3.0, pendiente validación en vivo) |
 | ~~**WSLCA**~~ | Liquidación de **caña de azúcar** | Sí | **BAJO** | ✅ **IMPLEMENTADO** (v1.3.0, pendiente validación en vivo) |
+| ~~**WSAPOC**~~ | Consulta de **apócrifos** (base APOC, validar proveedores) | Sí (`eapoc-ws-qaext`) | **BAJO** | ✅ **IMPLEMENTADO** (v1.3.0, pendiente validación en vivo) |
 | **TRABAJO_F931** | Consulta de DDJJ F931 de Seguridad Social (SICOSS) | Sí (catálogo) | MEDIO | No aparente |
 | **SETIWS / VEP** (`SETIWS-PAGO-API`) | Crear y gestionar VEP (volantes electrónicos de pago) | Sí (catálogo) | MEDIO | No aparente |
-| **WSAPOC** | Consulta de contribuyentes **apócrifos** (validar proveedores) | Sí (catálogo) | BAJO-MEDIO | No aparente |
-| **WSCTA** | Consulta de certificados DNRPA (transferencias automotores) | Sí | BAJO-MEDIO | No aparente |
+| **WSCTA** | Certificados DNRPA / CETA (transferencias automotores) | ⛔ **404** homo (`fwshomo/wscta`) | — | ⛔ **DIFERIDO**: WSDL homo caído + acceso de rol DNRPA/registro (`aprobarCertificado`), no general |
+| **wscec** | Consultas Ley Economía del Conocimiento | ⛔ no hallado (sin README ni WSDL en patrones) | — | ⛔ **DIFERIDO**: falta confirmar endpoint/manual |
 | **WSSEG** | Operaciones de seguros de caución | Sí | MEDIO | No aparente |
 | **WSTABACO** | Régimen tabacalero | Sí | MEDIO | No aparente |
 | **wscec** | Consultas Ley Economía del Conocimiento | Sí | BAJO-MEDIO | No aparente |
@@ -147,15 +148,17 @@ general que falten; la prioridad acá es **validar** lo que ya hay (cassettes), 
 
 ## Tarea 3 — Matriz de priorización
 
-### Implementados en esta tanda (v1.3.0, pendiente validación en vivo)
+### Implementados hacia v1.3.0 (pendiente validación en vivo)
 
 - ✅ **ws_sr_padron_a13** (`WSSrPadronA13`) — resultó **NO redundante** con A10: aporta
   `getIdPersonaListByDocumento` (búsqueda inversa documento→CUIT). Tests offline.
 - ✅ **WSLCA** (`wslca.py`) — liquidación de caña de azúcar; superficie de lectura
   (Dummy + catálogos + consultas) con tests offline; generación modelada del WSDL.
-- Falta: correr los smokes gateados (`ejemplos/smoke_padron_a13.py`,
-  `ejemplos/smoke_wslca.py`) con cert autorizado a `ws_sr_padron_a13` y `wslca`, y
-  grabar cassettes de homologación.
+- ✅ **WSAPOC** (`wsapoc.py`) — consulta de apócrifos (base APOC). Único viable de la
+  tanda de bajo esfuerzo (WSCTA caído+niche, wscec sin endpoint). Auth particular:
+  `Credencial{Token, Sign, CUITDelegado}`. Tests offline.
+- Falta: correr los smokes gateados con cert autorizado a `ws_sr_padron_a13`, `wslca`
+  y `wsapoc`, y grabar cassettes de homologación.
 
 ### Top candidatos por valor/esfuerzo (próximos a sumar)
 
@@ -165,8 +168,6 @@ general que falten; la prioridad acá es **validar** lo que ya hay (cassettes), 
 2. **SETIWS / VEP (volantes de pago)** — esfuerzo **MEDIO**, valor general alto
    (generar VEP es una necesidad muy común). Buen candidato si se quiere ampliar más
    allá de facturación.
-3. **WSAPOC (apócrifos)** — esfuerzo **BAJO-MEDIO**, valor de control (validar
-   proveedores). Complementa bien el Padrón.
 
 **Solo si aparece caso de uso concreto**: WSCTA (automotores), WSSEG (caución),
 WSTABACO, wscec, WSCCOMU (Ventanilla), y todo **Aduana** (requiere rol de agente →

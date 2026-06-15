@@ -74,6 +74,7 @@ Servicios web soportados:
 - [WSFEXv1][14]: comercio exterior (factura electrónica) — [English][15]
 - [WSFEcred][30]: facturas de crédito electrónicas MiPyME _(sin validar)_
 - [WSCDC][23]: constatación de comprobantes
+- [WSAPOC][30]: consulta de contribuyentes/facturas apócrifos (base APOC) _(sin validar en vivo)_
 - [Padrón de contribuyentes][26]: verificación de vendedores y compradores
   (Alcance 4, Alcance 5 / Constancia de Inscripción, Alcance 10, Alcance 13, Alcance 100)
   — Alcance 13 agrega la búsqueda inversa documento→CUIT _(sin validar en vivo)_
