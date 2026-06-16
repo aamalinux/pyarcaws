@@ -66,3 +66,16 @@ Thumbs.db
 reingart.*
 *.ini
 !conf/*.ini
+
+# Artefactos generados al correr ejemplos/smokes/CLI (salida en la raíz del repo)
+*.csr
+/datos_consulta.json
+/factura.pdf
+/salida.txt
+/entrada.txt
+/traceback.txt
+/qr.png
+/prueba.png
+/prueba_qr.png
+/prueba-cae-i25.png
+/test123.png
