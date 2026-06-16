@@ -82,7 +82,7 @@ CACERT = "conf/afip_ca_info.crt"  # WSAA CA Cert (Autoridades de Confiaza)
 HOMO = False
 TYPELIB = False
 DEFAULT_TTL = 60 * 60 * 5  # five hours
-DEBUG = True
+DEBUG = False
 
 # No debería ser necesario modificar nada despues de esta linea
 
@@ -477,6 +477,41 @@ class WSAA(BaseWS):
         d = datetime.datetime.strptime(fecha[:19], "%Y-%m-%dT%H:%M:%S")
         return now > d
 
+    def _solicitar_ta(self, service, crt, key, cache, fn, wsdl, proxy, wrapper, cacert, timeout):
+        "Crea y firma el TRA, llama a LoginCMS y graba el TA en cache. Devuelve el TA."
+        # crear el requerimiento de ticket de acceso (TRA)
+        if DEBUG:
+            print("Creando TRA...")
+        tra = self.CreateTRA(service=service, ttl=self.TTL)
+        # firmarlo criptográficamente
+        if DEBUG:
+            print("Firmando TRA...")
+        cms = self.SignTRA(tra, crt, key)
+        # conectar con el servicio web
+        if DEBUG:
+            print("Conectando a WSAA...")
+        ok = self.Conectar(cache, wsdl, proxy, wrapper, cacert, timeout=timeout)
+        if not ok or self.Excepcion:
+            raise RuntimeError(u"Fallo la conexión: %s" % self.Excepcion)
+        # llamar al método remoto para solicitar el TA
+        if DEBUG:
+            print("Llamando WSAA...")
+        ta = self.LoginCMS(cms)
+        if not ta:
+            raise RuntimeError("Ticket de acceso vacio: %s" % WSAA.Excepcion)
+        # grabar el TA para reutilizarlo; 0o600 porque contiene token/sign
+        # (válidos por horas). En POSIX restringe a sólo-dueño; en Windows es
+        # inocuo. No cambia firma ni API pública.
+        if DEBUG:
+            print("Grabando TA en %s..." % fn)
+        try:
+            fd = os.open(fn, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+            with os.fdopen(fd, "w") as f:
+                f.write(ta)
+        except IOError:
+            self.Excepcion = u"Imposible grabar ticket de accesso: %s" % fn
+        return ta
+
     def Autenticar(
         self,
         service,
@@ -514,38 +549,28 @@ class WSAA(BaseWS):
                 or os.path.getsize(fn) == 0
                 or os.path.getmtime(fn) + (DEFAULT_TTL) < time.time()
             ):
-                # ticket de acceso (TA) vencido, crear un nuevo req. (TRA)
-                if DEBUG:
-                    print("Creando TRA...")
-                tra = self.CreateTRA(service=service, ttl=self.TTL)
-                # firmarlo criptográficamente
-                if DEBUG:
-                    print("Firmando TRA...")
-                cms = self.SignTRA(tra, crt, key)
-                # concectar con el servicio web:
-                if DEBUG:
-                    print("Conectando a WSAA...")
-                ok = self.Conectar(cache, wsdl, proxy, wrapper, cacert, timeout=timeout)
-                if not ok or self.Excepcion:
-                    raise RuntimeError(u"Fallo la conexión: %s" % self.Excepcion)
-                # llamar al método remoto para solicitar el TA
-                if DEBUG:
-                    print("Llamando WSAA...")
-                ta = self.LoginCMS(cms)
-                if not ta:
-                    raise RuntimeError("Ticket de acceso vacio: %s" % WSAA.Excepcion)
-                # grabar el ticket de acceso para poder reutilizarlo luego
-                if DEBUG:
-                    print("Grabando TA en %s..." % fn)
-                try:
-                    open(fn, "w").write(ta)
-                except IOError as e:
-                    self.Excepcion = u"Imposible grabar ticket de accesso: %s" % fn
+                # no existe, está vacío o venció (pre-check barato por mtime):
+                # solicitar un TA nuevo
+                ta = self._solicitar_ta(
+                    service, crt, key, cache, fn, wsdl, proxy, wrapper, cacert, timeout
+                )
             else:
                 # leer el ticket de acceso del archivo en cache
                 if DEBUG:
                     print("Leyendo TA de %s..." % fn)
                 ta = open(fn, "r").read()
+                # validar el vencimiento por CONTENIDO (expirationTime real), no
+                # sólo por mtime: si self.TTL != DEFAULT_TTL el mtime puede no
+                # reflejar el vencimiento y servir un TA vencido. Si está vencido
+                # (o el TA cacheado está corrupto/sin expirationTime), regenerar.
+                self.AnalizarXml(xml=ta)
+                exp = self.ObtenerTagXml("expirationTime")
+                if not exp or self.Expirado(exp):
+                    if DEBUG:
+                        print("TA cacheado vencido, regenerando...")
+                    ta = self._solicitar_ta(
+                        service, crt, key, cache, fn, wsdl, proxy, wrapper, cacert, timeout
+                    )
             # analizar el ticket de acceso y extraer los datos relevantes
             self.AnalizarXml(xml=ta)
             self.Token = self.ObtenerTagXml("token")
@@ -558,7 +583,10 @@ class WSAA(BaseWS):
                     sys.exc_info()[0], sys.exc_info()[1]
                 )[0]
                 self.Traceback = ""
-            if DEBUG or debug:
+            # propagar según la política de excepciones (LanzarExcepciones se
+            # setea True al inicio de Autenticar), NO según el ruido de DEBUG:
+            # así DEBUG sólo controla los prints de diagnóstico, no si se relanza.
+            if self.LanzarExcepciones or debug:
                 raise
         return ta
 

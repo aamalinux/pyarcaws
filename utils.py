@@ -55,6 +55,7 @@ from pyarcaws._vendor.pysimplesoap.client import (
     parse_proxy,
     set_http_wrapper,
 )
+from pyarcaws._vendor.pysimplesoap.transport import _ca_bundle, _advertir_ssl_inseguro
 
 try:
     import json
@@ -375,7 +376,6 @@ class BaseWS(object):
                     warnings.warn("No se encuentra CACERT: %s" % str(cacert))
                     cacert = None  # wrong version, certificates not found...
                     raise RuntimeError("Error de configuracion CACERT ver DebugLog")
-                    return False
 
             if cacert and not os.path.isabs(cacert):
                 self.log("Fixing CACERT: %s" % cacert)
@@ -418,7 +418,7 @@ class BaseWS(object):
                             location = location.replace(":9051", ":443")
                         port["location"] = location
             return True
-        except:
+        except Exception:
             ex = traceback.format_exception(
                 sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2]
             )
@@ -579,8 +579,24 @@ class WebClient(object):
     ):
         kwargs = {}
         kwargs["timeout"] = timeout
-        kwargs["disable_ssl_certificate_validation"] = cacert is None
-        kwargs["ca_certs"] = cacert
+        # Validación SSL secure-by-default (alineado con el transport vendoreado):
+        #   cacert=False        -> DESACTIVAR validación (sólo debug, con UserWarning)
+        #   cacert=None/ruta CA -> validar (certifi por defecto, o CA propio)
+        if cacert is False:
+            _advertir_ssl_inseguro()
+            kwargs["disable_ssl_certificate_validation"] = True
+        else:
+            # resolver una ruta de CA relativa a absoluta (los consumidores como
+            # cot/iibb pasan "conf/arba.crt"); si falta el archivo, avisar claro y
+            # caer a certifi en vez de un error SSL opaco de httplib2.
+            if isinstance(cacert, str) and cacert and not cacert.startswith("-----BEGIN"):
+                if not os.path.isabs(cacert):
+                    cacert = os.path.abspath(cacert)
+                if not os.path.exists(cacert):
+                    warnings.warn("No se encuentra CACERT: %s (se usará certifi)" % cacert)
+                    cacert = None
+            kwargs["disable_ssl_certificate_validation"] = False
+            kwargs["ca_certs"] = _ca_bundle(cacert)
         if proxy:
             if isinstance(proxy, dict):
                 proxy_dict = proxy
