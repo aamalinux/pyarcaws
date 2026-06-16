@@ -830,11 +830,6 @@ interactions:
       - text/xml;charset=UTF-8
       Date:
       - Tue, 16 Jun 2026 11:22:20 GMT
-      Set-Cookie:
-      - f5avraaaaaaaaaaaaaaaa_session_=FICFFDOBPEBNCJNPFLACEBGFGNDGCIECGNCDNIGJJELGAMJKFLFAFKJCJDJHLKIFEKGDBFJABBMBMILAPIIANJCEKDJOPMIFIMNFFDOOIKFIGOFDLADBLNDEANMLIEMA;
-        HttpOnly; secure;
-      - 'TS01761d9e=01ef919f30d357cca79971e7fa56682fbc2ccbfe3e9eca387173d01f05d9ef00b5ec70db0bc5b6d41467e1598482df9deb53126582195a7fa4426ed106d7eb2c4e356945d0;
-        Path=/; '
       Strict-Transport-Security:
       - max-age=300; includeSubDomains; preload
       Transfer-Encoding:
@@ -878,11 +873,6 @@ interactions:
       - text/xml;charset=UTF-8
       Date:
       - Tue, 16 Jun 2026 11:22:20 GMT
-      Set-Cookie:
-      - f5avraaaaaaaaaaaaaaaa_session_=GNBCLPIODMMKAELCLFLLDAKEALMGFJJOONEINAMAMAGMKGIJLEEIMIMOEBNLJIEIIPIDLMCOBBJDLHKLKPIAFAFFKDPHKFMBBPKOPGOMHEIBLAODLDPHLMFANDMHLBCD;
-        HttpOnly; secure;
-      - 'TS01761d9e=01ef919f307ea70122265957b6c73e9cca906f1f7fbdc567457c4f1cf64b538c139f99b387e7cf5ed802940f1c9395d61a4d8a8051692d41aaf472c596c0e6362dde5c3161;
-        Path=/; '
       Strict-Transport-Security:
       - max-age=300; includeSubDomains; preload
       Transfer-Encoding:
@@ -937,11 +927,6 @@ interactions:
       - text/xml;charset=UTF-8
       Date:
       - Tue, 16 Jun 2026 11:22:20 GMT
-      Set-Cookie:
-      - f5avraaaaaaaaaaaaaaaa_session_=LFFCKMBLIGJAGJDNBPMMNJADEBJHCOPOIGJFGJFEEHBOBAKBJBIKNKPGBNCGIEGDPMKDEMNNBBMDICHCBCNAPFODKDJPGJLGHPNNIDBMKCLMDFDLLAKILKPMHBDPFKGN;
-        HttpOnly; secure;
-      - 'TS01761d9e=01ef919f305b5650d3b13accdc27baf9c8bc384246f5f757719b262b51dbe1b72f9f1af6be3e95b996ea35ad1216343cb9714db41cec1f22f2398f8474ebd16e1a24ec004d;
-        Path=/; '
       Strict-Transport-Security:
       - max-age=300; includeSubDomains; preload
       Transfer-Encoding:
@@ -993,11 +978,6 @@ interactions:
       - text/xml;charset=UTF-8
       Date:
       - Tue, 16 Jun 2026 11:22:20 GMT
-      Set-Cookie:
-      - f5avraaaaaaaaaaaaaaaa_session_=JLDEILFJMHHABILCFINBGOOKIDNLBHLNNKHPJEIKOAMLKLBOMGCJBDMLIKJMBLBFLMMDLAMIBBJCDHLCEOOAKEFDKDNOLJGBOBHHGPBEAOPKJALNAIBCLNOEIHAJDCPN;
-        HttpOnly; secure;
-      - 'TS01761d9e=01ef919f3071912247c7c17768280f95ad6df3f86149ef4f9defe6254f9127f247b0f256273ea81317349d6636502be9d7dd04ec1a5df453b3824fa3e899ec5fd8d5b718d8;
-        Path=/; '
       Strict-Transport-Security:
       - max-age=300; includeSubDomains; preload
       Transfer-Encoding:
@@ -1043,11 +1023,6 @@ interactions:
       - text/xml;charset=UTF-8
       Date:
       - Tue, 16 Jun 2026 11:22:20 GMT
-      Set-Cookie:
-      - f5avraaaaaaaaaaaaaaaa_session_=BLEKDBHBIBKCDHPEPMPGPJFOCKHDIAJPMBMKPHGEBPCFEMBKFNJENFJADAJHANIJGOCDEEAMBBPCKNNFAHLAEPMGKDKHFADPPJJPAADBPGGDCIPBAKOOAIPDIIKJGCEH;
-        HttpOnly; secure;
-      - 'TS01761d9e=01ef919f3081b7c4acc1265098d3a39132b74c81089c222b98e7b4274bbf83f3faf60f47cc04d178a7fe19ab0f21c83b866ffc2629d259f1c6c2a7abff592144f29a1e4e5a;
-        Path=/; '
       Strict-Transport-Security:
       - max-age=300; includeSubDomains; preload
       Transfer-Encoding:

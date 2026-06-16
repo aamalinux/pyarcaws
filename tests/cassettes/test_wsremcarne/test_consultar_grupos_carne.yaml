@@ -42,9 +42,6 @@ interactions:
       - text/xml;charset=utf-8
       Date:
       - Sun, 20 Jun 2021 17:01:11 GMT
-      Set-Cookie:
-      - TS01761d9e=01439f1ddfc826d368e83b853e603758d1d1894566205079a857cd76c220e35f7b23b7278e;
-        Path=/
       Transfer-Encoding:
       - chunked
       X-Powered-By:

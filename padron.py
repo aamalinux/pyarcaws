@@ -420,7 +420,7 @@ class PadronAFIP(object):
                 self.Traceback = ex.get("tb", "")
                 try:
                     self.Excepcion = norm(ex.get("msg", "").replace("\n", ""))
-                except:
+                except Exception:
                     self.Excepcion = "<no disponible>"
                 if DEBUG:
                     warnings.warn("Error %s [%d]" % (self.Excepcion, n))

@@ -87,9 +87,6 @@ interactions:
       - 5.0_Pub
       Pragma:
       - no-cache
-      Set-Cookie:
-      - TS01983a04=01439f1ddf906f1949545f72d3edbde8ded57027d6ad635e27e6e5f097dc917f678a64f73c;
-        Path=/
       Strict-Transport-Security:
       - nosniff
       X-AspNet-Version:

@@ -39,9 +39,6 @@ interactions:
       - 5.0_Pub
       Pragma:
       - no-cache
-      Set-Cookie:
-      - TS01983a04=01439f1ddfad39ffa4e6c70c81bf4f927c339353d20a995bb9bf48622472413a07bd41b5fe;
-        Path=/
       Strict-Transport-Security:
       - nosniff
       X-AspNet-Version:
@@ -101,9 +98,6 @@ interactions:
       - enforce
       MicrosoftOfficeWebServer:
       - 5.0_Pub
-      Set-Cookie:
-      - TS01983a04=01439f1ddf10529dc4f351a4a62a34068169642647072507e9224fe9cd0fda17744fbab63c;
-        Path=/
       Strict-Transport-Security:
       - nosniff
       X-AspNet-Version:

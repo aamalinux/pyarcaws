@@ -54,9 +54,6 @@ interactions:
       - text/xml;charset=utf-8
       Date:
       - Mon, 26 Jul 2021 15:06:33 GMT
-      Set-Cookie:
-      - TS01b14f84=0145b27a97ed7f32e2a07b14da099afaabafb0e2b1b08f7e42475b7f5d64a956180af4cfd5;
-        Path=/
       Transfer-Encoding:
       - chunked
     status:
@@ -98,9 +95,6 @@ interactions:
       - text/xml;charset=utf-8
       Date:
       - Mon, 26 Jul 2021 15:06:34 GMT
-      Set-Cookie:
-      - TS01b14f84=0145b27a9713d7e090dac05ad5ec92651c23faf449d43d0dcc26270054c739b7db31ee931f;
-        Path=/
       Transfer-Encoding:
       - chunked
     status:
@@ -401,9 +395,6 @@ interactions:
       - enforce
       MicrosoftOfficeWebServer:
       - 5.0_Pub
-      Set-Cookie:
-      - TS01983a04=01439f1ddfe9cb6f7481e7b06831f9702cfb28fd3814771ed8e3e8cdc145e6a2806d66548a;
-        Path=/
       Strict-Transport-Security:
       - nosniff
       X-AspNet-Version:

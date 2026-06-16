@@ -14,15 +14,13 @@ test:
 clean:
 	rm -Rf .venv
 
-# Works with bash and linux
-# This command first copies all the configuration settings from the conf folder
-# to the main folder and next it downloads test key and digital certificate that 
-# that can be used for testing and lastly the python module is used to decompress
-# the files
+# Copia las plantillas de configuración (.ini) de conf/ al directorio actual.
+# El certificado/clave de prueba ya NO se descargan: el reingart.zip del upstream
+# está vencido (404). Para obtener un certificado de homologación, generarlo por
+# autogestión WSASS (ver README, sección "Certificado").
 get-auth:
 	cp conf/*.ini .
-	curl -o reingart.zip https://www.sistemasagiles.com.ar/soft/pyafipws/reingart.zip
-	python -m zipfile -e reingart.zip .
+	@echo "Genera tu certificado de homologacion por WSASS (ver README)."
 
 access-ticket:
 	python -m pyarcaws.wsaa

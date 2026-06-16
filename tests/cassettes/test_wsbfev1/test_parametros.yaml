@@ -51,9 +51,6 @@ interactions:
       - 5.0_Pub
       Pragma:
       - no-cache
-      Set-Cookie:
-      - TS01983a04=01439f1ddfe655336336351789e8801817ba1b0f4ab01dddbf4e0ac7c6146248fe3a785a3a;
-        Path=/
       Strict-Transport-Security:
       - nosniff
       X-AspNet-Version:
@@ -109,9 +106,6 @@ interactions:
       - 5.0_Pub
       Pragma:
       - no-cache
-      Set-Cookie:
-      - TS01983a04=01439f1ddff216256d349e7f897c5de7cb76460026e0383de959213c676e8bf4061d8f2544;
-        Path=/
       Strict-Transport-Security:
       - nosniff
       X-AspNet-Version:
@@ -213,9 +207,6 @@ interactions:
       - 5.0_Pub
       Pragma:
       - no-cache
-      Set-Cookie:
-      - TS01983a04=01439f1ddfc891297b1c9c93c6f3286b86a9441dc233470ffd3698036449404636f53d85d3;
-        Path=/
       Strict-Transport-Security:
       - nosniff
       X-AspNet-Version:
@@ -271,9 +262,6 @@ interactions:
       - 5.0_Pub
       Pragma:
       - no-cache
-      Set-Cookie:
-      - TS01983a04=01439f1ddfde5e6e4de122697a7baa6cabe0e336938c2989df1a0c05371233ade7e984e699;
-        Path=/
       Strict-Transport-Security:
       - nosniff
       X-AspNet-Version:
@@ -330,9 +318,6 @@ interactions:
       - 5.0_Pub
       Pragma:
       - no-cache
-      Set-Cookie:
-      - TS01983a04=01439f1ddf736a9e3ef8f9549c8b9dc38700bd08e75ac5421eb348c01457e4a44b64b13373;
-        Path=/
       Strict-Transport-Security:
       - nosniff
       X-AspNet-Version:
@@ -405,9 +390,6 @@ interactions:
       - 5.0_Pub
       Pragma:
       - no-cache
-      Set-Cookie:
-      - TS01983a04=01439f1ddf91fe6c7c6b986790b2c3fd34f16f825aa715a3e9587f1d5711ad788b491441a1;
-        Path=/
       Strict-Transport-Security:
       - nosniff
       X-AspNet-Version:
@@ -3674,9 +3656,6 @@ interactions:
       - 5.0_Pub
       Pragma:
       - no-cache
-      Set-Cookie:
-      - TS01983a04=01439f1ddfed0df3b96c9bb497a18f20e3ea5452e45ca7c0a4dd0ecb15eb1f3b2c6237b654;
-        Path=/
       Strict-Transport-Security:
       - nosniff
       X-AspNet-Version:

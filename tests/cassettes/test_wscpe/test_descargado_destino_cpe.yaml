@@ -35,9 +35,6 @@ interactions:
       - text/xml;charset=utf-8
       Date:
       - Sat, 27 Nov 2021 14:32:27 GMT
-      Set-Cookie:
-      - TS01b14f84=0145b27a9773800220cf0c2d22bb64cc3b99d310aabbb63dfc80e4846514cf889dacf072da;
-        Path=/
       Transfer-Encoding:
       - chunked
     status:
@@ -73,10 +70,6 @@ interactions:
       - text/xml;charset=UTF-8
       Date:
       - Sat, 27 Nov 2021 14:32:27 GMT
-      Set-Cookie:
-      - JSESSIONID=F0A3D20484DBB028F49FCBDD4A38A577; Path=/; Secure; HttpOnly
-      - TS01761d9e=01439f1ddfb1512333681345bf5968686dd6f75d152c6e975385b88f3c70c33a89afbeae785057b07e52d3e9d5aff7c53a09345d19;
-        Path=/
       Transfer-Encoding:
       - chunked
     status:

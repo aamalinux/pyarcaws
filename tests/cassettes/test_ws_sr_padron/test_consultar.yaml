@@ -35,10 +35,6 @@ interactions:
       - text/xml;charset=UTF-8
       Date:
       - Tue, 10 Aug 2021 21:10:22 GMT
-      Set-Cookie:
-      - HttpOnly;Secure
-      - TS01a1c3b4=01439f1ddf7c01d20ab4d9aa045aa9b1089c9783f431ab26bc1ee2052f588187be7359228d0bad5b4cefd89aab9dc53213c88c5328;
-        Path=/
       Strict-Transport-Security:
       - max-age=300; includeSubDomains; preload
       X-Content-Type-Options:

@@ -43,9 +43,6 @@ interactions:
       - 5.0_Pub
       Pragma:
       - no-cache
-      Set-Cookie:
-      - TS01983a04=01439f1ddf8e84898775a43c2d5590bf0c77191261dc06fba7dc21cf593e1b44f1ac931374;
-        Path=/
       Strict-Transport-Security:
       - nosniff
       X-AspNet-Version:
@@ -149,9 +146,6 @@ interactions:
       - 5.0_Pub
       Pragma:
       - no-cache
-      Set-Cookie:
-      - TS01983a04=01439f1ddf84a7a5fa6719c5aa071a3b06e93ec680c1ad8be3283cbf367e41a88be23bf8fe;
-        Path=/
       Strict-Transport-Security:
       - nosniff
       X-AspNet-Version:
@@ -224,9 +218,6 @@ interactions:
       - 5.0_Pub
       Pragma:
       - no-cache
-      Set-Cookie:
-      - TS01983a04=01439f1ddf995decae5dd4d82a1b1879c89f2bb98ab5ab0ba0ff4da63a59286e09d76dc6bd;
-        Path=/
       Strict-Transport-Security:
       - nosniff
       X-AspNet-Version:
@@ -285,9 +276,6 @@ interactions:
       - 5.0_Pub
       Pragma:
       - no-cache
-      Set-Cookie:
-      - TS01983a04=01439f1ddf2c29251c6d94862738fe8279bf59a7609fea5579c567ab2f58b76cd3e3621fb0;
-        Path=/
       Strict-Transport-Security:
       - nosniff
       X-AspNet-Version:

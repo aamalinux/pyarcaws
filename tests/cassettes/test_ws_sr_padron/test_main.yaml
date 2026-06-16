@@ -35,9 +35,6 @@ interactions:
       - text/xml;charset=utf-8
       Date:
       - Wed, 11 Aug 2021 13:57:11 GMT
-      Set-Cookie:
-      - TS01b14f84=0145b27a9751990d784b5df2fc143ff51f6e24d6871f496afdcccf928011466496097164a6;
-        Path=/
       Transfer-Encoding:
       - chunked
     status:
@@ -78,10 +75,6 @@ interactions:
       - text/xml;charset=UTF-8
       Date:
       - Wed, 11 Aug 2021 13:57:15 GMT
-      Set-Cookie:
-      - HttpOnly;Secure
-      - TS01a1c3b4=01439f1ddfe2375885e0be844af621fbd694446ae91feddbe5556cbcb420e5046dd780f614fb274ad8a8189a416d34f690e582dfbe;
-        Path=/
       Strict-Transport-Security:
       - max-age=300; includeSubDomains; preload
       X-Content-Type-Options:
