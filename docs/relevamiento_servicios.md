@@ -59,7 +59,7 @@ de import). La diferencia de madurez está en *tests* y *validación en vivo*, n
 |--------|-----------|:---:|:---:|:---:|---|---|
 | `cot` | ARBA (Bs. As.) | OK | no | 200 (test) | **IMPORTA-SIN-PROBAR** | Remito electrónico; **REST/POST, no SOAP** |
 | `iibb` | ARBA (Bs. As.) | OK | no | timeout | **IMPORTA-SIN-PROBAR** | Percepciones/retenciones IIBB; el endpoint `dfe.test.arba.gov.ar` no respondió (timeout) |
-| `padron` | ARCA (padrón bulk) | OK | no | 200 (SOA) | **IMPORTA-SIN-PROBAR** | Descarga el ZIP de padrón + API SOA; no es WS SOAP por contribuyente |
+| `padron` | ARCA (padrón bulk) | OK | no | ⚠️ SOA `v2/persona` **404** | **IMPORTA-SIN-PROBAR** | Descarga el ZIP de padrón + API SOA REST; el endpoint público `soa.afip.gob.ar/sr-padron/v2/persona` da **404** (movido/discontinuado) → usar la familia autenticada A4/A10/A13/constancia. `Consultar` ahora surge el motivo claro (no `JSONDecodeError`) |
 | `trazamed` | ANMAT/PAMI (SNT) | OK | no | 200 | **IMPORTA-SIN-PROBAR** | Trazabilidad medicamentos |
 | `trazarenpre` | RENPRE/SEDRONAR (SNT) | OK | no | 200 | **IMPORTA-SIN-PROBAR** | Precursores químicos |
 | `trazafito` | SENASA (SNT) | OK | no | 200 | **IMPORTA-SIN-PROBAR** | Fitosanitarios |
