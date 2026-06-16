@@ -32,7 +32,9 @@ el proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
   (p. ej. un **404** porque el endpoint público `soa.afip.gob.ar/sr-padron/v2/persona`
   se movió/discontinuó) explotaba con un críptico `JSONDecodeError`. Ahora se valida
   que la respuesta sea JSON (tolerando `bytes`) y, si no, se surge un mensaje
-  accionable con el motivo y un fragmento del cuerpo. _Nota: al momento de este fix el
+  accionable con el motivo y un fragmento del cuerpo. Incluye un backstop
+  `try/except ValueError` para el JSON truncado/malformado que igual empieza con
+  `{`, con test de regresión offline (`tests/test_padron_consultar.py`). _Nota: al momento de este fix el
   endpoint SOA v2 de padrón devuelve 404; para consultar el padrón con servicio
   garantizado usar la familia autenticada (`ws_sr_padron_a4/a10/a13` /
   `ws_sr_constancia_inscripcion`)._

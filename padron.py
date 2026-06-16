@@ -434,13 +434,19 @@ class PadronAFIP(object):
         resp = self.response
         if isinstance(resp, bytes):
             resp = resp.decode("utf-8", "replace")
-        if not resp.strip().startswith("{"):
-            self.Excepcion = (
-                "Respuesta no-JSON del padrón (¿endpoint movido o discontinuado?): %s"
-                % resp.strip()[:200]
-            )
+        cuerpo = resp.strip()
+        msg_no_json = (
+            "Respuesta no-JSON del padrón (¿endpoint movido o discontinuado?): %s"
+            % cuerpo[:200]
+        )
+        if not cuerpo.startswith("{"):
+            self.Excepcion = msg_no_json
             return False
-        result = json.loads(resp)
+        try:
+            result = json.loads(resp)
+        except ValueError:  # JSON malformado/truncado pese a empezar con "{"
+            self.Excepcion = msg_no_json
+            return False
         if result["success"]:
             data = result["data"]
             # extraigo datos generales del contribuyente:
