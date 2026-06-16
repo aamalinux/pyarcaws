@@ -1,5 +1,88 @@
 interactions:
 - request:
+    body: null
+    headers:
+      accept-encoding:
+      - gzip, deflate
+      user-agent:
+      - Python-httplib2/0.31.2 (gzip)
+    method: GET
+    uri: https://awshomo.afip.gov.ar/sr-padron/webservices/personaServiceA13?wsdl
+  response:
+    body:
+      string: !!binary |
+        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
+        ZeZllmTm5xXbAQIAAP//kgwAAlMnAAA=
+    headers:
+      Accept-Ranges:
+      - bytes
+      Age:
+      - '338'
+      Connection:
+      - Keep-Alive
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '2246'
+      Content-Type:
+      - text/xml
+      Date:
+      - Tue, 16 Jun 2026 11:22:20 GMT
+      Set-Cookie:
+      - f5avraaaaaaaaaaaaaaaa_session_=GJHJJHKCJNEKHFNFKECKAHDGMBHBMJBKPDMOGLHOCCFGINDGKABEKELOLIDGLDHBILODOOAHBBAICNGDCEBAGBNDKDGGMFJOCEHIPOGBALHIIKACHMNBAIAMBDCMHJJJ;
+        HttpOnly; secure;
+      Strict-Transport-Security:
+      - max-age=300; includeSubDomains; preload
+      Vary:
+      - Accept-Encoding
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - sameorigin
+      X-XSS-Protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+- request:
     body: '<?xml version="1.0" encoding="UTF-8"?><soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
       xmlns:ser="http://a13.soap.ws.server.puc.sr/">
 
@@ -22,19 +105,19 @@ interactions:
   response:
     body:
       string: <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"><soap:Body><ns2:getIdPersonaListByDocumentoResponse
-        xmlns:ns2="http://a13.soap.ws.server.puc.sr/"><idPersonaListReturn><idPersona>20000037584</idPersona><idPersona>24000123451</idPersona><idPersona>20120039548</idPersona><idPersona>27890000334</idPersona><idPersona>20123456789</idPersona><idPersona>27123456780</idPersona><idPersona>20123456782</idPersona><idPersona>24123456781</idPersona><idPersona>20123456786</idPersona><idPersona>23890001459</idPersona><metadata><fechaHora>2026-06-16T01:43:23.315-03:00</fechaHora><servidor>setiwsh2</servidor></metadata></idPersonaListReturn></ns2:getIdPersonaListByDocumentoResponse></soap:Body></soap:Envelope>
+        xmlns:ns2="http://a13.soap.ws.server.puc.sr/"><idPersonaListReturn><idPersona>20000037584</idPersona><idPersona>24000123451</idPersona><idPersona>20120039548</idPersona><idPersona>27890000334</idPersona><idPersona>20123456789</idPersona><idPersona>27123456780</idPersona><idPersona>20123456782</idPersona><idPersona>24123456781</idPersona><idPersona>20123456786</idPersona><idPersona>23890001459</idPersona><metadata><fechaHora>2026-06-16T08:22:20.082-03:00</fechaHora><servidor>setiwsh2</servidor></metadata></idPersonaListReturn></ns2:getIdPersonaListByDocumentoResponse></soap:Body></soap:Envelope>
     headers:
       Content-Length:
       - '723'
       Content-Type:
       - text/xml;charset=UTF-8
       Date:
-      - Tue, 16 Jun 2026 04:43:23 GMT
+      - Tue, 16 Jun 2026 11:22:20 GMT
       Set-Cookie:
       - HttpOnly;Secure
-      - f5avraaaaaaaaaaaaaaaa_session_=HOKLDHKBJNEKHFNFFNJBAHDGMBHBMJBKPDMOGLHOCCFGINDGKABEKELOLIDGLDHBILODOOAHAEBINLHDCEBAGBNDCNGGELJOCEHIPOGBALHIIKLBHMNBAIAMBDCMHJGD;
+      - f5avraaaaaaaaaaaaaaaa_session_=MILEILFKMHHABILCHPNBGOOKIDNLBHLNNKHPJEIKOAMLKLBOMGCJBDMLIKJMBLBFLMMDLAMIBBJCDHLCEOOAKEFDKDNOLJGBOBHHGPBEAOPKJAMNAIBCLNOEIHAJDCPF;
         HttpOnly; secure;
-      - 'TS01a1c3b4=01ef919f302f629efc16c3e3471d45823e295e2e888c996ba63b4486eb4ea0c330b5429f918bf6b1ac5d3536d8c2d2223f576a71a7b617fde101dcbfe4c2290ad09e1eb3c27a0ddc2d1b5ebf06ccd43f2f67dcdc27;
+      - 'TS01a1c3b4=01ef919f30f58ce0ac9d4f4d987a7fc09bf1da71e26731f1a80f35f885f96c3912cb905c10f540ceaaecfee090c9b18aeed7574c7a3071f89e37b41dfa7d4b23cee05575ab4b3fbf42ac2ece8eec20f72a715047ca;
         Path=/; '
       Strict-Transport-Security:
       - max-age=300; includeSubDomains; preload
