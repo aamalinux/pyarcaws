@@ -1,0 +1,215 @@
+interactions:
+- request:
+    body: '<?xml version="1.0" encoding="UTF-8"?><soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+      xmlns:ser="https://serviciosjava.afip.gob.ar/wslca/">
+
+      <soapenv:Header/>
+
+      <soapenv:Body><ser:dummy/></soapenv:Body></soapenv:Envelope>'
+    headers:
+      accept-encoding:
+      - gzip, deflate
+      content-length:
+      - '246'
+      content-type:
+      - text/xml; charset="UTF-8"
+      soapaction:
+      - https://serviciosjava.afip.gob.ar/wslca/dummy
+      user-agent:
+      - Python-httplib2/0.31.2 (gzip)
+    method: POST
+    uri: https://fwshomo.afip.gov.ar/wslca/services/soap
+  response:
+    body:
+      string: <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"><soap:Header><serverTime>16/06/2026
+        01:43:23 GMT-03:00</serverTime><serverName>fiscaws-homoext01</serverName><elapsedTime>1781585003574ms</elapsedTime></soap:Header><soap:Body><ns2:DummyResp
+        xmlns:ns2="https://serviciosjava.afip.gob.ar/wslca/"><respuesta><appserver>Ok</appserver><authserver>Ok</authserver><dbserver>Ok</dbserver></respuesta></ns2:DummyResp></soap:Body></soap:Envelope>
+    headers:
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Date:
+      - Tue, 16 Jun 2026 04:43:23 GMT
+      Set-Cookie:
+      - f5avraaaaaaaaaaaaaaaa_session_=IHFHKLKJKJGMGLHOGPEOLDLGBOENDGGIILFGDEMNICPIBPCLAEGPJADDCFOJPGDILFGDEIHOAEKCOEGLCDNAKPHLCNKHLNJFMLHPADMIGLAHLCBNEACNBGBDLANKHAIP;
+        HttpOnly; secure;
+      - 'TS01761d9e=01ef919f307cf31fa0d48c378dc58536723518872bd84f4353151a6bbc52a049947fa2ec58c8d8340a68873fa61eb5b226a8dddf99c6328c34f6c736c3a7fa0b34fe3d3e8f;
+        Path=/; '
+      Strict-Transport-Security:
+      - max-age=300; includeSubDomains; preload
+      Transfer-Encoding:
+      - chunked
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - sameorigin
+      X-XSS-Protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: '200'
+- request:
+    body: '<?xml version="1.0" encoding="UTF-8"?><soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+      xmlns:ser="https://serviciosjava.afip.gob.ar/wslca/">
+
+      <soapenv:Header/>
+
+      <soapenv:Body><ser:ConsultarProvinciasReq><auth><token>TOKEN_SANITIZED</token><sign>SIGN_SANITIZED</sign><cuitRepresentada>20111111112</cuitRepresentada></auth></ser:ConsultarProvinciasReq></soapenv:Body></soapenv:Envelope>'
+    headers:
+      accept-encoding:
+      - gzip, deflate
+      content-length:
+      - '1276'
+      content-type:
+      - text/xml; charset="UTF-8"
+      soapaction:
+      - https://serviciosjava.afip.gob.ar/wslca/consultarProvincias
+      user-agent:
+      - Python-httplib2/0.31.2 (gzip)
+    method: POST
+    uri: https://fwshomo.afip.gov.ar/wslca/services/soap
+  response:
+    body:
+      string: <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"><soap:Header><serverTime>16/06/2026
+        01:43:24 GMT-03:00</serverTime><serverName>fiscaws-homoext01</serverName><elapsedTime>1781585003863ms</elapsedTime></soap:Header><soap:Body><ns2:ConsultarProvinciasResp
+        xmlns:ns2="https://serviciosjava.afip.gob.ar/wslca/"><respuesta><provincia><codigo>0</codigo><descripcion>CAP.FEDERAL</descripcion></provincia><provincia><codigo>1</codigo><descripcion>BUENOS
+        AIRES</descripcion></provincia><provincia><codigo>2</codigo><descripcion>CATAMARCA</descripcion></provincia><provincia><codigo>3</codigo><descripcion>CORDOBA</descripcion></provincia><provincia><codigo>4</codigo><descripcion>CORRIENTES</descripcion></provincia><provincia><codigo>5</codigo><descripcion>ENTRE
+        RIOS</descripcion></provincia><provincia><codigo>6</codigo><descripcion>JUJUY</descripcion></provincia><provincia><codigo>7</codigo><descripcion>MENDOZA</descripcion></provincia><provincia><codigo>8</codigo><descripcion>LA
+        RIOJA</descripcion></provincia><provincia><codigo>9</codigo><descripcion>SALTA</descripcion></provincia><provincia><codigo>10</codigo><descripcion>SAN
+        JUAN</descripcion></provincia><provincia><codigo>11</codigo><descripcion>SAN
+        LUIS</descripcion></provincia><provincia><codigo>12</codigo><descripcion>SANTA
+        FE</descripcion></provincia><provincia><codigo>13</codigo><descripcion>SGO.DEL
+        ESTERO</descripcion></provincia><provincia><codigo>14</codigo><descripcion>TUCUMAN</descripcion></provincia><provincia><codigo>16</codigo><descripcion>CHACO</descripcion></provincia><provincia><codigo>17</codigo><descripcion>CHUBUT</descripcion></provincia><provincia><codigo>18</codigo><descripcion>FORMOSA</descripcion></provincia><provincia><codigo>19</codigo><descripcion>MISIONES</descripcion></provincia><provincia><codigo>20</codigo><descripcion>NEUQUEN</descripcion></provincia><provincia><codigo>21</codigo><descripcion>LA
+        PAMPA</descripcion></provincia><provincia><codigo>22</codigo><descripcion>RIO
+        NEGRO</descripcion></provincia><provincia><codigo>23</codigo><descripcion>SANTA
+        CRUZ</descripcion></provincia><provincia><codigo>24</codigo><descripcion>TIER.DEL
+        FUEGO</descripcion></provincia><errores/><metadata><servidor>fiscaws-homoext01</servidor><fechaHora>2026-06-16T01:43:24.101-03:00</fechaHora></metadata></respuesta></ns2:ConsultarProvinciasResp></soap:Body></soap:Envelope>
+    headers:
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Date:
+      - Tue, 16 Jun 2026 04:43:23 GMT
+      Set-Cookie:
+      - f5avraaaaaaaaaaaaaaaa_session_=IFCILMJIFAIAIPCIDEKOGNAHEFPFKHPDCJMNCLKKOKACNMMIJHEEIEFDABOODPJKEECDMPHCAECCJBAKKIHAAGEFCNJACEJDONNAIILHCLJPHFEAAOJJDPMEBKCEKMNL;
+        HttpOnly; secure;
+      - 'TS01761d9e=01ef919f309233d1e1054e9d8460bd8bc5e18a4730f5ca6e6724f240ca80dd087a7608b7f9f417893e654f38097b9846f2ec7af03c500b2c047cd1b4b7dd7bd054ba9308c4;
+        Path=/; '
+      Strict-Transport-Security:
+      - max-age=300; includeSubDomains; preload
+      Transfer-Encoding:
+      - chunked
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - sameorigin
+      X-XSS-Protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: '200'
+- request:
+    body: '<?xml version="1.0" encoding="UTF-8"?><soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+      xmlns:ser="https://serviciosjava.afip.gob.ar/wslca/">
+
+      <soapenv:Header/>
+
+      <soapenv:Body><ser:ConsultarTributosReq><auth><token>TOKEN_SANITIZED</token><sign>SIGN_SANITIZED</sign><cuitRepresentada>20111111112</cuitRepresentada></auth></ser:ConsultarTributosReq></soapenv:Body></soapenv:Envelope>'
+    headers:
+      accept-encoding:
+      - gzip, deflate
+      content-length:
+      - '1272'
+      content-type:
+      - text/xml; charset="UTF-8"
+      soapaction:
+      - https://serviciosjava.afip.gob.ar/wslca/consultarTributos
+      user-agent:
+      - Python-httplib2/0.31.2 (gzip)
+    method: POST
+    uri: https://fwshomo.afip.gov.ar/wslca/services/soap
+  response:
+    body:
+      string: "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\"><soap:Header><serverTime>16/06/2026
+        01:43:24 GMT-03:00</serverTime><serverName>fiscaws-homoext01</serverName><elapsedTime>1781585004143ms</elapsedTime></soap:Header><soap:Body><ns2:ConsultarTributosResp
+        xmlns:ns2=\"https://serviciosjava.afip.gob.ar/wslca/\"><respuesta><tributo><codigo>9</codigo><descripcion>Otras
+        Percepciones</descripcion></tributo><tributo><codigo>8</codigo><descripcion>Percepciones
+        por Impuestos Municipales</descripcion></tributo><tributo><codigo>7</codigo><descripcion>Percepci\xF3n
+        de IIBB</descripcion></tributo><tributo><codigo>6</codigo><descripcion>Percepci\xF3n
+        de IVA</descripcion></tributo><tributo><codigo>5</codigo><descripcion>IIBB</descripcion></tributo><tributo><codigo>1</codigo><descripcion>Impuestos
+        nacionales</descripcion></tributo><tributo><codigo>3</codigo><descripcion>Impuestos
+        municipales</descripcion></tributo><tributo><codigo>2</codigo><descripcion>Impuestos
+        provinciales</descripcion></tributo><tributo><codigo>99</codigo><descripcion>Otros</descripcion></tributo><tributo><codigo>4</codigo><descripcion>Impuestos
+        internos</descripcion></tributo><errores/><metadata><servidor>fiscaws-homoext01</servidor><fechaHora>2026-06-16T01:43:24.228-03:00</fechaHora></metadata></respuesta></ns2:ConsultarTributosResp></soap:Body></soap:Envelope>"
+    headers:
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Date:
+      - Tue, 16 Jun 2026 04:43:24 GMT
+      Set-Cookie:
+      - f5avraaaaaaaaaaaaaaaa_session_=CMIPBPINDMMKAELCNAPADAKEALMGFJJOONEINAMAMAGMKGIJLEEIMIMOEBNLJIEIIPIDLMCOBEIDLBLLKPIAFAFFCNPHCLMBBPKOPGOMHEIBLABBLDPHLMFANDMHLBIL;
+        HttpOnly; secure;
+      - 'TS01761d9e=01ef919f30fb9ab04b963b6f6f12ffab210bc9a6e5cef1a58b6a9847e2cd69348ef3e13bbe979b8ae4e8d6d9b5076dd5fce637f5c253adf59b97a0d91d4abf92ddd239d695;
+        Path=/; '
+      Strict-Transport-Security:
+      - max-age=300; includeSubDomains; preload
+      Transfer-Encoding:
+      - chunked
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - sameorigin
+      X-XSS-Protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: '200'
+- request:
+    body: '<?xml version="1.0" encoding="UTF-8"?><soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+      xmlns:ser="https://serviciosjava.afip.gob.ar/wslca/">
+
+      <soapenv:Header/>
+
+      <soapenv:Body><ser:ConsultarTiposComprobanteReq><auth><token>TOKEN_SANITIZED</token><sign>SIGN_SANITIZED</sign><cuitRepresentada>20111111112</cuitRepresentada></auth></ser:ConsultarTiposComprobanteReq></soapenv:Body></soapenv:Envelope>'
+    headers:
+      accept-encoding:
+      - gzip, deflate
+      content-length:
+      - '1288'
+      content-type:
+      - text/xml; charset="UTF-8"
+      soapaction:
+      - https://serviciosjava.afip.gob.ar/wslca/consultarTiposComprobante
+      user-agent:
+      - Python-httplib2/0.31.2 (gzip)
+    method: POST
+    uri: https://fwshomo.afip.gov.ar/wslca/services/soap
+  response:
+    body:
+      string: "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\"><soap:Header><serverTime>16/06/2026
+        01:43:24 GMT-03:00</serverTime><serverName>fiscaws-homoext01</serverName><elapsedTime>1781585004266ms</elapsedTime></soap:Header><soap:Body><ns2:ConsultarTiposComprobanteResp
+        xmlns:ns2=\"https://serviciosjava.afip.gob.ar/wslca/\"><respuesta><tipoComprobante><codigo>171</codigo><descripcion>Liquidaci\xF3n
+        de Compra de Ca\xF1a de Az\xFAcar Clase A</descripcion></tipoComprobante><tipoComprobante><codigo>172</codigo><descripcion>Liquidaci\xF3n
+        de Compra de Ca\xF1a de Az\xFAcar Clase B</descripcion></tipoComprobante><errores/><metadata><servidor>fiscaws-homoext01</servidor><fechaHora>2026-06-16T01:43:24.291-03:00</fechaHora></metadata></respuesta></ns2:ConsultarTiposComprobanteResp></soap:Body></soap:Envelope>"
+    headers:
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Date:
+      - Tue, 16 Jun 2026 04:43:24 GMT
+      Set-Cookie:
+      - f5avraaaaaaaaaaaaaaaa_session_=NKBGEIFEKKLMOLHEKLKIKNBOPAMEGCOEHEFJJAEMLBADLGIAOAEFMJNLDLMHFLHOMKMDGICABENLBBFKMGKAPENPCNAKFPDNJKJCKOPFPPJKFBAJCEAPNNKBIGIOCAKP;
+        HttpOnly; secure;
+      - 'TS01761d9e=01ef919f30c0be3bfe9c4b1a875f7f8c20068717500141c82e1d82b184968c978e1db334c1a6a21d5ab03a31a2ef580c5a375d91d77d10013c999de66b52bcf36b19062dd1;
+        Path=/; '
+      Strict-Transport-Security:
+      - max-age=300; includeSubDomains; preload
+      Transfer-Encoding:
+      - chunked
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - sameorigin
+      X-XSS-Protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: '200'
+version: 1

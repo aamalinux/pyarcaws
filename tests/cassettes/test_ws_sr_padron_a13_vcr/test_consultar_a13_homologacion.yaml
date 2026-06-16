@@ -1,0 +1,70 @@
+interactions:
+- request:
+    body: '<?xml version="1.0" encoding="UTF-8"?><soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+      xmlns:ser="http://a13.soap.ws.server.puc.sr/">
+
+      <soapenv:Header/>
+
+      <soapenv:Body><ser:getPersona><token>TOKEN_SANITIZED</token><sign>SIGN_SANITIZED</sign><cuitRepresentada>20111111112</cuitRepresentada><idPersona>30500010912</idPersona></ser:getPersona></soapenv:Body></soapenv:Envelope>'
+    headers:
+      accept-encoding:
+      - gzip, deflate
+      content-length:
+      - '1282'
+      content-type:
+      - text/xml; charset="UTF-8"
+      soapaction:
+      - ''
+      user-agent:
+      - Python-httplib2/0.31.2 (gzip)
+    method: POST
+    uri: https://awshomo.afip.gov.ar/sr-padron/webservices/personaServiceA13
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAEA7Ipzk8ssHLNK0vNyS9IVajIzckrtgKJ2SpllJQUWOnrFydnpOYmFusBpUDievlF
+        6foghn4qVJO+kh3EFKf8lEo7m7xiI6v01JKA1KLi/LzEoNTigvy8YpjJQEm4wYmGxnogfXrlxXrF
+        qUVlqUV6BaXJesVFIAMLYNpLSovy7GxyU0sSUxJLEu1s0lKTMxI98osS7YwMjMx0Dcx0Dc1CDAyt
+        TIytjIz1DE0sdA2MrQwMbPQRCm1Apmem5BfZFaeWZJYXZxjZ6MOFbPQRZkMttbNJSS1OLsosSM7M
+        z3NMLskEqkxMCSjKzEvOLEjMsQt2DQrzdPb0D1ZwcVXwcVRwcvRzdlTw9fTzD/IMDnG00cev3SYl
+        PzczOTMnM9/OJjkxJyfVztczJMgVaExQiL+Pv6+rjT5E2CY5PyUzPT8gv7gEqM3QwNgMKIMshOzO
+        gKL8MpANiXbOnqEuji4KjqEh/n7+vkDnhbr6Ad3q6BnkGoziNoQWm5TMotRkkBi6WxSMjcwUAkwU
+        XEyMLICa4cpsUoEuSMl3gXvF2d/PzTPI19HF30YfXc4mMwVhFzBqkLk2eaW5qUX5dkB7bPShbJv8
+        NKDOvESXgpJ8n/xkoE/BtmOI2hRkFufbGZjY6IMZNiWZBUi2unkGOzv62OijigI9gWAjMZPBQY7m
+        exviYyKxJN8xJRMUNkCuvxswffg5KgANQJUYTDHm568waCINJZBcgZnIzRWUkTDlIMrhjvRxdXf0
+        0Q9yJRDPEL855ySWpdo5Ood4hsH9CxGDlCrO+XklRUDbgvOBfgRGs6WBoS4YhRgaAYsUIEIpW9CU
+        26TlF+UmepUWZQIdm2jn6hugBywffBRAvgGFL6o0MHSxFA1mJoaWxgagsMYiCdQCLVTtjA1MDQwM
+        DA0sDY1AimHCwGKy2Dkztago1Q4kgeCBSrbM/JR8LKYaGRgaGxoCIwOnCpuixKr8PKgvPd09vb0V
+        /AMUXN0VPN29Q709FdyDggM8Q0I93W30kVWCYwoSvM6hniGQ+IHwwVIwR3uFBnm6eDpDYxsmCnYQ
+        KgtWF+jnYa1hgBKg2gRaC+kX5ycWWLnmlaXm5Bek2gECAAD//14LoovnBgAA
+    headers:
+      Connection:
+      - Keep-Alive
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '843'
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Date:
+      - Tue, 16 Jun 2026 04:43:23 GMT
+      Set-Cookie:
+      - HttpOnly;Secure
+      - f5avraaaaaaaaaaaaaaaa_session_=BCIGPFEDJMBKENBPIOJKHLOIJCPLBLGFPHHGOCJEHFLMNGOGJINNIAOOIOPCNEILMDODFNCOAEIHGMNKHDNABIPKCNFKDBBCBEHPHADOFOLCEJGKFABNAAMIOLLMAEOG;
+        HttpOnly; secure;
+      - 'TS01a1c3b4=01ef919f309ae9d955993afc12f4359b37a95fcc34150e48ecdaa45cfc920732295bd8bcd92dc96fbe3a5805aaee519b402e2c1db1ebd6fbc3bc6921a42277f2b0e54501f43fb009d01783c76a452e7dce39fec6a1;
+        Path=/; '
+      Strict-Transport-Security:
+      - max-age=300; includeSubDomains; preload
+      Vary:
+      - Accept-Encoding
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - sameorigin
+      X-XSS-Protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+version: 1

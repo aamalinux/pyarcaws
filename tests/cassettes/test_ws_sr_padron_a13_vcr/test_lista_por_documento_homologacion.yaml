@@ -1,0 +1,52 @@
+interactions:
+- request:
+    body: '<?xml version="1.0" encoding="UTF-8"?><soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+      xmlns:ser="http://a13.soap.ws.server.puc.sr/">
+
+      <soapenv:Header/>
+
+      <soapenv:Body><ser:getIdPersonaListByDocumento><token>TOKEN_SANITIZED</token><sign>SIGN_SANITIZED</sign><cuitRepresentada>20111111112</cuitRepresentada><documento>12345678</documento></ser:getIdPersonaListByDocumento></soapenv:Body></soapenv:Envelope>'
+    headers:
+      accept-encoding:
+      - gzip, deflate
+      content-length:
+      - '1313'
+      content-type:
+      - text/xml; charset="UTF-8"
+      soapaction:
+      - ''
+      user-agent:
+      - Python-httplib2/0.31.2 (gzip)
+    method: POST
+    uri: https://awshomo.afip.gov.ar/sr-padron/webservices/personaServiceA13
+  response:
+    body:
+      string: <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"><soap:Body><ns2:getIdPersonaListByDocumentoResponse
+        xmlns:ns2="http://a13.soap.ws.server.puc.sr/"><idPersonaListReturn><idPersona>20000037584</idPersona><idPersona>24000123451</idPersona><idPersona>20120039548</idPersona><idPersona>27890000334</idPersona><idPersona>20123456789</idPersona><idPersona>27123456780</idPersona><idPersona>20123456782</idPersona><idPersona>24123456781</idPersona><idPersona>20123456786</idPersona><idPersona>23890001459</idPersona><metadata><fechaHora>2026-06-16T01:43:23.315-03:00</fechaHora><servidor>setiwsh2</servidor></metadata></idPersonaListReturn></ns2:getIdPersonaListByDocumentoResponse></soap:Body></soap:Envelope>
+    headers:
+      Content-Length:
+      - '723'
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Date:
+      - Tue, 16 Jun 2026 04:43:23 GMT
+      Set-Cookie:
+      - HttpOnly;Secure
+      - f5avraaaaaaaaaaaaaaaa_session_=HOKLDHKBJNEKHFNFFNJBAHDGMBHBMJBKPDMOGLHOCCFGINDGKABEKELOLIDGLDHBILODOOAHAEBINLHDCEBAGBNDCNGGELJOCEHIPOGBALHIIKLBHMNBAIAMBDCMHJGD;
+        HttpOnly; secure;
+      - 'TS01a1c3b4=01ef919f302f629efc16c3e3471d45823e295e2e888c996ba63b4486eb4ea0c330b5429f918bf6b1ac5d3536d8c2d2223f576a71a7b617fde101dcbfe4c2290ad09e1eb3c27a0ddc2d1b5ebf06ccd43f2f67dcdc27;
+        Path=/; '
+      Strict-Transport-Security:
+      - max-age=300; includeSubDomains; preload
+      Vary:
+      - Accept-Encoding
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - sameorigin
+      X-XSS-Protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+version: 1

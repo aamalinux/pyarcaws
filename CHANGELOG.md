@@ -8,6 +8,18 @@ el proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
 
 ## [Sin publicar]
 
+### Pruebas
+- **Cassettes de homologación (replay offline) para A13, WSLCA y WSAPOC.** Se
+  grabaron contra homologación, con el certificado de autogestión WSASS,
+  interacciones reales — WSDL vivo + respuesta — y se conectaron a tests de
+  replay (`test_ws_sr_padron_a13_vcr.py`: `getPersona` + búsqueda inversa por
+  documento; `test_wslca_vcr.py`: catálogos de caña de azúcar; `test_wsapoc_vcr.py`:
+  consulta de apócrifos) que corren **sin red ni certificado** (`vcr` +
+  `dontusefix`), validando el parseo contra el envelope real de ARCA. Cassettes
+  **saneados**: token/sign del Ticket de Acceso reemplazados por placeholders y
+  CUIT del titular por una sintética; las entidades consultadas son de
+  homologación con datos de relleno (sin PII real).
+
 ### Agregado
 - **Consulta de Apócrifos** (`WSAPOC`, módulo `wsapoc.py`, servicio WSAA
   `wsapoc`): verificado contra el WSDL vivo de homologación

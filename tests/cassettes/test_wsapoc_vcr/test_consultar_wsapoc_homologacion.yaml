@@ -1,0 +1,82 @@
+interactions:
+- request:
+    body: "<?xml version=\"1.0\" encoding=\"UTF-8\"?><soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"
+      xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n<soap:Header/>\n<soap:Body>\n
+      \   <Dummy xmlns=\"http://tempuri.org/\">\n    </Dummy>\n</soap:Body>\n</soap:Envelope>"
+    headers:
+      accept-encoding:
+      - gzip, deflate
+      content-length:
+      - '317'
+      content-type:
+      - text/xml; charset="UTF-8"
+      soapaction:
+      - http://tempuri.org/Service/Dummy
+      user-agent:
+      - Python-httplib2/0.31.2 (gzip)
+    method: POST
+    uri: https://eapoc-ws-qaext.afip.gob.ar/Service.asmx
+  response:
+    body:
+      string: "<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"
+        xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n  <s:Header>\n    <env-description
+        xmlns=\"s\">qa</env-description>\n    <env-version xmlns=\"s\">v1.0.12</env-version>\n
+        \   <exec-ts xmlns=\"s\">06/16/2026 01:43:24</exec-ts>\n  </s:Header>\n  <s:Body>\n
+        \   <DummyResponse xmlns=\"http://tempuri.org/\">\n      <DummyResult>\n        <appserver>OK</appserver>\n
+        \       <dbserver>OK</dbserver>\n        <authserver>NO</authserver>\n      </DummyResult>\n
+        \   </DummyResponse>\n  </s:Body>\n</s:Envelope>"
+    headers:
+      Content-Length:
+      - '593'
+      Content-Type:
+      - text/xml; charset="UTF-8"
+      Date:
+      - Tue, 16 Jun 2026 04:43:24 GMT
+      Strict-Transport-Security:
+      - max-age=15724800; includeSubDomains
+    status:
+      code: 200
+      message: OK
+- request:
+    body: "<?xml version=\"1.0\" encoding=\"UTF-8\"?><soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"
+      xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n<soap:Header/>\n<soap:Body>\n
+      \   <GetPublicacionAPOC xmlns=\"http://tempuri.org/\">\n    <Credencial xmlns=\"http://tempuri.org/\"><Token
+      xmlns=\"http://tempuri.org/\">TOKEN_SANITIZED</Token><Sign
+      xmlns=\"http://tempuri.org/\">SIGN_SANITIZED</Sign><CUITDelegado
+      xmlns=\"http://tempuri.org/\">20111111112</CUITDelegado></Credencial><cuit>20267565393</cuit></GetPublicacionAPOC>\n</soap:Body>\n</soap:Envelope>"
+    headers:
+      accept-encoding:
+      - gzip, deflate
+      content-length:
+      - '1468'
+      content-type:
+      - text/xml; charset="UTF-8"
+      soapaction:
+      - http://tempuri.org/Service/GetPublicacionAPOC
+      user-agent:
+      - Python-httplib2/0.31.2 (gzip)
+    method: POST
+    uri: https://eapoc-ws-qaext.afip.gob.ar/Service.asmx
+  response:
+    body:
+      string: "<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"
+        xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n  <s:Header>\n    <env-description
+        xmlns=\"s\">qa</env-description>\n    <env-version xmlns=\"s\">v1.0.12</env-version>\n
+        \   <exec-ts xmlns=\"s\">06/16/2026 01:43:24</exec-ts>\n  </s:Header>\n  <s:Body>\n
+        \   <GetPublicacionAPOCResponse xmlns=\"http://tempuri.org/\">\n      <GetPublicacionAPOCResult>\n
+        \       <codigo>0</codigo>\n        <descripcion>OK</descripcion>\n        <resultados
+        />\n      </GetPublicacionAPOCResult>\n    </GetPublicacionAPOCResponse>\n
+        \ </s:Body>\n</s:Envelope>"
+    headers:
+      Content-Length:
+      - '631'
+      Content-Type:
+      - text/xml; charset="UTF-8"
+      Date:
+      - Tue, 16 Jun 2026 04:43:24 GMT
+      Strict-Transport-Security:
+      - max-age=15724800; includeSubDomains
+    status:
+      code: 200
+      message: OK
+version: 1
