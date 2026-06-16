@@ -41,7 +41,9 @@ def parse_args(argv):
 def _catalogo(wslca, nombre, metodo, *args):
     print("\n[%s]" % nombre)
     try:
-        for fila in metodo(*args):
+        # el método decorado devuelve None si capturó un error de negocio
+        # (p. ej. "800: sin resultados"); tolerarlo y mostrar el ErrMsg abajo
+        for fila in (metodo(*args) or []):
             print("  ", fila)
     except Exception:
         traceback.print_exc()

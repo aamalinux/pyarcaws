@@ -33,6 +33,10 @@ htmlcov/
 nosetests.xml
 .pytest_cache/
 
+# Caché de Tickets de Acceso WSAA (contienen token/sign — NUNCA commitear)
+cache/
+TA-*.xml
+
 # Translations
 *.mo
 
