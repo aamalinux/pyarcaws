@@ -66,9 +66,6 @@ interactions:
       - text/xml
       Date:
       - Tue, 16 Jun 2026 11:22:20 GMT
-      Set-Cookie:
-      - f5avraaaaaaaaaaaaaaaa_session_=GJHJJHKCJNEKHFNFKECKAHDGMBHBMJBKPDMOGLHOCCFGINDGKABEKELOLIDGLDHBILODOOAHBBAICNGDCEBAGBNDKDGGMFJOCEHIPOGBALHIIKACHMNBAIAMBDCMHJJJ;
-        HttpOnly; secure;
       Strict-Transport-Security:
       - max-age=300; includeSubDomains; preload
       Vary:
@@ -113,12 +110,6 @@ interactions:
       - text/xml;charset=UTF-8
       Date:
       - Tue, 16 Jun 2026 11:22:20 GMT
-      Set-Cookie:
-      - HttpOnly;Secure
-      - f5avraaaaaaaaaaaaaaaa_session_=MILEILFKMHHABILCHPNBGOOKIDNLBHLNNKHPJEIKOAMLKLBOMGCJBDMLIKJMBLBFLMMDLAMIBBJCDHLCEOOAKEFDKDNOLJGBOBHHGPBEAOPKJAMNAIBCLNOEIHAJDCPF;
-        HttpOnly; secure;
-      - 'TS01a1c3b4=01ef919f30f58ce0ac9d4f4d987a7fc09bf1da71e26731f1a80f35f885f96c3912cb905c10f540ceaaecfee090c9b18aeed7574c7a3071f89e37b41dfa7d4b23cee05575ab4b3fbf42ac2ece8eec20f72a715047ca;
-        Path=/; '
       Strict-Transport-Security:
       - max-age=300; includeSubDomains; preload
       Vary:

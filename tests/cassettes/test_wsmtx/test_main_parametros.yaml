@@ -46,9 +46,6 @@ interactions:
       - text/xml;charset=UTF-8
       Date:
       - Thu, 22 Jul 2021 10:38:52 GMT
-      Set-Cookie:
-      - TS01761d9e=01439f1ddfa15b1a745b8b07f8a04eca80a9edd9716184701c53d760ae4aaa0f99a8c6751b;
-        Path=/
       Transfer-Encoding:
       - chunked
       X-Powered-By:
@@ -112,9 +109,6 @@ interactions:
       - text/xml;charset=UTF-8
       Date:
       - Thu, 22 Jul 2021 10:38:54 GMT
-      Set-Cookie:
-      - TS01761d9e=01439f1ddf2bcd7c7aeb6b061f141b90fe39351265abac7073c570df57a1a210099008e473;
-        Path=/
       Transfer-Encoding:
       - chunked
       X-Powered-By:
@@ -150,9 +144,6 @@ interactions:
       - text/xml;charset=UTF-8
       Date:
       - Thu, 22 Jul 2021 10:38:58 GMT
-      Set-Cookie:
-      - TS01761d9e=01439f1ddf1ea9130c51ff4cc572aab37f585bd4f3d08912b4ead7feded68cb235169f6026;
-        Path=/
       Transfer-Encoding:
       - chunked
       X-Powered-By:
@@ -189,9 +180,6 @@ interactions:
       - text/xml;charset=UTF-8
       Date:
       - Thu, 22 Jul 2021 10:39:00 GMT
-      Set-Cookie:
-      - TS01761d9e=01439f1ddf9e9ab310f597826974779a104101a7caeee83bf998e4302de5415977b015ae5b;
-        Path=/
       Transfer-Encoding:
       - chunked
       X-Powered-By:
@@ -273,9 +261,6 @@ interactions:
       - text/xml;charset=UTF-8
       Date:
       - Thu, 22 Jul 2021 10:39:02 GMT
-      Set-Cookie:
-      - TS01761d9e=01439f1ddfb2b56e6bd58653f82b06c61ee6be2e8b2d90d4d5d1ce99c8027cab356721e0c2;
-        Path=/
       Transfer-Encoding:
       - chunked
       X-Powered-By:
@@ -328,9 +313,6 @@ interactions:
       - text/xml;charset=UTF-8
       Date:
       - Thu, 22 Jul 2021 10:39:04 GMT
-      Set-Cookie:
-      - TS01761d9e=01439f1ddf9addc4ded5d9da2ce7cfa68b6d5d9b0fbd02df2b7865b5ca7093a092b42a480d;
-        Path=/
       Transfer-Encoding:
       - chunked
       X-Powered-By:
@@ -375,9 +357,6 @@ interactions:
       - text/xml;charset=UTF-8
       Date:
       - Thu, 22 Jul 2021 10:39:06 GMT
-      Set-Cookie:
-      - TS01761d9e=01439f1ddfc28200b6f2b869af1858981d6503e991f17ee9de8ca8681fd4255287805f45c9;
-        Path=/
       Transfer-Encoding:
       - chunked
       X-Powered-By:
@@ -447,9 +426,6 @@ interactions:
       - text/xml;charset=UTF-8
       Date:
       - Thu, 22 Jul 2021 10:39:08 GMT
-      Set-Cookie:
-      - TS01761d9e=01439f1ddf14acbffca73c9b0ef6045f41ec590fce3d6866e36d51f711ec4b4db432bb6749;
-        Path=/
       Transfer-Encoding:
       - chunked
       X-Powered-By:

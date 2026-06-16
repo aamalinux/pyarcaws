@@ -39,9 +39,6 @@ interactions:
       - enforce
       MicrosoftOfficeWebServer:
       - 5.0_Pub
-      Set-Cookie:
-      - TS01983a04=01439f1ddfbfef55e324bcbcc8a2cd6d9bc835eb862cd770cafce9613f03c702181186a356;
-        Path=/
       Strict-Transport-Security:
       - nosniff
       X-AspNet-Version:
@@ -97,9 +94,6 @@ interactions:
       - enforce
       MicrosoftOfficeWebServer:
       - 5.0_Pub
-      Set-Cookie:
-      - TS01983a04=01439f1ddff16fd9b92f90aee65b6ad6bb62f03081b6eee308b6819bf63f4d6d246896d772;
-        Path=/
       Strict-Transport-Security:
       - nosniff
       X-AspNet-Version:

@@ -35,9 +35,6 @@ interactions:
       - text/xml;charset=utf-8
       Date:
       - Sun, 20 Jun 2021 16:59:23 GMT
-      Set-Cookie:
-      - TS01b14f84=0145b27a97b80466c5666adfd73c5cabd9316cbd5878c9dfcaad58b961229f227dd6935d65;
-        Path=/
       Transfer-Encoding:
       - chunked
     status:
@@ -795,9 +792,6 @@ interactions:
       - text/xml
       Date:
       - Sun, 20 Jun 2021 16:59:25 GMT
-      Set-Cookie:
-      - TS01761d9e=01439f1ddf5b31dfd37c443e710a39aaa1a814e210e3609015f98b970184351ef244ea4eb2;
-        Path=/
       Transfer-Encoding:
       - chunked
       X-Powered-By:
@@ -833,9 +827,6 @@ interactions:
       - text/xml;charset=UTF-8
       Date:
       - Sun, 20 Jun 2021 16:59:28 GMT
-      Set-Cookie:
-      - TS01761d9e=01439f1ddf50733b5bdc20d0f30ab7bd2b085222c65737601ce925bada6a95cec31465d8f1;
-        Path=/
       Transfer-Encoding:
       - chunked
       X-Powered-By:

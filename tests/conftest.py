@@ -65,6 +65,25 @@ def vcr_cassette_dir(request):
     # Put all cassettes in vhs/{module}/{test}.yaml
     return os.path.join('tests/cassettes', request.module.__name__)
 
+
+def _filtrar_set_cookie(response):
+    """No grabar las cookies del balanceador (F5 `f5av...session`, `TS01...`).
+
+    Son cookies efímeras del servidor de ARCA, no credenciales nuestras, pero no
+    aportan nada al replay y ensucian el cassette. Se filtran al grabar.
+    """
+    headers = response.get("headers", {})
+    for clave in [k for k in headers if k.lower() == "set-cookie"]:
+        del headers[clave]
+    return response
+
+
+# configuración de VCR (pytest-vcr): filtra Set-Cookie de las respuestas grabadas
+@pytest.fixture(scope='module')
+def vcr_config():
+    return {"before_record_response": _filtrar_set_cookie}
+
+
 #WSAA authentication fixture, used by all tests
 @pytest.fixture(autouse=True)
 def auth(request):

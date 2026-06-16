@@ -30,10 +30,6 @@ interactions:
       - text/xml;charset=UTF-8
       Date:
       - Thu, 11 Nov 2021 03:36:50 GMT
-      Set-Cookie:
-      - JSESSIONID=39FC6C91926F81DDD09BA20E072DAB75; Path=/; Secure; HttpOnly
-      - TS01761d9e=01439f1ddff9ff30101b762a007e85d645f97e497817ed582177ae44712d23920073513bb619dd5448adef689600e23defa8ba729a;
-        Path=/
       Transfer-Encoding:
       - chunked
     status:
