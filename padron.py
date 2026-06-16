@@ -428,7 +428,19 @@ class PadronAFIP(object):
                 break
         else:
             return False
-        result = json.loads(self.response)
+        # el SOA puede devolver algo que NO sea JSON (p. ej. una página HTML de
+        # error 404 si el endpoint público se movió/discontinuó): evitar el
+        # JSONDecodeError críptico y surgir un motivo accionable.
+        resp = self.response
+        if isinstance(resp, bytes):
+            resp = resp.decode("utf-8", "replace")
+        if not resp.strip().startswith("{"):
+            self.Excepcion = (
+                "Respuesta no-JSON del padrón (¿endpoint movido o discontinuado?): %s"
+                % resp.strip()[:200]
+            )
+            return False
+        result = json.loads(resp)
         if result["success"]:
             data = result["data"]
             # extraigo datos generales del contribuyente:

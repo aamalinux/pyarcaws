@@ -27,6 +27,15 @@ el proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
   permisos de sólo-dueño (`os.open(..., 0o600)`; inocuo en Windows).
 
 ### Corregido
+- **`PadronAFIP.Consultar` — respuesta no-JSON del padrón (SOA).** El método hacía
+  `json.loads(self.response)` asumiendo siempre JSON; si el SOA respondía con HTML
+  (p. ej. un **404** porque el endpoint público `soa.afip.gob.ar/sr-padron/v2/persona`
+  se movió/discontinuó) explotaba con un críptico `JSONDecodeError`. Ahora se valida
+  que la respuesta sea JSON (tolerando `bytes`) y, si no, se surge un mensaje
+  accionable con el motivo y un fragmento del cuerpo. _Nota: al momento de este fix el
+  endpoint SOA v2 de padrón devuelve 404; para consultar el padrón con servicio
+  garantizado usar la familia autenticada (`ws_sr_padron_a4/a10/a13` /
+  `ws_sr_constancia_inscripcion`)._
 - **WSAA — expiración del TA por contenido, no sólo por `mtime`.** La frescura del
   TA cacheado se decidía con `getmtime + DEFAULT_TTL`, ignorando el
   `expirationTime` real; con un `TTL` distinto al default podía servirse un TA
