@@ -6,6 +6,48 @@ Todos los cambios notables de **pyarcaws** (fork de
 El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y
 el proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
 
+## [Sin publicar]
+
+### Seguridad
+- **`WebClient` — validación del certificado SSL activada por defecto** (fix de
+  seguridad con **cambio de comportamiento**). Antes, `WebClient` (el cliente
+  HTTP liviano que usan `padron.py`, `cot.py`, `iibb.py`, que **no** pasan por el
+  `Conectar` hardeneado de `BaseWS`) hacía `disable_ssl_certificate_validation =
+  cacert is None`: con el default `cacert=None` la validación quedaba
+  **desactivada** (expuesta a MITM). Ahora valida por defecto contra el bundle de
+  `certifi` (reusa `_ca_bundle`/`_advertir_ssl_inseguro` del transport vendoreado),
+  alineado con el resto del repo. El opt-out de depuración sigue disponible con
+  `cacert=False` (emite `UserWarning`, nunca silencioso). Además, una ruta de CA
+  **relativa** (p. ej. `cot`/`iibb` con `"conf/arba.crt"`) ahora se resuelve a
+  absoluta y, si falta, avisa y cae a `certifi` en vez de un error SSL opaco.
+  Verificado: el endpoint `soa.afip.gob.ar` (cert `*.afip.gob.ar`) valida con
+  `certifi`, así que el nuevo default no rompe la consulta de padrón.
+- **Ticket de Acceso WSAA cacheado con permisos `0o600`.** El TA (token/sign,
+  válido por horas) se escribía con el umask por defecto; ahora se crea con
+  permisos de sólo-dueño (`os.open(..., 0o600)`; inocuo en Windows).
+
+### Corregido
+- **WSAA — expiración del TA por contenido, no sólo por `mtime`.** La frescura del
+  TA cacheado se decidía con `getmtime + DEFAULT_TTL`, ignorando el
+  `expirationTime` real; con un `TTL` distinto al default podía servirse un TA
+  vencido. Ahora, en el cache-hit, se valida el `expirationTime` del TA leído (o
+  se regenera si está vencido o el cache está corrupto). La rama de regeneración
+  se extrajo a un helper privado `_solicitar_ta(...)`; `Autenticar` mantiene firma
+  y comportamiento públicos.
+- **WSFEv1 `CAESolicitar` — guarda de `FeDetResp`.** Una respuesta de error podía
+  traer `FeCabResp` sin `FeDetResp` y reventar con `KeyError`; ahora se exige
+  ambos y, si falta el detalle, se delega en `__analizar_errores` para surgir el
+  motivo real.
+
+### Cambiado
+- **Higiene interna (sin impacto de API):** `WSFEv1.LeerFacturaX` acota su
+  `except` a `(KeyError, IndexError, TypeError)` con log (antes `except:` mudo);
+  en `BaseWS.Conectar` se quitó un `return False` inalcanzable y el `except:`
+  final pasó a `except Exception:` (no captura `KeyboardInterrupt`/`SystemExit`);
+  en WSAA el `raise` de `Autenticar` depende de `LanzarExcepciones` (no de `DEBUG`)
+  y el `DEBUG` de módulo quedó en `False` por defecto (sólo controla los prints de
+  diagnóstico, no la propagación de errores).
+
 ## [1.3.0] - 2026-06-16
 
 ### Pruebas

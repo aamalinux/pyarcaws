@@ -472,7 +472,9 @@ class WSFEv1(BaseWS):
         )
 
         result = ret["FECAESolicitarResult"]
-        if "FeCabResp" in result:
+        # una respuesta de error puede traer FeCabResp pero no FeDetResp; exigir
+        # ambos evita un KeyError y deja que __analizar_errores surja el motivo.
+        if "FeCabResp" in result and result.get("FeDetResp"):
             fecabresp = result["FeCabResp"]
             fedetresp = result["FeDetResp"][0]["FECAEDetResponse"]
 
@@ -961,7 +963,10 @@ class WSFEv1(BaseWS):
                 self.Observaciones.append("%(code)s: %(msg)s" % (obs))
             self.Obs = "\n".join(self.Observaciones)
             return True
-        except:
+        except (KeyError, IndexError, TypeError) as e:
+            # índice fuera de rango o campo faltante en la factura; no enmascarar
+            # otros errores (se dejan propagar)
+            self.log("LeerFacturaX(%s): %s" % (i, e))
             return False
 
     # metodos para CAEA:
