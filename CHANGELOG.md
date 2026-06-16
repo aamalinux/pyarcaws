@@ -6,7 +6,7 @@ Todos los cambios notables de **pyarcaws** (fork de
 El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y
 el proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
 
-## [Sin publicar]
+## [1.3.0] - 2026-06-16
 
 ### Pruebas
 - **Cassettes de homologación (replay offline) para A13, WSLCA y WSAPOC.** Se
@@ -30,8 +30,8 @@ el proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
   `ConsultarTodos` (`GetAll`) y `ConsultarPorPublicacion(desde, hasta)`
   (`GetAllByPublicacion`). La autenticación va en `Credencial` con `Token`,
   `Sign` y **`CUITDelegado`** (no `cuit`/`cuitRepresentada`). Alias `Apocrifos`,
-  registro COM, CLI. Tests offline con fakes. _Pendiente validación en vivo
-  (smoke gateado, requiere autorizar `wsapoc` en WSASS)._
+  registro COM, CLI. Tests offline con fakes + cassette de homologación (ver
+  _Pruebas_). **Validado en vivo** contra homologación.
 - **Padrón Alcance 13** (`WSSrPadronA13`, servicio WSAA `ws_sr_padron_a13`):
   verificado contra el WSDL vivo de homologación (`personaServiceA13`). Hereda
   `getPersona` de Alcance 10 (mismo parseo de `personaReturn` → `persona`) y
@@ -39,8 +39,8 @@ el proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
   (`getIdPersonaListByDocumento` → `ConsultarListaPersonaPorDocumento(documento)`
   → `self.personas`, lista de CUIT/CUIL/CDI), que A4/A5/A10 no cubren. Flag de
   CLI `--a13` (con `--documento`), alias `PadronA13`, registro COM. Tests
-  offline con fakes. _Pendiente validación en vivo (smoke gateado, requiere
-  autorizar `ws_sr_padron_a13` en WSASS)._
+  offline con fakes + cassette de homologación (ver _Pruebas_). **Validado en
+  vivo** contra homologación.
 - **Liquidación de Caña de Azúcar** (`WSLCA`, módulo `wslca.py`, servicio WSAA
   `wslca`): verificado contra el WSDL vivo de homologación
   (`wslca/services/soap`, esquema `unqualified` como WSLSP → aplica el fix de
@@ -53,8 +53,9 @@ el proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
   fielmente contra el WSDL). Auth con `cuitRepresentada`. Errores tolerantes
   (`normalizar_lista_soap`). Alias `LiquidacionCanaAzucar`, registro COM, CLI.
   Tests offline (catálogos single/lista, errores uno/varios, consultas,
-  builder). _La superficie de generación queda pendiente de validación en vivo
-  (smoke gateado, requiere autorizar `wslca` en WSASS)._
+  builder) + cassette de catálogos de homologación (ver _Pruebas_). Los
+  **catálogos quedaron validados en vivo**; la superficie de **generación**
+  (`generarLiquidacion`) queda pendiente de validación en vivo.
 
 ## [1.2.0] - 2026-06-13
 
@@ -205,7 +206,8 @@ Línea base del fork: modernización de pyafipws para Python 3 y rebranding a AR
   `dict.has_key()` → operador `in`, `distutils` → `setuptools`, y varios
   arreglos reales de la suite de tests.
 
-[Sin publicar]: https://github.com/aamalinux/pyarcaws/compare/v1.2.0...HEAD
+[Sin publicar]: https://github.com/aamalinux/pyarcaws/compare/v1.3.0...HEAD
+[1.3.0]: https://github.com/aamalinux/pyarcaws/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/aamalinux/pyarcaws/compare/v1.1.1...v1.2.0
 [1.1.1]: https://github.com/aamalinux/pyarcaws/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/aamalinux/pyarcaws/compare/v1.0.0...v1.1.0
