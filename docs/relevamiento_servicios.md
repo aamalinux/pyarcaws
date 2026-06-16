@@ -148,17 +148,27 @@ general que falten; la prioridad acá es **validar** lo que ya hay (cassettes), 
 
 ## Tarea 3 — Matriz de priorización
 
-### Implementados hacia v1.3.0 (pendiente validación en vivo)
+### Implementados hacia v1.3.0
 
-- ✅ **ws_sr_padron_a13** (`WSSrPadronA13`) — resultó **NO redundante** con A10: aporta
-  `getIdPersonaListByDocumento` (búsqueda inversa documento→CUIT). Tests offline.
-- ✅ **WSLCA** (`wslca.py`) — liquidación de caña de azúcar; superficie de lectura
-  (Dummy + catálogos + consultas) con tests offline; generación modelada del WSDL.
-- ✅ **WSAPOC** (`wsapoc.py`) — consulta de apócrifos (base APOC). Único viable de la
-  tanda de bajo esfuerzo (WSCTA caído+niche, wscec sin endpoint). Auth particular:
-  `Credencial{Token, Sign, CUITDelegado}`. Tests offline.
-- Falta: correr los smokes gateados con cert autorizado a `ws_sr_padron_a13`, `wslca`
-  y `wsapoc`, y grabar cassettes de homologación.
+- ✅ **ws_sr_padron_a13** (`WSSrPadronA13`) — **VALIDADO EN VIVO** (homologación) +
+  cassette offline (`test_ws_sr_padron_a13_vcr.py`): `getPersona` (persona activa) y
+  `getIdPersonaListByDocumento` (lista real de varios idPersona).
+- ✅ **WSLCA** (`wslca.py`) — **VALIDADO EN VIVO** + cassette offline
+  (`test_wslca_vcr.py`): catálogos reales (provincias, tributos, tipos de comprobante
+  = "Liquidación de Compra de Caña de Azúcar Clase A/B"). Generación modelada del WSDL
+  (no ejercitada en vivo).
+- ✅ **WSAPOC** (`wsapoc.py`) — **VALIDADO EN VIVO** + cassette offline
+  (`test_wsapoc_vcr.py`): `Consultar` de un CUIT no apócrifo (respuesta limpia
+  `codigo 0`, `EsApocrifo=False`). Auth `Credencial{Token, Sign, CUITDelegado}`.
+- ⚠️ **ws_sr_padron_a100** (`WSSrPadronA100`) — **integración validada, sin positivo en
+  homologación**. El WSDL vivo solo expone `dummy` y `getParameterCollectionByName`:
+  **no hay operación que liste las colecciones disponibles** sin pasar `collectionName`.
+  ~14 nombres probados (`Provincias`, `Actividades`, `Impuestos`, …) devuelven
+  `ParameterDefinition no encontrada en PUC_PARAM.DICCIONARIO_PARAMETROS`. Dos hipótesis,
+  ambas posibles: **(a)** los `collectionName` válidos son nombres específicos del manual
+  V2.1 (PDF imagen, no extraíble) que no probamos; **(b)** el diccionario de parámetros de
+  **homologación está vacío** (común en homo), con lo que ningún nombre daría positivo
+  hasta producción. Auth/Dummy/parseo del fault confirmados OK. Sin cassette por ahora.
 
 ### Top candidatos por valor/esfuerzo (próximos a sumar)
 

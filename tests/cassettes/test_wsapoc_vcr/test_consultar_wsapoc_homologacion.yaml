@@ -1,0 +1,231 @@
+interactions:
+- request:
+    body: null
+    headers:
+      accept-encoding:
+      - gzip, deflate
+      user-agent:
+      - Python-httplib2/0.31.2 (gzip)
+    method: GET
+    uri: https://eapoc-ws-qaext.afip.gob.ar/Service.asmx?WSDL
+  response:
+    body:
+      string: "<wsdl:definitions xmlns:soap=\"http://schemas.xmlsoap.org/wsdl/soap/\"
+        xmlns:soap12=\"http://schemas.xmlsoap.org/wsdl/soap12/\" xmlns:tns=\"http://tempuri.org/\"
+        xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:http=\"http://schemas.microsoft.com/ws/06/2004/policy/http\"
+        xmlns:msc=\"http://schemas.microsoft.com/ws/2005/12/wsdl/contract\" xmlns:wsp=\"http://schemas.xmlsoap.org/ws/2004/09/policy\"
+        xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\"
+        xmlns:wsam=\"http://www.w3.org/2007/05/addressing/metadata\" targetNamespace=\"http://tempuri.org/\"
+        name=\"Service\" xmlns:wsdl=\"http://schemas.xmlsoap.org/wsdl/\">\n  <wsdl:types>\n
+        \   <xsd:schema elementFormDefault=\"qualified\" targetNamespace=\"http://tempuri.org/\">\n
+        \     <xsd:element name=\"Dummy\">\n        <xsd:complexType />\n      </xsd:element>\n
+        \     <xsd:element name=\"DummyResponse\">\n        <xsd:complexType>\n          <xsd:sequence>\n
+        \           <xsd:element minOccurs=\"0\" maxOccurs=\"1\" name=\"DummyResult\"
+        type=\"tns:DummyResponseType\" />\n          </xsd:sequence>\n        </xsd:complexType>\n
+        \     </xsd:element>\n      <xsd:element name=\"GetAll\">\n        <xsd:complexType>\n
+        \         <xsd:sequence>\n            <xsd:element minOccurs=\"0\" maxOccurs=\"1\"
+        name=\"Credencial\" type=\"tns:Credencial\" />\n          </xsd:sequence>\n
+        \       </xsd:complexType>\n      </xsd:element>\n      <xsd:element name=\"GetAllResponse\">\n
+        \       <xsd:complexType>\n          <xsd:sequence>\n            <xsd:element
+        minOccurs=\"0\" maxOccurs=\"1\" name=\"GetAllResult\" type=\"tns:MessageResponse\"
+        />\n          </xsd:sequence>\n        </xsd:complexType>\n      </xsd:element>\n
+        \     <xsd:element name=\"GetPublicacionAPOC\">\n        <xsd:complexType>\n
+        \         <xsd:sequence>\n            <xsd:element minOccurs=\"0\" maxOccurs=\"1\"
+        name=\"Credencial\" type=\"tns:Credencial\" />\n            <xsd:element minOccurs=\"1\"
+        maxOccurs=\"1\" name=\"cuit\" type=\"xsd:long\" />\n          </xsd:sequence>\n
+        \       </xsd:complexType>\n      </xsd:element>\n      <xsd:element name=\"GetPublicacionAPOCResponse\">\n
+        \       <xsd:complexType>\n          <xsd:sequence>\n            <xsd:element
+        minOccurs=\"0\" maxOccurs=\"1\" name=\"GetPublicacionAPOCResult\" type=\"tns:MessageResponse\"
+        />\n          </xsd:sequence>\n        </xsd:complexType>\n      </xsd:element>\n
+        \     <xsd:element name=\"GetAllByPublicacion\">\n        <xsd:complexType>\n
+        \         <xsd:sequence>\n            <xsd:element minOccurs=\"0\" maxOccurs=\"1\"
+        name=\"Credencial\" type=\"tns:Credencial\" />\n            <xsd:element minOccurs=\"0\"
+        maxOccurs=\"1\" name=\"desde\" type=\"xsd:string\" />\n            <xsd:element
+        minOccurs=\"0\" maxOccurs=\"1\" name=\"hasta\" type=\"xsd:string\" />\n          </xsd:sequence>\n
+        \       </xsd:complexType>\n      </xsd:element>\n      <xsd:element name=\"GetAllByPublicacionResponse\">\n
+        \       <xsd:complexType>\n          <xsd:sequence>\n            <xsd:element
+        minOccurs=\"0\" maxOccurs=\"1\" name=\"GetAllByPublicacionResult\" type=\"tns:MessageResponse\"
+        />\n          </xsd:sequence>\n        </xsd:complexType>\n      </xsd:element>\n
+        \     <xsd:complexType name=\"DummyResponseType\">\n        <xsd:sequence>\n
+        \         <xsd:element minOccurs=\"0\" maxOccurs=\"1\" name=\"appserver\"
+        type=\"xsd:string\" />\n          <xsd:element minOccurs=\"0\" maxOccurs=\"1\"
+        name=\"dbserver\" type=\"xsd:string\" />\n          <xsd:element minOccurs=\"0\"
+        maxOccurs=\"1\" name=\"authserver\" type=\"xsd:string\" />\n        </xsd:sequence>\n
+        \     </xsd:complexType>\n      <xsd:complexType name=\"Credencial\">\n        <xsd:sequence>\n
+        \         <xsd:element minOccurs=\"0\" maxOccurs=\"1\" name=\"Token\" type=\"xsd:string\"
+        />\n          <xsd:element minOccurs=\"0\" maxOccurs=\"1\" name=\"Sign\" type=\"xsd:string\"
+        />\n          <xsd:element minOccurs=\"0\" maxOccurs=\"1\" name=\"CUITDelegado\"
+        type=\"xsd:string\" />\n        </xsd:sequence>\n      </xsd:complexType>\n
+        \     <xsd:complexType name=\"MessageResponse\">\n        <xsd:sequence>\n
+        \         <xsd:element minOccurs=\"0\" maxOccurs=\"1\" name=\"codigo\" type=\"xsd:string\"
+        />\n          <xsd:element minOccurs=\"0\" maxOccurs=\"1\" name=\"descripcion\"
+        type=\"xsd:string\" />\n          <xsd:element minOccurs=\"0\" maxOccurs=\"1\"
+        name=\"resultados\" nillable=\"true\" type=\"tns:ArrayOfPublicacionAPOC\"
+        />\n        </xsd:sequence>\n      </xsd:complexType>\n      <xsd:complexType
+        name=\"ArrayOfPublicacionAPOC\">\n        <xsd:sequence>\n          <xsd:element
+        minOccurs=\"0\" maxOccurs=\"unbounded\" nillable=\"true\" name=\"PublicacionAPOC\"
+        type=\"tns:PublicacionAPOC\" />\n        </xsd:sequence>\n      </xsd:complexType>\n
+        \     <xsd:complexType name=\"PublicacionAPOC\">\n        <xsd:sequence>\n
+        \         <xsd:element minOccurs=\"1\" maxOccurs=\"1\" name=\"Cuit\" type=\"xsd:long\"
+        />\n          <xsd:element minOccurs=\"0\" maxOccurs=\"1\" name=\"Descripcion\"
+        type=\"xsd:string\" />\n          <xsd:element minOccurs=\"0\" maxOccurs=\"1\"
+        name=\"FechaCondicion\" type=\"xsd:string\" />\n          <xsd:element minOccurs=\"0\"
+        maxOccurs=\"1\" name=\"FechaPublicacion\" type=\"xsd:string\" />\n        </xsd:sequence>\n
+        \     </xsd:complexType>\n    </xsd:schema>\n  </wsdl:types>\n  <wsdl:message
+        name=\"Service_Dummy_InputMessage\">\n    <wsdl:part name=\"parameters\" element=\"tns:Dummy\"
+        />\n  </wsdl:message>\n  <wsdl:message name=\"Service_Dummy_OutputMessage\">\n
+        \   <wsdl:part name=\"parameters\" element=\"tns:DummyResponse\" />\n  </wsdl:message>\n
+        \ <wsdl:message name=\"Service_GetAll_InputMessage\">\n    <wsdl:part name=\"parameters\"
+        element=\"tns:GetAll\" />\n  </wsdl:message>\n  <wsdl:message name=\"Service_GetAll_OutputMessage\">\n
+        \   <wsdl:part name=\"parameters\" element=\"tns:GetAllResponse\" />\n  </wsdl:message>\n
+        \ <wsdl:message name=\"Service_GetPublicacionAPOC_InputMessage\">\n    <wsdl:part
+        name=\"parameters\" element=\"tns:GetPublicacionAPOC\" />\n  </wsdl:message>\n
+        \ <wsdl:message name=\"Service_GetPublicacionAPOC_OutputMessage\">\n    <wsdl:part
+        name=\"parameters\" element=\"tns:GetPublicacionAPOCResponse\" />\n  </wsdl:message>\n
+        \ <wsdl:message name=\"Service_GetAllByPublicacion_InputMessage\">\n    <wsdl:part
+        name=\"parameters\" element=\"tns:GetAllByPublicacion\" />\n  </wsdl:message>\n
+        \ <wsdl:message name=\"Service_GetAllByPublicacion_OutputMessage\">\n    <wsdl:part
+        name=\"parameters\" element=\"tns:GetAllByPublicacionResponse\" />\n  </wsdl:message>\n
+        \ <wsdl:portType name=\"Service\">\n    <wsdl:operation name=\"Dummy\">\n
+        \     <wsdl:input message=\"tns:Service_Dummy_InputMessage\" />\n      <wsdl:output
+        message=\"tns:Service_Dummy_OutputMessage\" />\n    </wsdl:operation>\n    <wsdl:operation
+        name=\"GetAll\">\n      <wsdl:input message=\"tns:Service_GetAll_InputMessage\"
+        />\n      <wsdl:output message=\"tns:Service_GetAll_OutputMessage\" />\n    </wsdl:operation>\n
+        \   <wsdl:operation name=\"GetPublicacionAPOC\">\n      <wsdl:input message=\"tns:Service_GetPublicacionAPOC_InputMessage\"
+        />\n      <wsdl:output message=\"tns:Service_GetPublicacionAPOC_OutputMessage\"
+        />\n    </wsdl:operation>\n    <wsdl:operation name=\"GetAllByPublicacion\">\n
+        \     <wsdl:input message=\"tns:Service_GetAllByPublicacion_InputMessage\"
+        />\n      <wsdl:output message=\"tns:Service_GetAllByPublicacion_OutputMessage\"
+        />\n    </wsdl:operation>\n  </wsdl:portType>\n  <wsdl:binding name=\"ServiceSoap\"
+        type=\"tns:Service\">\n    <soap:binding transport=\"http://schemas.xmlsoap.org/soap/http\"
+        />\n    <wsdl:operation name=\"Dummy\">\n      <soap:operation soapAction=\"http://tempuri.org/Service/Dummy\"
+        style=\"document\" />\n      <wsdl:input>\n        <soap:body use=\"literal\"
+        />\n      </wsdl:input>\n      <wsdl:output>\n        <soap:body use=\"literal\"
+        />\n      </wsdl:output>\n    </wsdl:operation>\n    <wsdl:operation name=\"GetAll\">\n
+        \     <soap:operation soapAction=\"http://tempuri.org/Service/GetAll\" style=\"document\"
+        />\n      <wsdl:input>\n        <soap:body use=\"literal\" />\n      </wsdl:input>\n
+        \     <wsdl:output>\n        <soap:body use=\"literal\" />\n      </wsdl:output>\n
+        \   </wsdl:operation>\n    <wsdl:operation name=\"GetPublicacionAPOC\">\n
+        \     <soap:operation soapAction=\"http://tempuri.org/Service/GetPublicacionAPOC\"
+        style=\"document\" />\n      <wsdl:input>\n        <soap:body use=\"literal\"
+        />\n      </wsdl:input>\n      <wsdl:output>\n        <soap:body use=\"literal\"
+        />\n      </wsdl:output>\n    </wsdl:operation>\n    <wsdl:operation name=\"GetAllByPublicacion\">\n
+        \     <soap:operation soapAction=\"http://tempuri.org/Service/GetAllByPublicacion\"
+        style=\"document\" />\n      <wsdl:input>\n        <soap:body use=\"literal\"
+        />\n      </wsdl:input>\n      <wsdl:output>\n        <soap:body use=\"literal\"
+        />\n      </wsdl:output>\n    </wsdl:operation>\n  </wsdl:binding>\n  <wsdl:binding
+        name=\"ServiceSoap12\" type=\"tns:Service\">\n    <soap12:binding transport=\"http://schemas.xmlsoap.org/soap/http\"
+        />\n    <wsdl:operation name=\"Dummy\">\n      <soap12:operation soapAction=\"http://tempuri.org/Service/Dummy\"
+        style=\"document\" />\n      <wsdl:input>\n        <soap12:body use=\"literal\"
+        />\n      </wsdl:input>\n      <wsdl:output>\n        <soap12:body use=\"literal\"
+        />\n      </wsdl:output>\n    </wsdl:operation>\n    <wsdl:operation name=\"GetAll\">\n
+        \     <soap12:operation soapAction=\"http://tempuri.org/Service/GetAll\" style=\"document\"
+        />\n      <wsdl:input>\n        <soap12:body use=\"literal\" />\n      </wsdl:input>\n
+        \     <wsdl:output>\n        <soap12:body use=\"literal\" />\n      </wsdl:output>\n
+        \   </wsdl:operation>\n    <wsdl:operation name=\"GetPublicacionAPOC\">\n
+        \     <soap12:operation soapAction=\"http://tempuri.org/Service/GetPublicacionAPOC\"
+        style=\"document\" />\n      <wsdl:input>\n        <soap12:body use=\"literal\"
+        />\n      </wsdl:input>\n      <wsdl:output>\n        <soap12:body use=\"literal\"
+        />\n      </wsdl:output>\n    </wsdl:operation>\n    <wsdl:operation name=\"GetAllByPublicacion\">\n
+        \     <soap12:operation soapAction=\"http://tempuri.org/Service/GetAllByPublicacion\"
+        style=\"document\" />\n      <wsdl:input>\n        <soap12:body use=\"literal\"
+        />\n      </wsdl:input>\n      <wsdl:output>\n        <soap12:body use=\"literal\"
+        />\n      </wsdl:output>\n    </wsdl:operation>\n  </wsdl:binding>\n  <wsdl:service
+        name=\"Service\">\n    <wsdl:port name=\"ServiceSoap\" binding=\"tns:ServiceSoap\">\n
+        \     <soap:address location=\"https://eapoc-ws-qaext.afip.gob.ar/Service.asmx\"
+        />\n    </wsdl:port>\n    <wsdl:port name=\"ServiceSoap12\" binding=\"tns:ServiceSoap12\">\n
+        \     <soap12:address location=\"https://eapoc-ws-qaext.afip.gob.ar/Service.asmx\"
+        />\n    </wsdl:port>\n  </wsdl:service>\n</wsdl:definitions>"
+    headers:
+      Content-Length:
+      - '10156'
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Date:
+      - Tue, 16 Jun 2026 11:22:20 GMT
+      Strict-Transport-Security:
+      - max-age=15724800; includeSubDomains
+    status:
+      code: 200
+      message: OK
+- request:
+    body: "<?xml version=\"1.0\" encoding=\"UTF-8\"?><soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"
+      xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n<soap:Header/>\n<soap:Body>\n
+      \   <Dummy xmlns=\"http://tempuri.org/\">\n    </Dummy>\n</soap:Body>\n</soap:Envelope>"
+    headers:
+      accept-encoding:
+      - gzip, deflate
+      content-length:
+      - '317'
+      content-type:
+      - text/xml; charset="UTF-8"
+      soapaction:
+      - http://tempuri.org/Service/Dummy
+      user-agent:
+      - Python-httplib2/0.31.2 (gzip)
+    method: POST
+    uri: https://eapoc-ws-qaext.afip.gob.ar/Service.asmx
+  response:
+    body:
+      string: "<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"
+        xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n  <s:Header>\n    <env-description
+        xmlns=\"s\">qa</env-description>\n    <env-version xmlns=\"s\">v1.0.12</env-version>\n
+        \   <exec-ts xmlns=\"s\">06/16/2026 08:22:21</exec-ts>\n  </s:Header>\n  <s:Body>\n
+        \   <DummyResponse xmlns=\"http://tempuri.org/\">\n      <DummyResult>\n        <appserver>OK</appserver>\n
+        \       <dbserver>OK</dbserver>\n        <authserver>NO</authserver>\n      </DummyResult>\n
+        \   </DummyResponse>\n  </s:Body>\n</s:Envelope>"
+    headers:
+      Content-Length:
+      - '593'
+      Content-Type:
+      - text/xml; charset="UTF-8"
+      Date:
+      - Tue, 16 Jun 2026 11:22:21 GMT
+      Strict-Transport-Security:
+      - max-age=15724800; includeSubDomains
+    status:
+      code: 200
+      message: OK
+- request:
+    body: "<?xml version=\"1.0\" encoding=\"UTF-8\"?><soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"
+      xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n<soap:Header/>\n<soap:Body>\n
+      \   <GetPublicacionAPOC xmlns=\"http://tempuri.org/\">\n    <Credencial xmlns=\"http://tempuri.org/\"><Token
+      xmlns=\"http://tempuri.org/\">TOKEN_SANITIZED</Token><Sign
+      xmlns=\"http://tempuri.org/\">SIGN_SANITIZED</Sign><CUITDelegado
+      xmlns=\"http://tempuri.org/\">20111111112</CUITDelegado></Credencial><cuit>20267565393</cuit></GetPublicacionAPOC>\n</soap:Body>\n</soap:Envelope>"
+    headers:
+      accept-encoding:
+      - gzip, deflate
+      content-length:
+      - '1468'
+      content-type:
+      - text/xml; charset="UTF-8"
+      soapaction:
+      - http://tempuri.org/Service/GetPublicacionAPOC
+      user-agent:
+      - Python-httplib2/0.31.2 (gzip)
+    method: POST
+    uri: https://eapoc-ws-qaext.afip.gob.ar/Service.asmx
+  response:
+    body:
+      string: "<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"
+        xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n  <s:Header>\n    <env-description
+        xmlns=\"s\">qa</env-description>\n    <env-version xmlns=\"s\">v1.0.12</env-version>\n
+        \   <exec-ts xmlns=\"s\">06/16/2026 08:22:21</exec-ts>\n  </s:Header>\n  <s:Body>\n
+        \   <GetPublicacionAPOCResponse xmlns=\"http://tempuri.org/\">\n      <GetPublicacionAPOCResult>\n
+        \       <codigo>0</codigo>\n        <descripcion>OK</descripcion>\n        <resultados
+        />\n      </GetPublicacionAPOCResult>\n    </GetPublicacionAPOCResponse>\n
+        \ </s:Body>\n</s:Envelope>"
+    headers:
+      Content-Length:
+      - '631'
+      Content-Type:
+      - text/xml; charset="UTF-8"
+      Date:
+      - Tue, 16 Jun 2026 11:22:21 GMT
+      Strict-Transport-Security:
+      - max-age=15724800; includeSubDomains
+    status:
+      code: 200
+      message: OK
+version: 1
