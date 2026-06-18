@@ -46,7 +46,7 @@ de import). La diferencia de madurez está en *tests* y *validación en vivo*, n
 | `wslsp` | Liquidación sector pecuario | OK | sí · cassette offline (marshalling/receptor) | 200 | **ACTIVO (live)** | Validado; fix `elementFormDefault` |
 | `wsltv` | Liquidación tabaco verde | OK | sí · cassette | 200 | **ACTIVO (cassette)** | |
 | `wslum` | Liquidación lechería | OK | sí · cassette | 200 | **ACTIVO (cassette)** | |
-| `wslpg` | Liquidación primaria de granos | OK | **no** | 200 | **IMPORTA-SIN-PROBAR** | ⚠️ Servicio grande e importante, **sin un solo test** |
+| `wslpg` | Liquidación primaria de granos | OK | sí · tests offline (marshalling/catálogos/tolerancia) | 200 | **PROBADO OFFLINE** | Builder + auth + parseo tolerante single-vs-list. Smoke en vivo **bloqueado por WSASS** (cert no autorizado para `wslpg`); **sin validar en vivo** |
 | `wscpe` | Carta de Porte Electrónica | OK | sí · cassettes offline (14) | **404** | **ACTIVO (cassette)** | ⚠️ WSDL homo **404 hoy** en la URL hardcodeada (`fwshomo/wscpe/services/soap`); los cassettes se grabaron contra esa misma URL → endpoint **movido o caída temporal de homo**. Verificar URL vigente |
 | `wsctg` | Trazabilidad de granos | OK | no | **404** | **DEPRECADO** | `DeprecationWarning` → usar **WSCPE** |
 | `wsremcarne` | Remito electrónico cárnico | OK | sí · cassette | 200 | **ACTIVO (cassette)** | |
