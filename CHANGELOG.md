@@ -49,6 +49,18 @@ el proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
   traer `FeCabResp` sin `FeDetResp` y reventar con `KeyError`; ahora se exige
   ambos y, si falta el detalle, se delega en `__analizar_errores` para surgir el
   motivo real.
+- **`WSCPE` (Carta de Porte) — endpoint de homologación migrado.** ARCA movió el
+  servicio fuera de los hosts `fwshomo`/`serviciosjava` (que hoy dan **404**) a los
+  hosts `cpea-ws*`. Se actualizó el dict `WSDL`: homo →
+  `https://cpea-ws-qaext.afip.gob.ar/wscpe/services/soap?wsdl` (confirmado en vivo,
+  WSDL 200 + `Dummy` Ok), prod → `https://cpea-ws.afip.gob.ar/wscpe/services/soap?wsdl`
+  (WSDL 200; sin validar en vivo). El WSDL conserva el mismo `targetNamespace`
+  (`serviciosjava.afip.gob.ar/wscpe`) y operaciones — sólo cambió el host; las URLs
+  viejas quedan comentadas con la nota del porqué.
+- **`WSCPE.AnalizarCPE` — `NameError: string_types`.** La rama que graba el PDF
+  base64 de una CPE autorizada usaba `string_types` (resto de la migración py2,
+  nunca quedó importado) → **toda autorización exitosa** (respuesta con `cabecera`)
+  reventaba con `NameError`. Cambiado a `isinstance(..., str)`.
 
 ### Cambiado
 - **Higiene interna (sin impacto de API):** `WSFEv1.LeerFacturaX` acota su
@@ -82,6 +94,18 @@ el proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
   para `Dummy`), por lo que las operaciones de lectura no pudieron ejercitarse ni
   grabarse contra ARCA. La estructura validada offline está modelada desde el
   WSDL vivo; queda **sin validar en vivo** hasta autorizar el servicio en WSASS._
+- **`WSCPE` (Carta de Porte) — tests offline + cassette del endpoint nuevo.**
+  `tests/test_wscpe_offline.py` (cliente SOAP falso, `dontusefix`): fija las URLs
+  migradas, `Dummy`, autenticación (`cuitRepresentada`), catálogos `Consultar*`,
+  `ConsultarUltNroOrden` y el builder Automotor (`CrearCPE`+`AgregarCabecera`→
+  `AutorizarCPEAutomotor`). `tests/test_wscpe_vcr.py` + cassette
+  `test_wscpe_vcr/test_dummy_homologacion.yaml`: replay **offline** de Conectar
+  (WSDL nuevo) + `Dummy` grabado contra `cpea-ws-qaext` — **valida en vivo** que el
+  endpoint nuevo conecta (Dummy no requiere auth, sin material sensible).
+  _Los 33 cassettes heredados (`tests/cassettes/test_wscpe/`) siguen contra el host
+  VIEJO `fwshomo` y dependen de la fixture `auth` (cert, `--run-online`): no replayean
+  offline. Re-grabar los catálogos/escrituras contra el endpoint nuevo requiere
+  **autorizar `wscpe` en WSASS** (hoy `coe.notAuthorized`)._
 
 ## [1.3.0] - 2026-06-16
 

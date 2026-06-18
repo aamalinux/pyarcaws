@@ -89,9 +89,15 @@ ESTADO_CPE = {
 }
 
 # constantes de configuración (producción/homologación):
+# ARCA migró el endpoint de WSCPE a los hosts `cpea-ws*` (2026): el WSDL conserva
+# el mismo targetNamespace (`serviciosjava.afip.gob.ar/wscpe`) y las operaciones,
+# sólo cambió el host. Las URLs viejas devuelven 404:
+#   prod viejo: https://serviciosjava.afip.gob.ar/wscpe/services/soap?wsdl  (404)
+#   homo viejo: https://fwshomo.afip.gov.ar/wscpe/services/soap?wsdl        (404)
+# Homo confirmado en vivo (GET WSDL 200); prod confirmado sólo a nivel WSDL.
 WSDL = [
-    "https://serviciosjava.afip.gob.ar/wscpe/services/soap?wsdl",
-    "https://fwshomo.afip.gov.ar/wscpe/services/soap?wsdl",
+    "https://cpea-ws.afip.gob.ar/wscpe/services/soap?wsdl",
+    "https://cpea-ws-qaext.afip.gob.ar/wscpe/services/soap?wsdl",
 ]
 
 # Seteado para ambiente de homologacion/debug.
@@ -567,7 +573,9 @@ class WSCPE(BaseWS):
         self.TarifaReferencia = transportes[0].get('tarifaReferencia') if transportes else None
 
         cpe_bytes = self.PDF
-        if sys.version_info[0] >= 3 and isinstance(cpe_bytes, string_types):
+        # `str` (texto) → bytes para grabar el PDF base64; `string_types` era un
+        # resto de la migración py2 (nunca quedó importado) y rompía con NameError
+        if isinstance(cpe_bytes, str):
             cpe_bytes = cpe_bytes.encode("utf-8")
         with open(archivo, "wb") as fh:
             fh.write(cpe_bytes)
