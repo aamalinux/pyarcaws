@@ -47,7 +47,7 @@ de import). La diferencia de madurez está en *tests* y *validación en vivo*, n
 | `wsltv` | Liquidación tabaco verde | OK | sí · cassette | 200 | **ACTIVO (cassette)** | |
 | `wslum` | Liquidación lechería | OK | sí · cassette | 200 | **ACTIVO (cassette)** | |
 | `wslpg` | Liquidación primaria de granos | OK | sí · tests offline (marshalling/catálogos/tolerancia) | 200 | **PROBADO OFFLINE** | Builder + auth + parseo tolerante single-vs-list. Smoke en vivo **bloqueado por WSASS** (cert no autorizado para `wslpg`); **sin validar en vivo** |
-| `wscpe` | Carta de Porte Electrónica | OK | sí · cassettes offline (14) | **404** | **ACTIVO (cassette)** | ⚠️ WSDL homo **404 hoy** en la URL hardcodeada (`fwshomo/wscpe/services/soap`); los cassettes se grabaron contra esa misma URL → endpoint **movido o caída temporal de homo**. Verificar URL vigente |
+| `wscpe` | Carta de Porte Electrónica | OK | sí · offline (fakes) + cassette Dummy nuevo; 33 heredados (host viejo) | 200 (`cpea-ws-qaext`) | **ACTIVO (Dummy live)** | Endpoint **migrado** a `cpea-ws-qaext` (homo) / `cpea-ws` (prod); `fwshomo`/`serviciosjava` dan 404. `Conectar`+`Dummy` validados en vivo; catálogos/escrituras **gateados por WSASS** (`coe.notAuthorized`). Mismo namespace/ops que el módulo (salvo 2 ops `editarCPEConfirmada*Dg`) |
 | `wsctg` | Trazabilidad de granos | OK | no | **404** | **DEPRECADO** | `DeprecationWarning` → usar **WSCPE** |
 | `wsremcarne` | Remito electrónico cárnico | OK | sí · cassette | 200 | **ACTIVO (cassette)** | |
 | `wsremazucar` | Remito azúcar/alcohol | OK | **no** | 200 | **IMPORTA-SIN-PROBAR** | |
@@ -71,12 +71,15 @@ de import). La diferencia de madurez está en *tests* y *validación en vivo*, n
 - **Ningún módulo roto por import.** La deuda real es de *cobertura de tests*: 15 de 31
   módulos no tienen ni un test (todos los `traza*`, `wslpg`, `wsfecred`, `ws_sire`,
   `wsremazucar`, `wsremharina`, `cot`, `iibb`, `padron`).
-- **`wscpe` (Carta de Porte): WSDL homo 404.** La URL hardcodeada
-  `https://fwshomo.afip.gov.ar/wscpe/services/soap?wsdl` devuelve 404 en todas sus
-  variantes (homo y prod-java), pese a que el servicio figura **activo** en el catálogo
-  oficial de ARCA y a que el módulo tiene 14 cassettes grabados contra esa misma URL.
-  Probable cambio de endpoint o caída temporal de homologación → **verificar la URL
-  vigente** antes de prometer que `wscpe` opera en vivo.
+- **`wscpe` (Carta de Porte): endpoint MIGRADO (resuelto).** Las URLs viejas
+  (`fwshomo.afip.gov.ar` homo, `serviciosjava.afip.gob.ar` prod) dan **404**: ARCA movió
+  el servicio a los hosts `cpea-ws*` (`cpea-ws-qaext.afip.gob.ar` homo,
+  `cpea-ws.afip.gob.ar` prod; WSDL 200, mismo `targetNamespace` y operaciones). Módulo
+  actualizado; `Conectar`+`Dummy` validados en vivo en homo. Catálogos/escrituras
+  **gateados por WSASS** (cert no autorizado para `wscpe`). Hallazgo: 2 ops del módulo
+  (`editarCPEConfirmadaAutomotorDg`/`...FerroviariaDg`) no figuran con ese nombre en el
+  WSDL vivo (el WSDL usa `editarCPEDGConfirmada*` / `editarCPEConfirmada*`) — divergencia
+  de naming preexistente, a decidir.
 - **`wsctg` y `wscoc`**: confirmados **DEPRECADOS** — `DeprecationWarning` en código y
   WSDL **404**. WSCTG se reemplaza por **WSCPE**; WSCOC no tiene reemplazo.
 - **`wslpg`** (liquidación primaria de granos): servicio mayor, WSDL vivo, pero **sin un
@@ -194,8 +197,8 @@ ante demanda; el resto, caso por caso. No es un "servicio" sino un programa.
   orden de valor): **`wslpg`** (el más importante sin test), `wsfecred`, `ws_sire`,
   `wsremazucar`, `wsremharina`, y los `traza*`. `cot`/`iibb`/`padron` validan contra
   endpoints provinciales/bulk (no requieren cert ARCA pero sí datos de prueba).
-- **A verificar (posible roto de entorno, no de código)**: **`wscpe`** — confirmar la
-  URL vigente del WSDL (homo 404 hoy); si el endpoint se movió, actualizar el módulo.
+- **`wscpe`** — RESUELTO: el endpoint se movió a `cpea-ws*` (ver hallazgos); módulo
+  actualizado y `Dummy` validado en vivo.
 - **DEPRECADOS** (ya señalizados, remoción prevista 2.0): **`wscoc`**, **`wsctg`**.
   No invertir; mantener el `DeprecationWarning`.
 
