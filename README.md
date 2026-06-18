@@ -87,7 +87,7 @@ Servicios web soportados:
 - [WSLUM][17c]: liquidación mensual de lechería
 - [WSLSP][17d]: liquidación del sector pecuario/ganadero
 - [WSLCA][30]: liquidación de caña de azúcar _(sin validar en vivo)_
-- [WSCPE][30]: carta de porte electrónica (reemplaza a WSCTG) — endpoint migrado a `cpea-ws*`; `Conectar`+`Dummy` validados en vivo, catálogos/escrituras _(sin validar en vivo: gate WSASS)_
+- [WSCPE][30]: carta de porte electrónica (reemplaza a WSCTG) — endpoint migrado a `cpea-ws*`; `Dummy` + catálogos `Consultar*` **validados en vivo** (cassettes de homologación); escrituras modeladas offline
 - [WSREMCARNE][30]: remito electrónico cárnico
 - [WSREMAZUCAR][30]: remito electrónico de azúcar/alcohol _(sin validar)_
 - [WSREMHARINA][30]: remito electrónico de harina de trigo _(sin validar)_

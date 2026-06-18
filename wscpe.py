@@ -70,6 +70,7 @@ from pyarcaws.utils import (
     inicializar_y_capturar_excepciones,
     get_install_dir,
     json_serializer,
+    normalizar_lista_soap,
 )
 
 
@@ -218,9 +219,12 @@ class WSCPE(BaseWS):
 
     def __analizar_errores(self, ret):
         "Comprueba y extrae errores si existen en la respuesta XML"
-        errores = [err["error"] for err in ret.get("errores", [])]
-        if errores and isinstance(errores[0], (list, tuple)):
-            errores = errores[0]
+        # ARCA entrega <errores> ausente, vacío (None) o con uno/varios <error>;
+        # normalizar_lista_soap tolera todas las formas. Antes, ret.get("errores",
+        # []) devolvía None cuando el nodo venía vacío (clave presente, valor None)
+        # y `for err in None` reventaba con TypeError — rompía hasta los catálogos
+        # en una respuesta OK (el decorador lo tragaba y devolvía None).
+        errores = normalizar_lista_soap(ret.get("errores"), "error")
         self.errores = errores
         self.Errores = ["%(codigo)s: %(descripcion)s" % err for err in errores]
         self.ErrCode = " ".join(["%(codigo)s" % err for err in errores])
