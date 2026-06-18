@@ -36,7 +36,7 @@ de import). La diferencia de madurez está en *tests* y *validación en vivo*, n
 | `wscdc` | Constatación de comprobantes | OK | sí · cassette offline (errores/obs) | 200 | **ACTIVO (live)** | Validado; parseo tolerante |
 | `ws_sr_padron` | Padrón A4 / Constancia (ex A5) / A10 / A100 | OK | sí · cassettes offline (a10_vcr, constancia_vcr) + tests | 200 (A4/A5/A10/A100) | **ACTIVO (live)** | A10 y constancia validados en vivo |
 | `wsfecred` | Facturas de Crédito Electrónicas MiPyME | OK | **no** | 200 | **IMPORTA-SIN-PROBAR** | Candidato a cassette |
-| `ws_sire` | SIRE — certificado retención C2005 (IVA) | OK | **no** | 200 (reca.homo) | **IMPORTA-SIN-PROBAR** | WSDL distinto: `ws-aplicativos-reca.homo.afip.gob.ar` |
+| `ws_sire` | SIRE — certificado retención C2005 (IVA) | OK | sí · tests offline (fakes) | 200 (reca.homo) | **PROBADO OFFLINE** | Dominio RECA, `soap_server="oracle"`. `Emitir`/`anular` **gateados por WSASS** (`coe.notAuthorized`) + agente de retención IVA. `Dummy` (sin auth): endpoint responde SOAP a curl, pero httplib2 recibe HTML de sondeo del WAF → sin cassette (ver hallazgo) |
 | `wscoc` | Operaciones cambiarias (RG 3210) | OK | no | **404** | **DEPRECADO** | `DeprecationWarning`; régimen discontinuado 2015, sin reemplazo |
 
 ### ARCA — agro / liquidaciones / remitos
@@ -84,8 +84,17 @@ de import). La diferencia de madurez está en *tests* y *validación en vivo*, n
   WSDL **404**. WSCTG se reemplaza por **WSCPE**; WSCOC no tiene reemplazo.
 - **`wslpg`** (liquidación primaria de granos): servicio mayor, WSDL vivo, pero **sin un
   solo test** → prioridad alta para cassettes si hay caso de uso de granos.
-- **`ws_sire`** usa un dominio distinto al resto (`ws-aplicativos-reca.homo.afip.gob.ar`),
-  WSDL vivo (200): es la familia "aplicativos RECA", no el `fwshomo` clásico.
+- **`ws_sire`** (SIRE C2005): dominio RECA `ws-aplicativos-reca.homo.afip.gob.ar`
+  (no `fwshomo`), `soap_server="oracle"`, WSDL+XSD vivos (200). Tests offline
+  agregados (marshalling de `Emitir` con `cuitAgente`). **Gates**: (1) `sire-ws` no
+  autorizado en WSASS (`coe.notAuthorized`) y `Emitir` exige agente de retención IVA
+  designado → escritura sin validar en vivo; (2) **hallazgo de transporte**: el
+  `Dummy` no requiere auth y el endpoint RECA devuelve un `dummyResponse` válido a un
+  POST crudo de `curl` (mismos headers/body), pero el httplib2 vendoreado recibe una
+  página **HTML de sondeo** del Oracle/WAF (request-id cambiante) → `ExpatError`; el
+  GET del WSDL sí funciona. Causa no fijada (curl HTTP/1.1 anda; probable
+  fingerprint TLS/WAF), no es bug del módulo — bloquea grabar cassette de Dummy.
+  Inconsistencia menor: `HOMO=False` pese a que el módulo sólo trae el WSDL de homo.
 
 ---
 

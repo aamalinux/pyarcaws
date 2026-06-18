@@ -78,7 +78,7 @@ Servicios web soportados:
 - [Padrón de contribuyentes][26]: verificación de vendedores y compradores
   (Alcance 4, Alcance 5 / Constancia de Inscripción, Alcance 10, Alcance 13, Alcance 100)
   — Alcance 13 agrega la búsqueda inversa documento→CUIT _(sin validar en vivo)_
-- [SIRE][30]: sistema integral de retenciones electrónicas — certificado C2005 _(sin validar)_
+- [SIRE][30]: sistema integral de retenciones electrónicas — certificado C2005 (`ws_sire`); tests offline _(sin validar en vivo: gate WSASS + WAF RECA bloquea el transporte; ver relevamiento)_
 
 **ARCA — agricultura, ganadería y remitos:**
 
