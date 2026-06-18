@@ -106,6 +106,20 @@ el proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
   VIEJO `fwshomo` y dependen de la fixture `auth` (cert, `--run-online`): no replayean
   offline. Re-grabar los catálogos/escrituras contra el endpoint nuevo requiere
   **autorizar `wscpe` en WSASS** (hoy `coe.notAuthorized`)._
+- **`WSSIREc2005` (SIRE — certificado de retención C2005) — primera batería de
+  tests offline** (`tests/test_ws_sire_offline.py`, cliente SOAP falso,
+  `dontusefix`): import/versión, `Dummy`, el marshalling de `Emitir` (envelope
+  con **`cuitAgente`** —no `cuit`/`cuitRepresentada`— y el dict `certificado`
+  según el XSD vivo) con el parseo de `CertificadoNro`/`CodigoSeguridad`, y la
+  rama de anulación (`motivoAnulacion`/`numeroCertificadoOriginal`/
+  `importeCertificadoOriginal` como campos del `certificado` de `emitir`).
+  _Sin red ni certificado. **No se grabó cassette**: `Emitir`/`anular` están
+  **gateados por WSASS** (`sire-ws` → `coe.notAuthorized`) y además exigen que el
+  CUIT sea agente de retención de IVA designado. El `Dummy` no requiere auth y el
+  endpoint RECA responde un `dummyResponse` válido a un POST crudo (curl), pero el
+  transporte httplib2 vendoreado recibe una página HTML de sondeo del Oracle/WAF
+  (request-id cambiante) para el mismo POST → `ExpatError`; el GET del WSDL sí
+  funciona. Queda **modelado offline**; ver hallazgo en el relevamiento._
 
 ## [1.3.0] - 2026-06-16
 
