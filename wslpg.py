@@ -117,6 +117,7 @@ from pyarcaws.utils import (
     BaseWS,
     inicializar_y_capturar_excepciones,
     get_install_dir,
+    como_lista,
 )
 
 
@@ -634,9 +635,11 @@ class WSLPG(BaseWS):
         "Comprueba y extrae errores si existen en la respuesta XML"
         errores = []
         if "errores" in ret:
-            errores.extend(ret["errores"])
+            # pysimplesoap entrega un único <errores> como dict (no lista):
+            # como_lista lo aplana para no romper el parseo con un solo error
+            errores.extend(como_lista(ret["errores"]))
         if "erroresFormato" in ret:
-            errores.extend(ret["erroresFormato"])
+            errores.extend(como_lista(ret["erroresFormato"]))
         if errores:
             self.Errores = [
                 "%(codigo)s: %(descripcion)s" % err["error"] for err in errores
@@ -1242,7 +1245,7 @@ class WSLPG(BaseWS):
                 )
                 # analizar detalle de importes ajustados discriminados por alicuota
                 # (por compatibildiad y consistencia se usan los mismos campos)
-                for it in liq.get("importes", liq.get("importe")):
+                for it in como_lista(liq.get("importes", liq.get("importe"))):
                     # en ajustes LSG no se agrupan los importes en un subtipo...
                     if "importeReturn" in it:
                         it = it["importeReturn"][0]  # TODO: revisar SOAP
@@ -1251,7 +1254,7 @@ class WSLPG(BaseWS):
                     self.params_out["importe_ajustar_%s" % tasa] = it["importe"]
                     self.params_out["iva_calculado_%s" % tasa] = it["ivaCalculado"]
             if "certificados" in liq:
-                for c in liq["certificados"]:
+                for c in como_lista(liq["certificados"]):
                     cert = c["certificado"]
                     self.params_out["certificados"].append(
                         dict(
@@ -1317,7 +1320,7 @@ class WSLPG(BaseWS):
             self.params_out["retenciones"] = []
             self.params_out["deducciones"] = []
             self.params_out["percepciones"] = []
-            for retret in aut.get("retenciones", []):
+            for retret in como_lista(aut.get("retenciones", [])):
                 retret = retret["retencionReturn"]
                 self.params_out["retenciones"].append(
                     {
@@ -1339,7 +1342,7 @@ class WSLPG(BaseWS):
                         ),
                     }
                 )
-            for dedret in aut.get("deducciones", []):
+            for dedret in como_lista(aut.get("deducciones", [])):
                 dedret = dedret["deduccionReturn"]
                 self.params_out["deducciones"].append(
                     {
@@ -1358,7 +1361,7 @@ class WSLPG(BaseWS):
                         ),
                     }
                 )
-            for perret in aut.get("percepciones", []):
+            for perret in como_lista(aut.get("percepciones", [])):
                 perret = perret.get("percepcionReturn", perret)
                 self.params_out["percepciones"].append(
                     {
@@ -2051,7 +2054,7 @@ class WSLPG(BaseWS):
             fechaConfirmacionCtgHas=fecha_confirmacion_ctg_has,
         )["oReturn"]
         self.__analizar_errores(ret)
-        array = ret.get("ctg", [])
+        array = como_lista(ret.get("ctg", []))
         self.Excepcion = self.Traceback = ""
         self.params_out["ctgs"] = []
         for ctg in array:
@@ -2131,7 +2134,7 @@ class WSLPG(BaseWS):
             fechaEmisionHas=fecha_emision_has,
         )["oReturn"]
         self.__analizar_errores(ret)
-        array = ret.get("certificado", [])
+        array = como_lista(ret.get("certificado", []))
         self.Excepcion = self.Traceback = ""
         self.params_out["certificados"] = []
         for cert in array:
@@ -2813,7 +2816,7 @@ class WSLPG(BaseWS):
             },
         )["campaniaReturn"]
         self.__analizar_errores(ret)
-        array = ret.get("campanias", [])
+        array = como_lista(ret.get("campanias", []))
         return [
             ("%s %%s %s %%s %s" % (sep, sep, sep))
             % (
@@ -2832,7 +2835,7 @@ class WSLPG(BaseWS):
             },
         )["tipoGranoReturn"]
         self.__analizar_errores(ret)
-        array = ret.get("granos", [])
+        array = como_lista(ret.get("granos", []))
         if sep is None:
             return dict(
                 [
@@ -2863,7 +2866,7 @@ class WSLPG(BaseWS):
             },
         )["gradoRefReturn"]
         self.__analizar_errores(ret)
-        array = ret.get("gradosRef", [])
+        array = como_lista(ret.get("gradosRef", []))
         if sep is None:
             return dict(
                 [
@@ -2895,7 +2898,7 @@ class WSLPG(BaseWS):
             codGrano=cod_grano,
         )["gradoEntReturn"]
         self.__analizar_errores(ret)
-        array = ret.get("gradoEnt", [])
+        array = como_lista(ret.get("gradoEnt", []))
         if sep is None:
             return dict(
                 [
@@ -2927,7 +2930,7 @@ class WSLPG(BaseWS):
             },
         )["tipoCertDepReturn"]
         self.__analizar_errores(ret)
-        array = ret.get("tiposCertDep", [])
+        array = como_lista(ret.get("tiposCertDep", []))
         return [
             ("%s %%s %s %%s %s" % (sep, sep, sep))
             % (
@@ -2947,7 +2950,7 @@ class WSLPG(BaseWS):
             },
         )["tipoDeduccionReturn"]
         self.__analizar_errores(ret)
-        array = ret.get("tiposDeduccion", [])
+        array = como_lista(ret.get("tiposDeduccion", []))
         return [
             ("%s %%s %s %%s %s" % (sep, sep, sep))
             % (
@@ -2967,7 +2970,7 @@ class WSLPG(BaseWS):
             },
         )["tipoRetencionReturn"]
         self.__analizar_errores(ret)
-        array = ret.get("tiposRetencion", [])
+        array = como_lista(ret.get("tiposRetencion", []))
         return [
             ("%s %%s %s %%s %s" % (sep, sep, sep))
             % (
@@ -2987,7 +2990,7 @@ class WSLPG(BaseWS):
             },
         )["puertoReturn"]
         self.__analizar_errores(ret)
-        array = ret.get("puertos", [])
+        array = como_lista(ret.get("puertos", []))
         return [
             ("%s %%s %s %%s %s" % (sep, sep, sep))
             % (
@@ -3007,7 +3010,7 @@ class WSLPG(BaseWS):
             },
         )["tipoActividadReturn"]
         self.__analizar_errores(ret)
-        array = ret.get("tiposActividad", [])
+        array = como_lista(ret.get("tiposActividad", []))
         return [
             ("%s %%s %s %%s %s" % (sep, sep, sep))
             % (
@@ -3028,7 +3031,7 @@ class WSLPG(BaseWS):
                 },
             )["tipoActividadReturn"]
             self.__analizar_errores(ret)
-            array = ret.get("tiposActividad", [])
+            array = como_lista(ret.get("tiposActividad", []))
             self.Excepcion = self.Traceback = ""
             return [
                 ("%s %%s %s %%s %s" % (sep, sep, sep))
@@ -3055,7 +3058,7 @@ class WSLPG(BaseWS):
             },
         )["provinciasReturn"]
         self.__analizar_errores(ret)
-        array = ret.get("provincias", [])
+        array = como_lista(ret.get("provincias", []))
         if sep is None:
             return dict(
                 [
@@ -3086,7 +3089,7 @@ class WSLPG(BaseWS):
             codProvincia=codigo_provincia,
         )["localidadesReturn"]
         self.__analizar_errores(ret)
-        array = ret.get("localidades", [])
+        array = como_lista(ret.get("localidades", []))
         if sep is None:
             return dict(
                 [
@@ -3134,7 +3137,7 @@ class WSLPG(BaseWS):
             },
         )["tipoActividadReturn"]
         self.__analizar_errores(ret)
-        for it_act in ret.get("tiposActividad", []):
+        for it_act in como_lista(ret.get("tiposActividad", [])):
 
             ret = self.client.tipoOperacionXActividadConsultar(
                 auth={
@@ -3145,7 +3148,7 @@ class WSLPG(BaseWS):
                 nroActLiquida=it_act["codigoDescripcion"]["codigo"],
             )["tipoOperacionReturn"]
             self.__analizar_errores(ret)
-            array = ret.get("tiposOperacion", [])
+            array = como_lista(ret.get("tiposOperacion", []))
             if sep:
                 ops.extend(
                     [

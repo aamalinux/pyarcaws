@@ -58,6 +58,30 @@ el proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
   en WSAA el `raise` de `Autenticar` depende de `LanzarExcepciones` (no de `DEBUG`)
   y el `DEBUG` de módulo quedó en `False` por defecto (sólo controla los prints de
   diagnóstico, no la propagación de errores).
+- **`WSLPG` — parseo tolerante single-vs-list en los nodos repetibles.** Los
+  catálogos (`ConsultarProvincias`, `ConsultarTipoGrano`, `ConsultarCampanias`,
+  …), el `__analizar_errores` (`<errores>`/`<erroresFormato>`) y las
+  sub-estructuras de la respuesta de autorización (`retenciones`, `deducciones`,
+  `percepciones`, `certificados`) iteraban asumiendo siempre una lista. Cuando
+  ARCA devolvía **un solo** elemento, pysimplesoap lo entrega como `dict` y el
+  recorrido explotaba con `TypeError: string indices must be integers`. Se
+  envolvieron los puntos de iteración con `utils.como_lista` (mismo helper ya
+  usado en WSLCA/WSLSP), sin cambiar la lógica para el caso de varios elementos.
+
+### Pruebas
+- **`WSLPG` (Liquidación Primaria de Granos) — primera batería de tests
+  offline** (`tests/test_wslpg_offline.py`): importación/alias, autenticación
+  clásica (`cuit` en minúsculas, *no* `cuitRepresentada`), `Dummy`, el patrón
+  builder (`CrearLiquidacion` + `Agregar*` persisten entre llamadas decoradas y
+  arman el envelope de `AutorizarLiquidacion`), el parseo de la respuesta y la
+  tolerancia single-vs-list de catálogos/errores/sub-estructuras. Corren con un
+  cliente SOAP falso, sin red ni certificado (`-m "not online"`).
+  _El smoke en vivo y los cassettes de homologación quedaron **bloqueados por el
+  gate WSASS**: el certificado de homologación disponible no está autorizado
+  para `wslpg` (`coe.notAuthorized` en WSAA; `common_001 Acceso Denegado` aun
+  para `Dummy`), por lo que las operaciones de lectura no pudieron ejercitarse ni
+  grabarse contra ARCA. La estructura validada offline está modelada desde el
+  WSDL vivo; queda **sin validar en vivo** hasta autorizar el servicio en WSASS._
 
 ## [1.3.0] - 2026-06-16
 
