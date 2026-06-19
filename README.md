@@ -58,9 +58,12 @@ Funcionalidades:
 Servicios web soportados:
 -------------------------
 
-> Estado de madurez en el fork: los servicios marcados _(sin validar)_ importan
-> limpio en Python 3 y su WSDL responde, pero todavía **no tienen tests ni
-> validación en vivo** en el fork (heredados de pyafipws). Ver
+> Estado de madurez en el fork (de menor a mayor): _(sin validar)_ importa limpio
+> en Python 3 y su WSDL responde, pero **sin tests ni validación en vivo**
+> (heredado de pyafipws); _(sin validar en vivo)_ ya tiene **tests offline**
+> (marshalling/parseo con cassettes o fakes) pero la lectura en vivo está
+> pendiente o gateada por WSASS; **validado en vivo** se ejercitó contra
+> homologación (Dummy/catálogos read-only). Ver
 > [`docs/relevamiento_servicios.md`](docs/relevamiento_servicios.md) para el
 > estado real módulo por módulo.
 
@@ -281,7 +284,7 @@ python -c "import pyarcaws; print('OK', pyarcaws.__file__)"
 
 # 2) tests offline (sin red ni certificado) — es lo mismo que corre el CI
 pytest -m "not online" --timeout=60
-# -> 106 passed, 357 skipped, 63 deselected, 0 failed
+# -> 185 passed, 357 skipped, 63 deselected, 0 failed
 ```
 
 Los tests de integración que autentican contra ARCA y/o requieren certificado
