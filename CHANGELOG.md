@@ -61,6 +61,16 @@ el proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
   base64 de una CPE autorizada usaba `string_types` (resto de la migración py2,
   nunca quedó importado) → **toda autorización exitosa** (respuesta con `cabecera`)
   reventaba con `NameError`. Cambiado a `isinstance(..., str)`.
+- **`WSCPE.__analizar_errores` — `TypeError` con `<errores>` vacío.** ARCA
+  devuelve el nodo `<errores>` presente pero vacío (`None`) en **toda respuesta
+  OK**; `ret.get("errores", [])` devolvía `None` (la clave existe) y
+  `for err in None` reventaba con `TypeError: 'NoneType' object is not iterable`,
+  tragado por el decorador → **todos los catálogos `Consultar*` devolvían `None`**
+  (p. ej. `ConsultarProvincias` daba 0 ítems pese a que ARCA mandaba 24). Además
+  la forma `<errores><error>…</error></errores>` (uno o varios) tampoco se
+  parseaba bien. Reemplazado por `normalizar_lista_soap(ret.get("errores"),
+  "error")` (mismo helper de WSCDC/WSFEv1), que tolera ausente/vacío/uno/varios.
+  Detectado al validar los catálogos en vivo contra el endpoint nuevo.
 
 ### Cambiado
 - **Higiene interna (sin impacto de API):** `WSFEv1.LeerFacturaX` acota su
@@ -120,6 +130,16 @@ el proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
   transporte httplib2 vendoreado recibe una página HTML de sondeo del Oracle/WAF
   (request-id cambiante) para el mismo POST → `ExpatError`; el GET del WSDL sí
   funciona. Queda **modelado offline**; ver hallazgo en el relevamiento._
+- **`WSCPE` — catálogos validados en vivo + cassettes de homologación.** Con
+  `wscpe` ya autorizado en WSASS, se grabaron contra el endpoint nuevo
+  (`cpea-ws-qaext`) y se conectaron a `tests/test_wscpe_vcr.py` (replay offline,
+  `vcr`+`dontusefix`) los catálogos read-only: `ConsultarProvincias` (24),
+  `ConsultarTiposGrano` (39), `ConsultarLocalidadesPorProvincia` (2107 en Bs.As.)
+  y `ConsultarUltNroOrden`, además del `Dummy`. Cassettes **saneados** (token/sign
+  → placeholders, CUIT del agente → sintético, `Set-Cookie` filtrado; datos de
+  catálogo públicos, sin PII). _Las escrituras (`autorizarCPE*`,
+  `informarContingencia`) quedan modeladas offline (`test_wscpe_offline.py`); no se
+  ejercitan en vivo._
 
 ## [1.3.0] - 2026-06-16
 
