@@ -95,7 +95,12 @@ Servicios web soportados:
 **ARBA (Ingresos Brutos provinciales — Bs. As.):**
 
 - [COT][20]: Código de Operación de Traslado (remito electrónico provincial)
-- [IIBB][33]: percepciones / retenciones de Ingresos Brutos _(sin validar)_
+- [IIBB][33]: percepciones / retenciones de Ingresos Brutos (WS DFE, online) _(sin validar)_
+- **Padrón de alícuotas IIBB** (`padron_iibb`): parser **offline** de los
+  archivos de padrón de regímenes generales de percepción/retención de **ARBA** y
+  **AGIP** (ZIP/TXT, latin-1). Consulta la alícuota por CUIT, sin red ni
+  credenciales. Distinto de `iibb.py` (web service DFE de ARBA, online) y de
+  `padron.py` (padrón de ARCA). Tests offline.
 
 **SNT — trazabilidad (ANMAT / SENASA / RENPRE):**
 

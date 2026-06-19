@@ -8,6 +8,22 @@ el proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
 
 ## [Sin publicar]
 
+### Agregado
+- **`padron_iibb` — parser OFFLINE de padrones de alícuotas de IIBB (ARBA y
+  AGIP).** Módulo nuevo (`padron_iibb.py`, clase `PadronIIBB`; **no** es un web
+  service: sin red, sin credenciales, sin WSAA). Lee los archivos de padrón de
+  regímenes generales de percepción/retención (ZIP o TXT, latin-1, campos
+  separados por `;`) y consulta la alícuota por CUIT. Soporta dos formatos, con
+  el layout **confirmado contra los PDF oficiales de diseño de registro**:
+  **ARBA** "Régimen de Recaudación por Sujeto" (dos archivos Ret/Per, una
+  alícuota cada uno, fusionados por CUIT; sin razón social) y **AGIP** "Padrón
+  Unificado" (ambas alícuotas + razón social). Normaliza `9,99`→`float`,
+  `DDMMAAAA`→`date`, tolera líneas vacías/encabezados/registros malformados
+  (log y seguir). `Consultar(cuit)` devuelve el dict normalizado o `None` si el
+  CUIT no está (nunca alícuota 0). CLI `padron_iibb`. No confundir con `iibb.py`
+  (WS DFE de ARBA, online) ni con `padron.py` (ARCA). Tests offline con fixtures
+  hechas a mano (`tests/test_padron_iibb_offline.py`).
+
 ### Seguridad
 - **`WebClient` — validación del certificado SSL activada por defecto** (fix de
   seguridad con **cambio de comportamiento**). Antes, `WebClient` (el cliente
