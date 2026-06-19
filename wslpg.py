@@ -118,6 +118,7 @@ from pyarcaws.utils import (
     inicializar_y_capturar_excepciones,
     get_install_dir,
     como_lista,
+    normalizar_lista_soap,
 )
 
 
@@ -2816,12 +2817,12 @@ class WSLPG(BaseWS):
             },
         )["campaniaReturn"]
         self.__analizar_errores(ret)
-        array = como_lista(ret.get("campanias", []))
+        array = normalizar_lista_soap(ret.get("campanias"), "codigoDescripcion")
         return [
             ("%s %%s %s %%s %s" % (sep, sep, sep))
             % (
-                it["codigoDescripcion"]["codigo"],
-                it["codigoDescripcion"]["descripcion"],
+                it["codigo"],
+                it["descripcion"],
             )
             for it in array
         ]
@@ -2835,13 +2836,13 @@ class WSLPG(BaseWS):
             },
         )["tipoGranoReturn"]
         self.__analizar_errores(ret)
-        array = como_lista(ret.get("granos", []))
+        array = normalizar_lista_soap(ret.get("granos"), "codigoDescripcion")
         if sep is None:
             return dict(
                 [
                     (
-                        it["codigoDescripcion"]["codigo"],
-                        it["codigoDescripcion"]["descripcion"],
+                        it["codigo"],
+                        it["descripcion"],
                     )
                     for it in array
                 ]
@@ -2850,8 +2851,8 @@ class WSLPG(BaseWS):
             return [
                 ("%s %%s %s %%s %s" % (sep, sep, sep))
                 % (
-                    it["codigoDescripcion"]["codigo"],
-                    it["codigoDescripcion"]["descripcion"],
+                    it["codigo"],
+                    it["descripcion"],
                 )
                 for it in array
             ]
@@ -2866,13 +2867,13 @@ class WSLPG(BaseWS):
             },
         )["gradoRefReturn"]
         self.__analizar_errores(ret)
-        array = como_lista(ret.get("gradosRef", []))
+        array = normalizar_lista_soap(ret.get("gradosRef"), "codigoDescripcion")
         if sep is None:
             return dict(
                 [
                     (
-                        it["codigoDescripcion"]["codigo"],
-                        it["codigoDescripcion"]["descripcion"],
+                        it["codigo"],
+                        it["descripcion"],
                     )
                     for it in array
                 ]
@@ -2881,8 +2882,8 @@ class WSLPG(BaseWS):
             return [
                 ("%s %%s %s %%s %s" % (sep, sep, sep))
                 % (
-                    it["codigoDescripcion"]["codigo"],
-                    it["codigoDescripcion"]["descripcion"],
+                    it["codigo"],
+                    it["descripcion"],
                 )
                 for it in array
             ]
@@ -2898,13 +2899,13 @@ class WSLPG(BaseWS):
             codGrano=cod_grano,
         )["gradoEntReturn"]
         self.__analizar_errores(ret)
-        array = como_lista(ret.get("gradoEnt", []))
+        array = normalizar_lista_soap(ret.get("gradoEnt"), "gradoEnt")
         if sep is None:
             return dict(
                 [
                     (
-                        it["gradoEnt"]["codigoDescripcion"]["codigo"],
-                        it["gradoEnt"]["valor"],
+                        it["codigoDescripcion"]["codigo"],
+                        it["valor"],
                     )
                     for it in array
                 ]
@@ -2913,9 +2914,9 @@ class WSLPG(BaseWS):
             return [
                 ("%s %%s %s %%s %s %%s %s" % (sep, sep, sep, sep))
                 % (
-                    it["gradoEnt"]["codigoDescripcion"]["codigo"],
-                    it["gradoEnt"]["codigoDescripcion"]["descripcion"],
-                    it["gradoEnt"]["valor"],
+                    it["codigoDescripcion"]["codigo"],
+                    it["codigoDescripcion"]["descripcion"],
+                    it["valor"],
                 )
                 for it in array
             ]
@@ -2930,12 +2931,12 @@ class WSLPG(BaseWS):
             },
         )["tipoCertDepReturn"]
         self.__analizar_errores(ret)
-        array = como_lista(ret.get("tiposCertDep", []))
+        array = normalizar_lista_soap(ret.get("tiposCertDep"), "codigoDescripcion")
         return [
             ("%s %%s %s %%s %s" % (sep, sep, sep))
             % (
-                it["codigoDescripcion"]["codigo"],
-                it["codigoDescripcion"]["descripcion"],
+                it["codigo"],
+                it["descripcion"],
             )
             for it in array
         ]
@@ -2950,12 +2951,12 @@ class WSLPG(BaseWS):
             },
         )["tipoDeduccionReturn"]
         self.__analizar_errores(ret)
-        array = como_lista(ret.get("tiposDeduccion", []))
+        array = normalizar_lista_soap(ret.get("tiposDeduccion"), "codigoDescripcion")
         return [
             ("%s %%s %s %%s %s" % (sep, sep, sep))
             % (
-                it["codigoDescripcion"]["codigo"],
-                it["codigoDescripcion"]["descripcion"],
+                it["codigo"],
+                it["descripcion"],
             )
             for it in array
         ]
@@ -2970,12 +2971,12 @@ class WSLPG(BaseWS):
             },
         )["tipoRetencionReturn"]
         self.__analizar_errores(ret)
-        array = como_lista(ret.get("tiposRetencion", []))
+        array = normalizar_lista_soap(ret.get("tiposRetencion"), "codigoDescripcion")
         return [
             ("%s %%s %s %%s %s" % (sep, sep, sep))
             % (
-                it["codigoDescripcion"]["codigo"],
-                it["codigoDescripcion"]["descripcion"],
+                it["codigo"],
+                it["descripcion"],
             )
             for it in array
         ]
@@ -2990,12 +2991,12 @@ class WSLPG(BaseWS):
             },
         )["puertoReturn"]
         self.__analizar_errores(ret)
-        array = como_lista(ret.get("puertos", []))
+        array = normalizar_lista_soap(ret.get("puertos"), "codigoDescripcion")
         return [
             ("%s %%s %s %%s %s" % (sep, sep, sep))
             % (
-                it["codigoDescripcion"]["codigo"],
-                it["codigoDescripcion"]["descripcion"],
+                it["codigo"],
+                it["descripcion"],
             )
             for it in array
         ]
@@ -3010,12 +3011,12 @@ class WSLPG(BaseWS):
             },
         )["tipoActividadReturn"]
         self.__analizar_errores(ret)
-        array = como_lista(ret.get("tiposActividad", []))
+        array = normalizar_lista_soap(ret.get("tiposActividad"), "codigoDescripcion")
         return [
             ("%s %%s %s %%s %s" % (sep, sep, sep))
             % (
-                it["codigoDescripcion"]["codigo"],
-                it["codigoDescripcion"]["descripcion"],
+                it["codigo"],
+                it["descripcion"],
             )
             for it in array
         ]
@@ -3031,13 +3032,13 @@ class WSLPG(BaseWS):
                 },
             )["tipoActividadReturn"]
             self.__analizar_errores(ret)
-            array = como_lista(ret.get("tiposActividad", []))
+            array = normalizar_lista_soap(ret.get("tiposActividad"), "codigoDescripcion")
             self.Excepcion = self.Traceback = ""
             return [
                 ("%s %%s %s %%s %s" % (sep, sep, sep))
                 % (
-                    it["codigoDescripcion"]["codigo"],
-                    it["codigoDescripcion"]["descripcion"],
+                    it["codigo"],
+                    it["descripcion"],
                 )
                 for it in array
             ]
@@ -3058,13 +3059,13 @@ class WSLPG(BaseWS):
             },
         )["provinciasReturn"]
         self.__analizar_errores(ret)
-        array = como_lista(ret.get("provincias", []))
+        array = normalizar_lista_soap(ret.get("provincias"), "codigoDescripcion")
         if sep is None:
             return dict(
                 [
                     (
-                        int(it["codigoDescripcion"]["codigo"]),
-                        it["codigoDescripcion"]["descripcion"],
+                        int(it["codigo"]),
+                        it["descripcion"],
                     )
                     for it in array
                 ]
@@ -3073,8 +3074,8 @@ class WSLPG(BaseWS):
             return [
                 ("%s %%s %s %%s %s" % (sep, sep, sep))
                 % (
-                    it["codigoDescripcion"]["codigo"],
-                    it["codigoDescripcion"]["descripcion"],
+                    it["codigo"],
+                    it["descripcion"],
                 )
                 for it in array
             ]
@@ -3089,13 +3090,13 @@ class WSLPG(BaseWS):
             codProvincia=codigo_provincia,
         )["localidadesReturn"]
         self.__analizar_errores(ret)
-        array = como_lista(ret.get("localidades", []))
+        array = normalizar_lista_soap(ret.get("localidades"), "codigoDescripcion")
         if sep is None:
             return dict(
                 [
                     (
-                        str(it["codigoDescripcion"]["codigo"]),
-                        it["codigoDescripcion"]["descripcion"],
+                        str(it["codigo"]),
+                        it["descripcion"],
                     )
                     for it in array
                 ]
@@ -3104,8 +3105,8 @@ class WSLPG(BaseWS):
             return [
                 ("%s %%s %s %%s %s" % (sep, sep, sep))
                 % (
-                    it["codigoDescripcion"]["codigo"],
-                    it["codigoDescripcion"]["descripcion"],
+                    it["codigo"],
+                    it["descripcion"],
                 )
                 for it in array
             ]
@@ -3137,7 +3138,7 @@ class WSLPG(BaseWS):
             },
         )["tipoActividadReturn"]
         self.__analizar_errores(ret)
-        for it_act in como_lista(ret.get("tiposActividad", [])):
+        for it_act in normalizar_lista_soap(ret.get("tiposActividad"), "codigoDescripcion"):
 
             ret = self.client.tipoOperacionXActividadConsultar(
                 auth={
@@ -3145,18 +3146,18 @@ class WSLPG(BaseWS):
                     "sign": self.Sign,
                     "cuit": self.Cuit,
                 },
-                nroActLiquida=it_act["codigoDescripcion"]["codigo"],
+                nroActLiquida=it_act["codigo"],
             )["tipoOperacionReturn"]
             self.__analizar_errores(ret)
-            array = como_lista(ret.get("tiposOperacion", []))
+            array = normalizar_lista_soap(ret.get("tiposOperacion"), "codigoDescripcion")
             if sep:
                 ops.extend(
                     [
                         ("%s %%s %s %%s %s %%s %s" % (sep, sep, sep, sep))
                         % (
-                            it_act["codigoDescripcion"]["codigo"],
-                            it["codigoDescripcion"]["codigo"],
-                            it["codigoDescripcion"]["descripcion"],
+                            it_act["codigo"],
+                            it["codigo"],
+                            it["descripcion"],
                         )
                         for it in array
                     ]
@@ -3165,9 +3166,9 @@ class WSLPG(BaseWS):
                 ops.extend(
                     [
                         (
-                            it_act["codigoDescripcion"]["codigo"],
-                            it["codigoDescripcion"]["codigo"],
-                            it["codigoDescripcion"]["descripcion"],
+                            it_act["codigo"],
+                            it["codigo"],
+                            it["descripcion"],
                         )
                         for it in array
                     ]
