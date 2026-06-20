@@ -85,7 +85,7 @@ Servicios web soportados:
 
 **ARCA — agricultura, ganadería y remitos:**
 
-- [WSLPG][17]: liquidación primaria de granos — tests offline (marshalling/catálogos) _(sin validar en vivo: servicio no autorizado en WSASS)_
+- [WSLPG][17]: liquidación primaria de granos — catálogos `Consultar*` + `ConsultarUltNroOrden` **validados en vivo** (cassette de homologación); escrituras modeladas offline. `Dummy` gateado por el server (`common_001`)
 - [WSLTV][17b]: liquidación de tabaco verde
 - [WSLUM][17c]: liquidación mensual de lechería
 - [WSLSP][17d]: liquidación del sector pecuario/ganadero

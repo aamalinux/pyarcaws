@@ -166,14 +166,17 @@ def test_autorizar_liquidacion_arma_envelope():
 # --- catálogos: tolerancia single-vs-list ----------------------------------
 
 
-def _provincias_resp(provincias):
-    return {"provinciasConsultar": {"provinciasReturn": {"provincias": provincias}}}
+def _provincias_resp(cod_desc):
+    # estructura REAL de ARCA: el nodo repetible es <codigoDescripcion> dentro de
+    # <provincias> (varios -> lista; uno solo -> dict). Confirmado en vivo (homo).
+    return {"provinciasConsultar": {"provinciasReturn":
+            {"provincias": {"codigoDescripcion": cod_desc}}}}
 
 
 def test_provincias_lista():
     cliente = _FakeClient(_provincias_resp([
-        {"codigoDescripcion": {"codigo": "1", "descripcion": "BUENOS AIRES"}},
-        {"codigoDescripcion": {"codigo": "2", "descripcion": "CATAMARCA"}},
+        {"codigo": "1", "descripcion": "BUENOS AIRES"},
+        {"codigo": "2", "descripcion": "CATAMARCA"},
     ]))
     w = _nuevo(cliente)
     out = w.ConsultarProvincias(sep=None)
@@ -181,9 +184,10 @@ def test_provincias_lista():
 
 
 def test_provincia_unica_como_dict_tolerada():
-    "pysimplesoap entrega un único elemento como dict (no lista): como_lista lo aplana."
+    "Con un único elemento ARCA entrega <codigoDescripcion> como dict (no lista):"
+    "normalizar_lista_soap lo aplana."
     cliente = _FakeClient(_provincias_resp(
-        {"codigoDescripcion": {"codigo": "1", "descripcion": "BUENOS AIRES"}}
+        {"codigo": "1", "descripcion": "BUENOS AIRES"}
     ))
     w = _nuevo(cliente)
     out = w.ConsultarProvincias(sep=None)
@@ -192,15 +196,14 @@ def test_provincia_unica_como_dict_tolerada():
 
 def test_tipo_grano_unico_tolerado():
     cliente = _FakeClient({"tipoGranoConsultar": {"tipoGranoReturn": {"granos":
-        {"codigoDescripcion": {"codigo": "2", "descripcion": "TRIGO"}}}}})
+        {"codigoDescripcion": {"codigo": "2", "descripcion": "TRIGO"}}}}})  # único
     w = _nuevo(cliente)
     assert w.ConsultarTipoGrano(sep=None) == {"2": "TRIGO"}
 
 
 def test_campanias_lista_formato_sep():
-    cliente = _FakeClient({"campaniaConsultar": {"campaniaReturn": {"campanias": [
-        {"codigoDescripcion": {"codigo": "2526", "descripcion": "2025/2026"}},
-    ]}}})
+    cliente = _FakeClient({"campaniaConsultar": {"campaniaReturn": {"campanias":
+        {"codigoDescripcion": [{"codigo": "2526", "descripcion": "2025/2026"}]}}}})
     # ojo: el método llama a campaniasConsultar (plural)
     cliente._respuestas["campaniasConsultar"] = cliente._respuestas.pop("campaniaConsultar")
     w = _nuevo(cliente)

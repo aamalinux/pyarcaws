@@ -87,6 +87,20 @@ el proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
   parseaba bien. Reemplazado por `normalizar_lista_soap(ret.get("errores"),
   "error")` (mismo helper de WSCDC/WSFEv1), que tolera ausente/vacío/uno/varios.
   Detectado al validar los catálogos en vivo contra el endpoint nuevo.
+- **`WSLPG` — catálogos `Consultar*` rotos contra la respuesta real de ARCA.** El
+  módulo modelaba la estructura al revés: esperaba `<nodo>` como **lista** de
+  `{codigoDescripcion: {…}}`, pero ARCA entrega `<nodo>` como **dict** con el nodo
+  repetible adentro: `{codigoDescripcion: [ {codigo, descripcion}, … ]}`. Con el
+  envoltorio `como_lista` previo sólo funcionaba si había **un solo** ítem; con
+  varios (el caso real: 24 provincias, 69 granos, …) reventaba con `TypeError:
+  list indices must be integers`. Se reparó todo el bloque de catálogos
+  (`ConsultarProvincias`/`TipoGrano`/`Campanias`/`Puerto`/`TipoActividad`/
+  `TipoDeduccion`/`TipoRetencion`/`CodigoGradoReferencia`/`TipoCertificadoDeposito`/
+  `LocalidadesPorProvincia`/`TiposOperacion` y el anidamiento especial de
+  `GradoEntregadoXTipoGrano`) usando `normalizar_lista_soap(ret.get(<nodo>),
+  "codigoDescripcion")`, que tolera ausente/uno/varios. Detectado al validar en
+  vivo (heurística: un catálogo que vuelve con 0 ítems y sin error es sospecha de
+  parseo, no de datos vacíos).
 
 ### Cambiado
 - **Higiene interna (sin impacto de API):** `WSFEv1.LeerFacturaX` acota su
@@ -156,6 +170,19 @@ el proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
   catálogo públicos, sin PII). _Las escrituras (`autorizarCPE*`,
   `informarContingencia`) quedan modeladas offline (`test_wscpe_offline.py`); no se
   ejercitan en vivo._
+- **`WSLPG` — catálogos validados en vivo + cassette de homologación.** Con
+  `wslpg` autorizado en WSASS, se grabó contra homologación un único cassette
+  (`test_wslpg_vcr/test_catalogos_homologacion.yaml`) con el GET del WSDL + los
+  POST de los catálogos read-only (`ConsultarUltNroOrden`, `ConsultarProvincias`,
+  `TipoGrano`, `Campanias`, `Puerto`, `TipoActividad`, `TipoDeduccion`,
+  `TipoRetencion`, `CodigoGradoReferencia`, `TipoCertificadoDeposito`,
+  `GradoEntregadoXTipoGrano`, `LocalidadesPorProvincia`), que `test_wslpg_vcr.py`
+  reproduce offline contra el envelope real. Cassette **saneado** (token/sign →
+  placeholders, CUIT del agente → sintético, `Set-Cookie` filtrado; datos de
+  catálogo públicos, sin PII). _`Dummy` no se valida en vivo: el endpoint lo
+  responde con `[common_001] Acceso Denegado` (se invoca sin auth). Las escrituras
+  (`AutorizarLiquidacion`/ajustes/anulaciones) siguen modeladas offline
+  (`test_wslpg_offline.py`)._
 
 ## [1.3.0] - 2026-06-16
 
