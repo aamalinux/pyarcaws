@@ -6,7 +6,7 @@ Todos los cambios notables de **pyarcaws** (fork de
 El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y
 el proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
 
-## [Sin publicar]
+## [1.4.0] - 2026-07-01
 
 ### Agregado
 - **`padron_iibb` — parser OFFLINE de padrones de alícuotas de IIBB (ARBA y
@@ -384,7 +384,7 @@ Línea base del fork: modernización de pyafipws para Python 3 y rebranding a AR
   `dict.has_key()` → operador `in`, `distutils` → `setuptools`, y varios
   arreglos reales de la suite de tests.
 
-[Sin publicar]: https://github.com/aamalinux/pyarcaws/compare/v1.3.0...HEAD
+[1.4.0]: https://github.com/aamalinux/pyarcaws/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/aamalinux/pyarcaws/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/aamalinux/pyarcaws/compare/v1.1.1...v1.2.0
 [1.1.1]: https://github.com/aamalinux/pyarcaws/compare/v1.1.0...v1.1.1
